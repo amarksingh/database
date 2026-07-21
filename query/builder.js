@@ -27,7 +27,7 @@ class Builder {
 	}
 
 	from() {
-		this.$query = this.getQuery().from(...arguments)
+		this[kQuery] = this.getQuery().from(...arguments)
 		return this;
 	}
 
