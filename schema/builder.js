@@ -15,8 +15,11 @@ class Builder {
 
     constructor($connection) {
         this.$connection = $connection;
-        this.$schema = $connection.$connection.schema;
         this.$grammar = $connection.getSchemaGrammar();
+    }
+
+    get $schema() {
+        return this.$connection.$connection.schema;
     }
 
     create(table, cb) {
@@ -49,6 +52,11 @@ class Builder {
 
     hasTable() {
         return this.$schema.hasTable(...arguments)
+    }
+
+    async getColumnListing(tableName) {
+        const info = await this.$connection.table(tableName).columnInfo();
+        return Object.keys(info);
     }
 
     alter() {
@@ -99,10 +107,6 @@ class Builder {
         return this.$schema.renameTable(...arguments)
     }
 
-    renameTable() {
-        return this.$schema.renameTable(...arguments)
-    }
-
     createView() {
         return this.$schema.createView(...arguments)
     }
@@ -114,11 +118,6 @@ class Builder {
 
     dropSchema() {
         return this.$schema.dropSchema(...arguments)
-
-    }
-
-    dropSchemaIfExists() {
-        return this.$schema.dropSchemaIfExists(...arguments)
 
     }
 

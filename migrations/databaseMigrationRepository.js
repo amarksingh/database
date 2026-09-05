@@ -23,9 +23,10 @@ class DatabaseMigrationRepository {
             .get();
     }
 
-    getLast() {
+    async getLast() {
+        const lastBatch = await this.getLastBatchNumber();
         return this.table()
-            .where('batch', this.getLastBatchNumber())
+            .where('batch', lastBatch)
             .orderBy('migration', 'desc')
             .get();
     }
@@ -46,11 +47,14 @@ class DatabaseMigrationRepository {
     }
 
     async getNextBatchNumber() {
-        return ((await this.getLastBatchNumber()).batch || 0) + 1;
+        return (await this.getLastBatchNumber()) + 1;
     }
 
-    getLastBatchNumber() {
-        return this.table().max({ batch: 'batch' });
+    async getLastBatchNumber() {
+        const res = await this.table().max('batch as batch');
+        if (!res || !res.length) return 0;
+        const val = Object.values(res[0])[0];
+        return Number(val) || 0;
     }
 
     createRepository() {

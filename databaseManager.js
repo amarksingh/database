@@ -1,33 +1,28 @@
 const lodash = require('lodash')
 const ConfigurationUrlParser = require('@ostro/support/configurationUrlParser');
 const { Macroable } = require('@ostro/support/macro');
+const { isset, tap, env } = require('@ostro/support/function');
 class DatabaseManager extends Macroable {
 
     $type = 'database';
-    $connections = {}
-    $extensions = {}
+    $connections = {};
+    $extensions = {};
+    $container;
+    $app;
+    $factory;
+    $reconnector;
+
     constructor($container, $factory) {
-        super()
-        Object.defineProperties(this, {
-            '$reconnector': {
-                value: ($connection) => {
-                    this.reconnect($connection.getName());
-                },
-                writable: true
-            },
-            '$app': {
-                value: $container,
-                writable: true
-            },
-            '$factory': {
-                value: $factory,
-                writable: false
-            }
-        })
+        super();
+        this.$app = $container;
+        this.$factory = $factory;
+        this.$reconnector = ($connection) => {
+            this.reconnect($connection.getName());
+        };
     }
 
     builder($name = null) {
-        return this.driver($name)
+        return this.connection($name);
     }
 
     connection(name = null) {
@@ -68,7 +63,7 @@ class DatabaseManager extends Macroable {
     }
     configuration(name) {
         name = name || this.getDefaultConnection();
-        const connections = lodash.get(this.$app['config'], 'database.connections');
+        const connections = lodash.get(this.$app['config'], 'database.connections', {})
 
         if (!connections[name]) {
             throw new Error(`Database connection [${name}] not configured.`);
@@ -78,7 +73,9 @@ class DatabaseManager extends Macroable {
     }
 
     configure(connection, type) {
-        connection.setReconnector(this.$reconnector);
+        if (connection && typeof connection.setReconnector === 'function') {
+            connection.setReconnector(this.$reconnector);
+        }
 
         return connection;
     }
@@ -110,6 +107,12 @@ class DatabaseManager extends Macroable {
         return this.refreshConnections($name);
     }
 
+    refreshConnections($name) {
+        return this.$connections[$name] = this.configure(
+            this.makeConnection($name)
+        );
+    }
+
     usingConnection($name, $callback) {
         const $previousName = this.getDefaultConnection();
 
@@ -125,7 +128,7 @@ class DatabaseManager extends Macroable {
     }
 
     setDefaultConnection($name) {
-        lodash.set(this.app['config'], 'database.default', $name);
+        lodash.set(this.$app['config'], 'database.default', $name);
     }
 
     supportedDrivers() {
@@ -156,8 +159,9 @@ class DatabaseManager extends Macroable {
     }
 
     registerCommands(dir) {
-        if (this.$container.console && typeof this.$container.console.load == 'function' && env('production')) {
-            this.$container.console.load(dir);
+        const container = this.$container || this.$app;
+        if (container && container.console && typeof container.console.load == 'function' && !env('production')) {
+            container.console.load(dir);
         }
     }
     __call($target, $method, $parameters) {

@@ -1,3 +1,4 @@
+const { isset, is_null } = require('@ostro/support/function')
 const Relation = require('./relation')
 const kForeignKey = Symbol('foreignKey')
 const kLocalKey = Symbol('localKey')
@@ -19,16 +20,17 @@ class HasOneOrMany extends Relation {
         const $instance = this.$related.newInstance();
         $instance.fill($attributes);
         this.setForeignAttributesForCreate($instance);
+        return $instance;
     }
 
     makeMany($records) {
-        $instances = this.$related.newCollection();
+        let items = [];
 
         for (let $record of $records) {
-            $instances.push(this.make($record));
+            items.push(this.make($record));
         }
 
-        return $instances;
+        return this.$related.newCollection(items);
     }
 
     addConstraints() {
@@ -116,7 +118,7 @@ class HasOneOrMany extends Relation {
     }
 
     async firstOrCreate($attributes = {}, $values = {}) {
-        const $instance = await this.where($attributes).first();
+        let $instance = await this.where($attributes).first();
         if (is_null($instance)) {
             $instance = await this.create({ ...$attributes, ...$values });
         }
@@ -139,27 +141,28 @@ class HasOneOrMany extends Relation {
     }
 
     async saveMany($models) {
-        for (let $model in $models) {
+        for (let $model of $models) {
             await this.save($model);
         }
 
         return $models;
     }
 
-    create($attributes = {}) {
+    async create($attributes = {}) {
         const $instance = this.$related.newInstance();
         $instance.fill($attributes);
         this.setForeignAttributesForCreate($instance);
-        return $instance.save();
+        await $instance.save();
+        return $instance;
     }
 
-    createMany($records) {
-        let $instances = this.$related.newCollection();
+    async createMany($records) {
+        let items = [];
 
         for (let $record of $records) {
-            $instances.push(this.create($record));
+            items.push(await this.create($record));
         }
-        return $instances;
+        return this.$related.newCollection(items);
     }
 
     setForeignAttributesForCreate($model) {
@@ -167,7 +170,7 @@ class HasOneOrMany extends Relation {
     }
 
     getRelationExistenceQuery($query, $parentQuery, $columns = ['*']) {
-        if ($query.getQuery()._single.table == $parentQuery.getQuery()._single.table) {
+        if ($query.getTable() == $parentQuery.getTable()) {
             return this.getRelationExistenceQueryForSelfRelation($query, $parentQuery, $columns);
         }
 
@@ -200,7 +203,7 @@ class HasOneOrMany extends Relation {
     getForeignKeyName() {
         let $segments = this.getQualifiedForeignKeyName().split('.');
 
-        return $segments.last();
+        return $segments[$segments.length - 1];
     }
 
     getQualifiedForeignKeyName() {

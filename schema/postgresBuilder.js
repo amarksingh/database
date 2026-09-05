@@ -1,3 +1,4 @@
+const { empty } = require('@ostro/support/function');
 const Builder = require('./builder')
 class PgSqlSchema extends Builder {
     getAllTables() {
@@ -54,7 +55,7 @@ class PgSqlSchema extends Builder {
         const types = await this.compileGetTypes();
         const $types = [];
         const $domains = [];
-        const $schemas = [];
+        const $schemas = [this.$connection.getConfig('schema', 'public')];
         for (let $type of types.rows) {
             if (!$type['implicit'] && $schemas.includes($type['schema'])) {
                 if ($type['type'] === 'domain') {

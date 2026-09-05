@@ -1,3 +1,4 @@
+const { implement, is_null, isset, get_class } = require('@ostro/support/function')
 const HasOneOrMany = require('./hasOneOrMany')
 const SupportsDefaultModels = require('./concerns/supportsDefaultModels')
 const CanBeOneOfMany = require('./concerns/canBeOneOfMany')
@@ -109,11 +110,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
             return instance;
         }
 
-        return this.$related.newInstance({...attributes, ...values});
+        const model = this.$related.newInstance();
+        model.fill({...attributes, ...values});
+        return model;
     }
 
     async firstOrCreate(attributes = {}, values = {}) {
-        const instance = await this.clone().where(attributes).first();
+        const instance = await this.where(attributes).first();
         if (instance !== null) {
             return instance;
         }
@@ -123,7 +126,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
 
     async createOrFirst(attributes = {}, values = {}) {
         try {
-            return this.getQuery().withSavepointIfNeeded(function () {
+            return await this.getQuery().withSavepointIfNeeded(() => {
                 return this.create({...attributes, ...values});
             });
         } catch (exception) {
@@ -161,17 +164,16 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
             return model;
         }
 
-        const ModelNotFoundException = require('../exceptions/ModelNotFoundException');
-        throw new ModelNotFoundException().setModel(this.$related.constructor.name);
+        throw new ModelNotFoundException().setModel(get_class(this.$related));
     }
 
-    firstOr(columns = ['*'], callback = null) {
+    async firstOr(columns = ['*'], callback = null) {
         if (typeof columns === 'function') {
             callback = columns;
             columns = ['*'];
         }
 
-        const model = this.first(columns);
+        const model = await this.first(columns);
         if (model !== null) {
             return model;
         }
@@ -179,56 +181,58 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return callback();
     }
 
-    find(id, columns = ['*']) {
+    async find(id, columns = ['*']) {
         if (Array.isArray(id) || (id && typeof id.toArray === 'function')) {
             return this.findMany(id, columns);
         }
 
         return this.where(
-            this.getRelated().getQualifiedKeyName(), '=', id
+            this.$related.qualifyColumn(this.$related.getKeyName()), '=', id
         ).first(columns);
     }
 
-    findMany(ids, columns = ['*']) {
+    async findMany(ids, columns = ['*']) {
         ids = (ids && typeof ids.toArray === 'function') ? ids.toArray() : ids;
 
         if (!ids || ids.length === 0) {
-            return this.getRelated().newCollection();
+            return this.$related.newCollection();
         }
 
         return this.whereIn(
-            this.getRelated().getQualifiedKeyName(), ids
+            this.$related.qualifyColumn(this.$related.getKeyName()), ids
         ).get(columns);
     }
 
-    findOrFail(id, columns = ['*']) {
-        const result = this.find(id, columns);
+    async findOrFail(id, columns = ['*']) {
+        const result = await this.find(id, columns);
 
         id = (id && typeof id.toArray === 'function') ? id.toArray() : id;
 
         if (Array.isArray(id)) {
-            if (result.length === new Set(id).size) {
+            const resultCount = result && typeof result.count === 'function' ? result.count() : (result ? result.length : 0);
+            if (resultCount === new Set(id).size) {
                 return result;
             }
         } else if (result !== null) {
             return result;
         }
 
-        throw new ModelNotFoundException().setModel(this.$related.constructor.name, id);
+        throw new ModelNotFoundException().setModel(get_class(this.$related), id);
     }
 
-    findOr(id, columns = ['*'], callback = null) {
+    async findOr(id, columns = ['*'], callback = null) {
         if (typeof columns === 'function') {
             callback = columns;
             columns = ['*'];
         }
 
-        const result = this.find(id, columns);
+        const result = await this.find(id, columns);
 
         id = (id && typeof id.toArray === 'function') ? id.toArray() : id;
 
         if (Array.isArray(id)) {
-            if (result.length === new Set(id).size) {
+            const resultCount = result && typeof result.count === 'function' ? result.count() : (result ? result.length : 0);
+            if (resultCount === new Set(id).size) {
                 return result;
             }
         } else if (result !== null) {
@@ -316,11 +320,11 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
 
     each(callback, count = 1000) {
         return this.chunk(count, (results) => {
-            results.forEach((value, key) => {
+            for (const [key, value] of results.entries()) {
                 if (callback(value, key) === false) {
                     return false;
                 }
-            });
+            }
         });
     }
 
@@ -349,11 +353,11 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
     }
 
     getRelationExistenceQuery(query, parentQuery, columns = ['*']) {
-        if (parentQuery.getQuery().from === query.getQuery().from) {
+        if (parentQuery.getTable() === query.getTable()) {
             return this.getRelationExistenceQueryForSelfRelation(query, parentQuery, columns);
         }
 
-        if (parentQuery.getQuery().from === this.$throughParent.getTable()) {
+        if (parentQuery.getTable() === this.$throughParent.getTable()) {
             return this.getRelationExistenceQueryForThroughSelfRelation(query, parentQuery, columns);
         }
 
@@ -365,7 +369,8 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
     }
 
     getRelationExistenceQueryForSelfRelation(query, parentQuery, columns = ['*']) {
-        query.from(`${query.getModel().getTable()} as ${hash = this.getRelationCountHash()}`);
+        const hash = this.getRelationCountHash();
+        query.from(`${query.getModel().getTable()} as ${hash}`);
 
         query.join(this.$throughParent.getTable(), this.getQualifiedParentKeyName(), '=', `${hash}.${this.$secondKey}`);
 
@@ -381,7 +386,8 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
     }
 
     getRelationExistenceQueryForThroughSelfRelation(query, parentQuery, columns = ['*']) {
-        const table = `${this.$throughParent.getTable()} as ${hash = this.getRelationCountHash()}`;
+        const hash = this.getRelationCountHash();
+        const table = `${this.$throughParent.getTable()} as ${hash}`;
 
         query.join(table, `${hash}.${this.$secondLocalKey}`, '=', this.getQualifiedFarKeyName());
 

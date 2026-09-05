@@ -1,4 +1,4 @@
-const { get_class_name } = require("@ostro/support/function");
+const { get_class_name, count } = require("@ostro/support/function");
 const ModelNotFoundExceptionContracts = require("@ostro/contracts/database/eloquent/modelNotFoundException");
 
 class ModelNotFoundException extends ModelNotFoundExceptionContracts {

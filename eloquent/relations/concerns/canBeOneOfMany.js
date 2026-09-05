@@ -1,9 +1,10 @@
+const { last } = require('@ostro/support/function');
+
 class CanBeOneOfMany {
 
     $isOneOfMany = false;
 
     getRelationQuery() {
-        return this.$query
         return this.isOneOfMany() ?
             this.$oneOfManySubQuery :
             this.$query;
@@ -18,11 +19,11 @@ class CanBeOneOfMany {
     }
 
     qualifyRelatedColumn($column) {
-        return String.contains($column, '.') ? $column : this.$query.getModel().getTable() + '.' + $column;
+        return $column.includes('.') ? $column : this.$query.getModel().getTable() + '.' + $column;
     }
 
     isOneOfMany() {
-        return this.$isOneOfMany;
+        return this.$isOneOfMany === true;
     }
 
     getRelationName() {

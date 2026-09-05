@@ -1,5 +1,8 @@
 const { Macroable, Micros } = require('@ostro/support/macro')
+const { is_null, get_class_name } = require('@ostro/support/function')
 const InteractsWithDictionary = require('./concerns/interactsWithDictionary')
+const ModelNotFoundException = require('../modelNotFoundException')
+const MultipleRecordsFoundException = require('../multipleRecordsFoundException')
 
 class Relation extends Macroable.implement(InteractsWithDictionary) {
 
@@ -60,11 +63,11 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
         return this.get();
     }
 
-    sole($columns = ['*']) {
-        $result = this.take(2).get($columns);
+    async sole($columns = ['*']) {
+        const $result = await this.take(2).get($columns);
 
-        if ($result.isEmpty()) {
-            throw (new ModelNotFoundException).setModel(get_class(this.$related));
+        if ($result.count() === 0) {
+            throw (new ModelNotFoundException).setModel(this.$related);
         }
 
         if ($result.count() > 1) {
@@ -95,7 +98,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
 
     getRelationExistenceCountQuery($query, $parentQuery) {
         return this.getRelationExistenceQuery(
-            $query, $parentQuery, 'count(*)'
+            $query, $parentQuery, $query.raw('count(*)')
         );
     }
 
@@ -180,16 +183,19 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
     static morphMap($map = null, $merge = true) {
         $map = this.buildMorphMapFromModels($map);
 
-        if (is_array($map)) {
-            this.$morphMap = $merge && this.$morphMap ?
-                $map + this.$morphMap : $map;
+        if (Array.isArray($map)) {
+            this.$morphMap = $merge && Array.isArray(this.$morphMap) ?
+                this.$morphMap.concat($map) : $map;
+        } else if (typeof $map === 'object' && $map !== null) {
+            this.$morphMap = $merge && typeof this.$morphMap === 'object' && !Array.isArray(this.$morphMap) ?
+                { ...this.$morphMap, ...$map } : $map;
         }
 
         return this.$morphMap;
     }
 
     static buildMorphMapFromModels($models = null) {
-        if (is_null($models) || Array.isAssoc($models)) {
+        if (is_null($models) || !Array.isArray($models)) {
             return $models;
         }
 

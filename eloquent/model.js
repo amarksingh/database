@@ -20,14 +20,16 @@ const kScopes = Symbol('scopes')
 const kRemovedScopes = Symbol('removeScopes')
 const kWasRecentlyCreated = Symbol('wasRecentlyCreated')
 const kPerformRelationQuery = Symbol('performRelationQuery')
-const kLazyQueries = Symbol('lazyQueries')
+const kLazyQueries = Symbol.for('lazyQueries')
 const Collection = require('./collection')
 const ModelInterface = require('@ostro/contracts/database/eloquent/model')
-const { is_array, count, in_array, clone } = require('@ostro/support/function')
+const { is_array, count, in_array, clone, isset, is_null, empty, implement, get_class, get_class_name, is_string, is_numeric } = require('@ostro/support/function')
+const { snake, plural, studly, contains, startsWith } = require('@ostro/support/string')
+const { intersection } = require('lodash')
 
 class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRelationships, HasRelationships, HasAttributes, HidesAttributes, HasTimestamps) {
 
-	$table = String.snakeCase(this.constructor.name).toLowerCase().plural();
+	$table = plural(snake(this.constructor.name));
 
 	get $query() {
 		return this[kQuery] = this[kQuery] || Model.getConnectionResolver().table(this.$table)
@@ -111,15 +113,15 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 	fillable(obj = {}) {
 		let fillKeys = Object.keys(obj)
-		let $massAssign = this.$fillable.intersection(fillKeys)
+		let $massAssign = intersection(this.$fillable, fillKeys)
 		if ($massAssign.length == 0 && fillKeys.length) {
 			throw Error('Add column to fillable property to allow mass assignment on [' + this.constructor.name + '].')
 		}
 		for (let fillable of $massAssign) {
 			if (obj.hasOwnProperty(fillable)) {
-				let fn = this['set' + fillable.ucfirst() + 'Attribute']
+				let fn = this['set' + studly(fillable) + 'Attribute']
 				if (typeof fn == 'function') {
-					this['set' + fillable.ucfirst() + 'Attribute'](obj[fillable])
+					this['set' + studly(fillable) + 'Attribute'](obj[fillable])
 				} else {
 					this.setAttribute(fillable, obj[fillable])
 				}
@@ -137,10 +139,9 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 			if (this.isFillable($key)) {
 				this.setAttribute($key, $value);
 			} else if ($totallyGuarded) {
-				throw new Error(sprintf(
-					'Add [%s] to fillable property to allow mass assignment on [%s].',
-					$key, get_class(this)
-				));
+				throw new Error(
+					`Add [${$key}] to fillable property to allow mass assignment on [${this.constructor.name}].`
+				);
 			}
 		}
 
@@ -213,6 +214,10 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this.getAttribute(this.getKeyName());
 	}
 
+	getQualifiedKeyName() {
+		return this.qualifyColumn(this.getKeyName());
+	}
+
 
 
 	first() {
@@ -234,15 +239,44 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 			return this.fill($attributes);
 		});
 	}
+
+	addWhereExistsQuery($query, $boolean = 'and', $not = false) {
+		let raw = $query && typeof $query.getQueryBuilder == 'function' ? $query.getQueryBuilder() : ($query && $query.$query ? $query.$query : $query);
+		if ($boolean === 'or') {
+			$not ? this.orWhereNotExists(raw) : this.orWhereExists(raw);
+		} else {
+			$not ? this.whereNotExists(raw) : this.whereExists(raw);
+		}
+		return this;
+	}
 	create(data = {}) {
-		if (typeof data != 'object' || Array.isArray(data))
-			throw Error('Only json object allowed')
-		this.fillable(data)
-		this.addTimestampsToInsertValues(this.getAttributes())
-		return this.$query.insert(this.getAttributes()).then(res => {
-			this.updateInserdtId([this.getAttributes()], res)
-			return this
-		})
+		let isArray = Array.isArray(data);
+		if (isArray && !data.length) {
+			return new Collection([]);
+		}
+		let items = isArray ? data : [data];
+
+		let instances = items.map(item => {
+			if (typeof item != 'object' || item === null) {
+				throw new Error('Only json object allowed');
+			}
+			let instance = this.newInstance();
+			instance.fill(item);
+			return instance;
+		});
+
+		let insertValues = instances.map(inst => inst.getAttributes());
+		this.addTimestampsToInsertValues(insertValues);
+
+		return this.$query.insert(insertValues).then(ids => {
+			this.updateInserdtId(insertValues, ids);
+			instances.forEach((inst, index) => {
+				inst.setRawAttributes(insertValues[index], true);
+				inst.$exists = true;
+				inst.syncOriginal();
+			});
+			return isArray ? new Collection(instances) : instances[0];
+		});
 	}
 
 	upsert(datas, $uniqueBy, $update = null) {
@@ -265,7 +299,7 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	createSelectWithConstraint($name) {
 		return [$name.split(':')[0], function ($query) {
 			$query.select($name.split(':')[1].split(',').map(function ($column) {
-				if (String.contains($column, '.')) {
+				if (contains($column, '.')) {
 					return $column;
 				}
 
@@ -285,7 +319,7 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 			if (is_numeric($name)) {
 				$name = $constraints;
 
-				[$name, $constraints] = String.contains($name, ':') ?
+				[$name, $constraints] = typeof $name === 'string' && $name.includes(':') ?
 					this.createSelectWithConstraint($name) : [$name, function () { }];
 			}
 
@@ -389,7 +423,8 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	hydrate($items) {
 
 		let $instance = this.newInstance();
-		return $instance.newCollection($items.map(function ($item) {
+		let itemsArr = Array.isArray($items) ? $items : ($items && typeof $items.all === 'function' ? $items.all() : Object.values($items || {}));
+		return $instance.newCollection(itemsArr.map(function ($item) {
 			return $instance.newFromBuilder($item);
 		}));
 	}
@@ -412,16 +447,20 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $model;
 	}
 
+	newQuery() {
+		return this.newModelQuery();
+	}
+
 	newQueryWithoutRelationships() {
 		return this.newModelQuery();
 	}
 
 	getQuery() {
-		return this.$query.$query
+		return this.$query
 	}
 
 	qualifyColumn($column) {
-		if (String.contains($column, '.')) {
+		if (contains($column, '.')) {
 			return $column;
 		}
 
@@ -429,7 +468,7 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	}
 
 	isNestedUnder($relation, $name) {
-		return String.contains($name, '.') && String.startsWith($name, $relation + '.');
+		return contains($name, '.') && startsWith($name, $relation + '.');
 	}
 
 	relationsNestedUnder($relation) {
@@ -446,7 +485,7 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	}
 
 	getForeignKey() {
-		return String.snakeCase(class_basename(this)) + '_' + this.getKeyName();
+		return snake(get_class_name(this)) + '_' + this.getKeyName();
 	}
 
 	getRelation($name) {
@@ -455,7 +494,6 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 			let instance = this.getModel().newInstance()
 			if (typeof instance[$name] != 'function') {
 				throw RelationNotFoundException.make(this.getModel(), $name);
-
 			}
 			return instance[$name]()
 		});
@@ -477,10 +515,6 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this.toJson()
 	}
 
-	toJson() {
-		return this.attributesToJson();
-	}
-
 	async eagerLoadRelation($models, $name, $constraints) {
 
 		let $relation = this.getRelation($name);
@@ -499,7 +533,7 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	async eagerLoadRelations($models) {
 		for (let $name in this[kEagerLoad]) {
 			let $constraints = this[kEagerLoad][$name]
-			if ($name.includes('.') === false) {
+			if (contains($name, '.') === false) {
 				$models = await this.eagerLoadRelation($models, $name, $constraints);
 			}
 		}
@@ -519,6 +553,7 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 		if (typeof skipColumns == "boolean") {
 			withTimestamp = skipColumns;
+			skipColumns = [];
 		}
 		if (withTimestamp === false) {
 			skipColumns.push(this.CREATED_AT);
@@ -626,11 +661,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		const $id = await $query.insert([$attributes], $keyName);
 		if (Array.isArray($keyName)) {
 			for (let key of $keyName) {
-				return this.setAttribute(key, $id[0][key]);
+				this.setAttribute(key, $id[0][key]);
 			}
-
+			return this;
 		} else {
-			return this.setAttribute($keyName, $id[0][$keyName]);
+			const idVal = Array.isArray($id) && typeof $id[0] === 'object' && $id[0] !== null ? $id[0][$keyName] : (Array.isArray($id) ? $id[0] : $id);
+			return this.setAttribute($keyName, idVal);
 		}
 
 	}
@@ -676,7 +712,7 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		}
 
 		if (is_array($id)) {
-			if (in_array(this.getModel().getKeyType(), ['int', 'integer'])) {
+			if (in_array(this.getModel().getKeyType(), ['int', 'integer']) && typeof this.$query.whereIntegerInRaw === 'function') {
 				this.$query.whereIntegerInRaw(this.getModel().getQualifiedKeyName(), $id);
 			} else {
 				this.$query.whereIn(this.getModel().getQualifiedKeyName(), $id);
@@ -698,7 +734,7 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		}
 
 		if (is_array($id)) {
-			if (in_array(this.getModel().getKeyType(), ['int', 'integer'])) {
+			if (in_array(this.getModel().getKeyType(), ['int', 'integer']) && typeof this.$query.whereIntegerNotInRaw === 'function') {
 				this.$query.whereIntegerNotInRaw(this.getModel().getQualifiedKeyName(), $id);
 			} else {
 				this.$query.whereNotIn(this.getModel().getQualifiedKeyName(), $id);
@@ -742,12 +778,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 					[this.$primaryKey]: this.getAttribute(this.$primaryKey)
 				}
 				this.where(where)
-				return this.$query.delete();
+				await this.$query.delete();
 			}
 		} else {
 			await this.$query.delete()
 		}
-
 
 		this.$exists = false;
 	}
@@ -824,13 +859,13 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 			return res
 		})
 	}
-	firstOr($columns = ['*'], $callback = null) {
+	async firstOr($columns = ['*'], $callback = null) {
 		if (typeof $columns == 'function') {
 			$callback = $columns;
 
 			$columns = ['*'];
 		}
-		const $model = this.first($columns)
+		const $model = await this.first($columns)
 		if (!is_null($model)) {
 			return $model;
 		}
@@ -840,11 +875,9 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 	updateOrCreate(where = {}, update = {}) {
 		return this.where(where).first().then(async res => {
-
 			if (res) {
-				if (this.$timestamps)
-					update[this.UPDATED_AT] = this.freshTimestampString()
-				return res.where(where).update(update);
+				await res.fill(update).save();
+				return res;
 			}
 
 			return this.create({ ...where, ...update })
@@ -868,18 +901,18 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	callScope($scope, $parameters = []) {
 		$parameters.unshift(this);
 		const $query = this.getQuery();
-		const wheres = $query._statements.filter(s => s.type == 'where');
-		const $originalWhereCount = is_null(wheres)
-			? 0 : count(wheres);
+		const statements = ($query && $query._statements) || [];
+		const wheres = statements.filter(s => s.type == 'where');
+		const $originalWhereCount = count(wheres);
 
-		const $result = $scope(...$parameters) || this;
+		const $result = typeof $scope === 'function' ? ($scope(...$parameters) || this) : this;
 		return $result;
 	}
 
 
 	withoutGlobalScopes($scopes = null) {
 		if (!is_array($scopes)) {
-			$scopes = Object.keys(this.scopes);
+			$scopes = Object.keys(this[kScopes] || {});
 		}
 
 		for (const $scope of $scopes) {
@@ -889,9 +922,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this;
 	}
 	withGlobalScope($identifier, $scope) {
-		this.scopes[$identifier] = $scope;
+		if (!this[kScopes]) {
+			this[kScopes] = {};
+		}
+		this[kScopes][$identifier] = $scope;
 
-		if (method_exists($scope, 'extend')) {
+		if ($scope && typeof $scope.extend === 'function') {
 			$scope.extend(this);
 		}
 
@@ -917,30 +953,81 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this.getQuery();
 	}
 
-	__set(target, key, value) {
-		if (!target.$exists) {
-			throw Error('Instance is not alive.')
+	toArray() {
+		return this.attributesToJson();
+	}
+
+	toJson() {
+		return this.attributesToJson();
+	}
+
+	async fresh($columns = ['*']) {
+		if (!this.$exists) {
+			return null;
 		}
+		return (new this.constructor).where(this.getKeyName(), this.getKey()).first($columns);
+	}
+
+	async refresh() {
+		if (!this.$exists) {
+			return this;
+		}
+		const fresh = await (new this.constructor).where(this.getKeyName(), this.getKey()).first();
+		if (fresh) {
+			this.setRawAttributes(fresh.getAttributes(), true);
+		}
+		return this;
+	}
+
+	__set(target, key, value) {
 		if (typeof key == 'symbol') {
 			return target[key] = value
 		}
 		return target.setAttribute(key, value)
 	}
 
-	__get(target, key) {
-		return target.getAttribute(key)
+	__get(target, key, receiver) {
+		const self = receiver || target;
+		if (typeof target[key] === 'function') {
+			return target[key].bind(self);
+		}
+		let scopeMethod = 'scope' + studly(key);
+		if (typeof target[scopeMethod] === 'function') {
+			return (...args) => target[scopeMethod](self, ...args) || self;
+		}
+		return target.getAttribute(key);
+	}
+
+	__call(target, method, args) {
+		if (typeof target[method] == 'function') {
+			return target[method](...args);
+		}
+		let scopeMethod = 'scope' + studly(method);
+		if (typeof target[scopeMethod] == 'function') {
+			let res = target[scopeMethod](target, ...args);
+			return (typeof res !== 'undefined') ? res : target;
+		}
+		if (target.$query && typeof target.$query[method] == 'function') {
+			return target.$query[method](...args);
+		}
+		throw new MethodNotAvailable('Method [' + method + '] was not available on [' + target.constructor.name + ']');
 	}
 
 	static __call(target, method, args) {
 
-		target = (new target())
+		let instance = Macroable(new target())
 
-		if (typeof target[method] == 'function') {
-			return target[method](...args)
-
+		if (typeof instance[method] == 'function') {
+			return instance[method](...args)
 		}
 
-		throw new MethodNotAvailable('Method [' + method + '] was not available on [' + target.constructor.name + ']')
+		let scopeMethod = 'scope' + studly(method);
+		if (typeof instance[scopeMethod] == 'function') {
+			let res = instance[scopeMethod](instance, ...args);
+			return (typeof res !== 'undefined') ? res : instance;
+		}
+
+		throw new MethodNotAvailable('Method [' + method + '] was not available on [' + instance.constructor.name + ']')
 	}
 
 }

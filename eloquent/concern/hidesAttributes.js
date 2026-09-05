@@ -1,3 +1,5 @@
+const { empty, is_array, value } = require('@ostro/support/function');
+const { difference, union } = require('lodash');
 class HidesAttributes {
 
     $hidden = [];
@@ -24,12 +26,12 @@ class HidesAttributes {
     }
 
     makeVisible($attributes) {
-        $attributes = Array.isArray($attributes) ? $attributes : arguments();
+        $attributes = Array.isArray($attributes) ? $attributes : Array.from(arguments);
 
-        this.$hidden = this.$hidden.intersection(Object.keys($attributes));
+        this.$hidden = difference(this.$hidden, $attributes);
 
         if (!empty(this.$visible)) {
-            this.$visible = this.$visible.intersection(Object.keys($attributes));
+            this.$visible = union(this.$visible, $attributes);
         }
 
         return this;
@@ -40,9 +42,8 @@ class HidesAttributes {
     }
 
     makeHidden($attributes) {
-        this.$hidden = this.$hidden.concat(
-            Array.isArray($attributes) ? $attributes : arguments()
-        );
+        $attributes = Array.isArray($attributes) ? $attributes : Array.from(arguments);
+        this.$hidden = union(this.$hidden, $attributes);
 
         return this;
     }

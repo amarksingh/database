@@ -1,4 +1,5 @@
-const { get_class_name } = require('@ostro/support/function')
+const { get_class_name, isset, empty, count } = require('@ostro/support/function')
+const { intersection } = require('lodash')
 class GuardsAttributes {
     $fillable = [];
 
@@ -99,35 +100,37 @@ class GuardsAttributes {
 
         return empty(this.getFillable()) &&
             $key.includes('.') &&
-            !String.startsWith($key, '_');
+            !$key.startsWith('_');
     }
 
     isGuarded($key) {
         if (empty(this.getGuarded())) {
             return false;
         }
-        const reg = new RegExp('/^' + $key.escape() + '$/', 'i')
+        const escapedKey = $key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const reg = new RegExp('^' + escapedKey + '$', 'i');
 
-        return this.getGuarded().toString() == ['*'].toString() ||
-            !empty(this.getGuarded().filter(item => reg.test(item)))
+        return this.getGuarded().toString() === ['*'].toString() ||
+            !empty(this.getGuarded().filter(item => reg.test(item)));
     }
 
     async isGuardableColumn($key) {
-        if (!isset(this.constructor.$guardableColumns[this.name])) {
-            this.constructor.$guardableColumns[get_class_name(this)] = await this.getConnection()
+        const className = get_class_name(this);
+        if (!isset(this.constructor.$guardableColumns[className])) {
+            this.constructor.$guardableColumns[className] = await this.getConnection()
                 .getColumnListing(this.getTable());
         }
 
-        return this.constructor.$guardableColumns[get_class_name(this)].indexOf($key) > -1;
+        return this.constructor.$guardableColumns[className].indexOf($key) > -1;
     }
 
     totallyGuarded() {
-        return count(this.getFillable()) === 0 && this.getGuarded() == ['*'];
+        return count(this.getFillable()) === 0 && this.getGuarded().toString() === ['*'].toString();
     }
 
     fillableFromArray($attributes) {
         if (count(this.getFillable()) > 0 && !this.constructor.$unguarded) {
-            return this.getFillable().intersection(Object.keys($attributes));
+            return intersection(this.getFillable(), Object.keys($attributes));
         }
 
         return Object.keys($attributes);

@@ -4,7 +4,15 @@ const QueryBuilder = require('../query/builder');
 const QueryGrammar = require('../query/grammars/grammar');
 const Processor = require('../query/processors/processor');
 const SchemaBuilder = require('../schema/builder');
-const { debounce } = require('@ostro/support/function');
+const { debounce, is_callable, is_null } = require('@ostro/support/function');
+
+class LostConnectionException extends Error {
+    constructor(message = 'Lost connection and no reconnector available.') {
+        super(message);
+        this.name = this.constructor.name;
+    }
+}
+
 class Connection extends Macroable {
     static $resolvers = {};
 
@@ -22,10 +30,12 @@ class Connection extends Macroable {
 
     $activeConnection = true;
 
+    $beforeExecutingCallbacks = [];
+
     constructor(connection, $database = '', $tablePrefix = '', $config = {}) {
         super()
 
-        this.$connection = connection($database, $tablePrefix);
+        this.$connection = typeof connection === 'function' ? connection($database, $tablePrefix) : connection;
 
         this.$database = $database;
 
@@ -34,8 +44,11 @@ class Connection extends Macroable {
         this.$config = $config;
 
         this.useDefaultQueryGrammar();
+        this.useDefaultPostProcessor();
 
-        this.initiateAutoCloseConnection();
+        if (this.$connection) {
+            this.initiateAutoCloseConnection();
+        }
 
     }
 
@@ -83,10 +96,18 @@ class Connection extends Macroable {
         );
     }
 
-    selectOne($query, $bindings = [], $useReadPdo = true) {
-        const $records = this.select($query, $bindings, $useReadPdo);
+    transaction(callback) {
+        return this.$connection.transaction(callback);
+    }
 
-        return $records.shift();
+    async select($query, $bindings = [], $useReadPdo = true) {
+        return this.run($query, $bindings);
+    }
+
+    async selectOne($query, $bindings = [], $useReadPdo = true) {
+        const $records = await this.select($query, $bindings, $useReadPdo);
+
+        return Array.isArray($records) ? $records[0] : $records;
     }
 
     insert($query, $bindings = []) {
@@ -114,13 +135,14 @@ class Connection extends Macroable {
         });
     }
 
-    async run($query, $bindings) {
+    async run($query, $bindings, $callback = null) {
         for (let $beforeExecutingCallback of this.$beforeExecutingCallbacks) {
             $beforeExecutingCallback($query, $bindings, this);
         }
 
         this.reconnectIfMissingConnection();
 
+        let $result;
         try {
             $result = await this.raw($query, $bindings, $callback);
         } catch ($e) {
@@ -205,6 +227,18 @@ class Connection extends Macroable {
         return this.$database;
     }
 
+    setReadConnection($readConnection) {
+        this.$readConnection = $readConnection;
+        return this;
+    }
+
+    getReadConnection() {
+        if (this.$readConnection) {
+            return typeof this.$readConnection === 'function' ? this.$readConnection(this.$database, this.$tablePrefix) : this.$readConnection;
+        }
+        return this.$connection;
+    }
+
     setDatabaseName($database) {
         this.$database = $database;
 
@@ -229,10 +263,19 @@ class Connection extends Macroable {
         return $grammar;
     }
 
+    getColumnListing($table) {
+        return this.getSchemaBuilder().getColumnListing($table);
+    }
+
 
     disconnect() {
-        this.$connection.destroy();
-        this.$activeConnection = false
+        if (this.$disconnectTimer) {
+            this.$disconnectTimer.clear();
+        }
+        if (this.$connection && typeof this.$connection.destroy === 'function') {
+            this.$connection.destroy();
+        }
+        this.$activeConnection = false;
     }
 
     initiateAutoCloseConnection() {
@@ -246,6 +289,12 @@ class Connection extends Macroable {
                 this.$activeConnection = false;
             }
         }, closeTime);
+        this.$disconnectTimer = disconnectConnection;
+
+        if (!this.$connection?.client || typeof this.$connection.client.acquireConnection !== 'function') {
+            return;
+        }
+
         const acquireConnection = this.$connection.client.acquireConnection.bind(this.$connection.client)
         this.$connection.client.acquireConnection = () => {
             connectionCount++;

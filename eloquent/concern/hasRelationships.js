@@ -4,7 +4,8 @@ const BelongsTo = require('../relations/belongsTo')
 const HasOneThrough = require('../relations/hasOneThrough')
 const HasManyThrough = require('../relations/hasManyThrough')
 const BelongsToMany = require('../relations/belongsToMany')
-const { getCallerFunctionName, exists, get_class } = require('@ostro/support/function')
+const { getCallerFunctionName, exists, get_class, is_null, get_class_name, in_array, clone, tap } = require('@ostro/support/function')
+const { snake } = require('@ostro/support/string')
 
 const Collect = require('@ostro/support/collection')
 const kRelation = Symbol('relation')
@@ -76,7 +77,7 @@ class HasRelationships {
 
 
         if (is_null($foreignKey)) {
-            $foreignKey = String.snakeCase($relation) + '_' + $instance.getKeyName();
+            $foreignKey = snake($relation) + '_' + $instance.getKeyName();
         }
 
         $ownerKey = $ownerKey || $instance.getKeyName();
@@ -84,6 +85,7 @@ class HasRelationships {
         const belongsToRelation = this.newBelongsTo(
             $instance.newQuery(), this, $foreignKey, $ownerKey, $relation
         )
+        belongsToRelation.addConstraints();
         if (this.$exists && !getCallerFunctionName('eagerLoadRelation')) {
             belongsToRelation.addEagerConstraints(new Collect([this]));
         }
@@ -182,7 +184,7 @@ class HasRelationships {
 
         let $segments = [
             $instance ? $instance.joiningTableSegment() :
-                String.snakeCase(class_basename($related)),
+                snake(get_class_name($related)),
             this.joiningTableSegment(),
         ];
 
@@ -192,7 +194,7 @@ class HasRelationships {
     }
 
     joiningTableSegment() {
-        return String.snakeCase(class_basename(this));
+        return snake(get_class_name(this));
     }
 
     touches($relation) {
@@ -203,8 +205,9 @@ class HasRelationships {
         for (let $relation of this.getTouchedRelations()) {
             this[$relation]().touch();
 
-            if (this.getRelations() instanceof get_class(this)) {
-                this.getRelations().touchOwners();
+            let relatedModel = this.getRelations()[$relation];
+            if (relatedModel && typeof relatedModel.touchOwners === 'function') {
+                relatedModel.touchOwners();
             }
         }
     }
@@ -226,7 +229,7 @@ class HasRelationships {
     }
 
     relationLoaded($key) {
-        return exists(this.getRelations()[$key]);
+        return Boolean(exists(this.getRelations()[$key]));
     }
     relation(relation) {
         return this.getRelations()[relation]
@@ -261,6 +264,18 @@ class HasRelationships {
     unsetRelations() {
         this[kRelation] = {};
 
+        return this;
+    }
+
+    async load($relations) {
+        let relations = Array.isArray($relations) ? $relations : (arguments.length === 1 && typeof $relations === 'string' ? [$relations] : [...arguments]);
+        for (let rel of relations) {
+            if (typeof this[rel] === 'function') {
+                let relationObj = this[rel]();
+                let results = await relationObj.getResults();
+                this.setRelation(rel, results);
+            }
+        }
         return this;
     }
 

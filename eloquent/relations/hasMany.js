@@ -1,4 +1,5 @@
 const HasOneOrMany = require('./hasOneOrMany')
+const { is_null } = require('@ostro/support/function')
 
 class HasMany extends HasOneOrMany {
 

@@ -1,6 +1,7 @@
 const { random, shuffle, wrap } = require('lodash');
 const Connection = require('@ostro/database/connections/connection');
 const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException');
+const { empty } = require('@ostro/support/function');
 class ConnectionFactory {
 
     $container;
@@ -20,7 +21,7 @@ class ConnectionFactory {
     }
 
     parseConfig(config, name) {
-        return { ...config, prefix: '', name };
+        return { prefix: '', ...config, name };
     }
 
     createSingleConnection(config) {

@@ -1,9 +1,10 @@
+const { implement, isset } = require('@ostro/support/function')
 const HasManyThrough = require('./hasManyThrough')
 const SupportsDefaultModels = require('./concerns/supportsDefaultModels')
 const InteractsWithDictionary = require('./concerns/interactsWithDictionary')
 class HasOneThrough extends implement(HasManyThrough, SupportsDefaultModels, InteractsWithDictionary) {
-    getResults() {
-        return this.$query.first() || this.getDefaultFor(this.$farParent);
+    async getResults() {
+        return (await this.$query.first()) || this.getDefaultFor(this.$farParent);
     }
 
     initRelation($models, $relation) {

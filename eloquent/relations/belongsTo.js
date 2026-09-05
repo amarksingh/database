@@ -1,3 +1,4 @@
+const { implement, isset, is_null } = require('@ostro/support/function')
 const Model = require('@ostro/contracts/database/eloquent/model')
 
 const Relation = require('./relation')
@@ -24,16 +25,16 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
 
     }
 
-    getResults() {
+    async getResults() {
         if (is_null(this.$child[this.$foreignKey])) {
             return this.getDefaultFor(this.$parent);
         }
 
-        return this.$query.first() || this.getDefaultFor(this.$parent);
+        return (await this.$query.first()) || this.getDefaultFor(this.$parent);
     }
 
     addConstraints() {
-        if (this.$constraints) {
+        if (this.constructor.$constraints) {
 
             let $table = this.$related.getTable();
 
@@ -177,7 +178,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
     }
 
     getRelatedKeyFrom($model) {
-        return $model[this.$ownerKey];
+        return $model.getAttribute ? $model.getAttribute(this.$ownerKey) : $model[this.$ownerKey];
     }
 
     getRelationName() {

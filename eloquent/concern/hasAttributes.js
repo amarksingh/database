@@ -1,3 +1,5 @@
+const { isset, is_null, count, empty, method_exists, collect } = require('@ostro/support/function')
+const { studly, snake, lowerFirst } = require('@ostro/support/string')
 const CollectionInterface = require('@ostro/contracts/collection/collect')
 const ModelInterface = require('@ostro/contracts/database/eloquent/model')
 const { omit, pick } = require('lodash')
@@ -53,9 +55,12 @@ class HasAttributes {
     attributesToJson() {
         let $attributes = { ...this.getJsonableAttributes(), ...this.getJsonableAppends() }
         let $mutatedAttributes = this.getMutatedAttributes()
-        $attributes = this.addMutatedAttributesToJSON(
-            $attributes, $mutatedAttributes
-        );
+        for (let $key of $mutatedAttributes) {
+            if (this.$attributes.hasOwnProperty($key)) {
+                $attributes[$key] = this.getAttributeValue($key);
+            }
+        }
+        $attributes = this.getJsonableItems($attributes);
         let jsonableRelations = this.getJsonableableRelations()
         for (let $key in jsonableRelations) {
             let $value = jsonableRelations[$key]
@@ -113,22 +118,21 @@ class HasAttributes {
         let $attributes = {};
         let jsonableRelations = this.getJsonableableRelations()
         for (let $key in jsonableRelations) {
-            let $value = jsonableRelations[$key]
+            let $value = jsonableRelations[$key];
+            let $relation;
 
             if ($value instanceof CollectionInterface) {
-                var $relation = $value.toArray();
+                $relation = $value.toArray();
             } else if (is_null($value)) {
                 $relation = $value;
             }
             if (this.constructor.$snakeAttributes) {
-                $key = String.snake($key);
+                $key = snake($key);
             }
 
             if (isset($relation) || is_null($value)) {
                 $attributes[$key] = $relation;
             }
-
-            unset($relation);
         }
 
         return $attributes;
@@ -183,7 +187,7 @@ class HasAttributes {
             return;
         } else if (this.$attributes.hasOwnProperty($key) || this.hasGetMutator($key)) {
             return this.getAttributeValue($key);
-        } else if (method_exists(this.constructor.class, $key)) {
+        } else if (typeof this[$key] === 'function') {
             return;
         }
 
@@ -203,9 +207,14 @@ class HasAttributes {
     }
 
     isDirty($attributes = null) {
+        const attrs = Array.isArray($attributes) ? $attributes : (arguments.length === 1 && typeof $attributes === 'string' ? [$attributes] : Array.from(arguments));
         return this.hasChanges(
-            this.getDirty(), Array.isArray($attributes) ? $attributes : arguments
+            this.getDirty(), attrs
         );
+    }
+
+    isClean($attributes = null) {
+        return !this.isDirty(...arguments);
     }
 
     hasChanges($changes, $attributes = null) {
@@ -214,7 +223,7 @@ class HasAttributes {
             return count($changes) > 0;
         }
 
-        for (let $attribute in $attributes) {
+        for (let $attribute of $attributes) {
             if ($changes.hasOwnProperty($attribute)) {
                 return true;
             }
@@ -260,25 +269,64 @@ class HasAttributes {
     }
 
     hasGetMutator($key) {
-        return method_exists(this, 'get' + $key.studly() + 'Attribute');
+        return method_exists(this, 'get' + studly($key) + 'Attribute');
     }
 
     mutateAttribute($key, $value) {
-        return this['get' + $key.studly() + 'Attribute']($value);
+        return this['get' + studly($key) + 'Attribute']($value);
     }
 
     hasSetMutator($key) {
-        return method_exists(this, 'set' + $key.studly() + 'Attribute');
+        return method_exists(this, 'set' + studly($key) + 'Attribute');
     }
 
     setMutatedAttributeValue($key, $value) {
-        return this['set' + $key.studly() + 'Attribute']($value);
+        return this['set' + studly($key) + 'Attribute']($value);
+    }
+
+    hasCast($key) {
+        return this.$casts && this.$casts.hasOwnProperty($key);
+    }
+
+    getCasts() {
+        return this.$casts || {};
+    }
+
+    castAttribute($key, $value) {
+        if ($value === null || $value === undefined) {
+            return $value;
+        }
+        let castType = this.$casts[$key];
+        switch (castType) {
+            case 'int':
+            case 'integer':
+                return parseInt($value, 10);
+            case 'real':
+            case 'float':
+            case 'double':
+                return parseFloat($value);
+            case 'string':
+                return String($value);
+            case 'bool':
+            case 'boolean':
+                return Boolean($value);
+            case 'object':
+            case 'json':
+            case 'array':
+                return typeof $value === 'string' ? JSON.parse($value) : $value;
+            default:
+                return $value;
+        }
     }
 
     transformModelValue($key, $value) {
 
         if (this.hasGetMutator($key)) {
             return this.mutateAttribute($key, $value);
+        }
+
+        if (this.hasCast($key)) {
+            return this.castAttribute($key, $value);
         }
 
         return $value;
@@ -293,12 +341,12 @@ class HasAttributes {
     }
 
     getMutatedAttributes() {
-        let $class = this.constructor;
+        let $class = Object.getPrototypeOf(this).constructor;
 
-        if (!isset(this.constructor.$mutatorCache[$class.name])) {
-            this.constructor.cacheMutatedAttributes($class);
+        if (!isset(HasAttributes.$mutatorCache[$class.name])) {
+            $class.cacheMutatedAttributes($class);
         }
-        return this.constructor.$mutatorCache[$class.name];
+        return HasAttributes.$mutatorCache[$class.name];
     }
 
     syncChanges() {
@@ -308,8 +356,8 @@ class HasAttributes {
     }
 
     static cacheMutatedAttributes($class) {
-        this.$mutatorCache[$class.name] = collect(this.getMutatorMethods($class)).map(($match) => {
-            return (this.$snakeAttributes ? $match.snake() : $match).lowerFirst();
+        HasAttributes.$mutatorCache[$class.name] = collect(this.getMutatorMethods($class)).map(($match) => {
+            return lowerFirst(this.$snakeAttributes ? snake($match) : $match);
         }).all();
     }
 

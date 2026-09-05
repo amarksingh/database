@@ -1,4 +1,10 @@
 class Migration {
+    $connection = null;
+
+    getConnection() {
+        return this.$connection;
+    }
+
     up() {
 
     }

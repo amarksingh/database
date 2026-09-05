@@ -66,13 +66,15 @@ class Builder {
 		return this;
 	}
 
-	whereExists() {
-		this.getQueryBuilder().whereExists(...arguments)
+	whereExists(query) {
+		const raw = query && typeof query.getQueryBuilder == 'function' ? query.getQueryBuilder() : (query && query.$query ? query.$query : query);
+		this.getQueryBuilder().whereExists(raw);
 		return this;
 	}
 
-	whereNotExists() {
-		this.getQueryBuilder().whereNotExists(...arguments)
+	whereNotExists(query) {
+		const raw = query && typeof query.getQueryBuilder == 'function' ? query.getQueryBuilder() : (query && query.$query ? query.$query : query);
+		this.getQueryBuilder().whereNotExists(raw);
 		return this;
 	}
 
@@ -121,13 +123,15 @@ class Builder {
 		return this;
 	}
 
-	orWhereExists() {
-		this.getQueryBuilder().orWhereExists(...arguments)
+	orWhereExists(query) {
+		const raw = query && typeof query.getQueryBuilder == 'function' ? query.getQueryBuilder() : (query && query.$query ? query.$query : query);
+		this.getQueryBuilder().orWhereExists(raw);
 		return this;
 	}
 
-	orWhereNotExists() {
-		this.getQueryBuilder().orWhereNotExists(...arguments)
+	orWhereNotExists(query) {
+		const raw = query && typeof query.getQueryBuilder == 'function' ? query.getQueryBuilder() : (query && query.$query ? query.$query : query);
+		this.getQueryBuilder().orWhereNotExists(raw);
 		return this;
 	}
 
@@ -346,10 +350,6 @@ class Builder {
 		return this;
 	}
 
-	insert() {
-		return this.getQueryBuilder().insert(...arguments)
-	}
-
 	batchInsert() {
 		this.getQueryBuilder().batchInsert(...arguments)
 		return this;
@@ -358,14 +358,6 @@ class Builder {
 	returning() {
 		this.getQueryBuilder().havingBetween(...arguments)
 		return this;
-	}
-
-	update() {
-		return this.getQueryBuilder().update(...arguments)
-	}
-
-	delete() {
-		return this.getQueryBuilder().delete(...arguments)
 	}
 
 	transacting() {
@@ -389,57 +381,8 @@ class Builder {
 	}
 
 	noWait() {
-		return this.getQueryBuilder().noWait(...arguments)
-	}
-
-	async count(name) {
-		name = name || '*';
-		if (!name.includes('as')) {
-			name = name + ' as countResult';
-		}
-		const query = this.getQueryBuilder();
-		query.clearOrder();
-		query.clearSelect();
-		const data = await query.count(name);
-		name = name.split('as ');
-		name = trim(last(name), ' ');
-		return Array.isArray(data) ? data[0][name] : null;
-	}
-
-	min() {
-		return this.getQueryBuilder().min(...arguments)
-	}
-
-	max(max) {
-		return this.getQueryBuilder().max(max).first()
-	}
-
-	sum() {
-		return this.getQueryBuilder().sum(...arguments)
-	}
-
-	avg() {
-		return this.getQueryBuilder().avg(...arguments)
-	}
-
-	increment() {
-		return this.getQueryBuilder().increment(...arguments)
-	}
-
-	decrement() {
-		return this.getQueryBuilder().decrement(...arguments)
-	}
-
-	truncate() {
-		return this.getQueryBuilder().truncate(...arguments)
-	}
-
-	async pluck(key, value) {
-		if (typeof value == 'string') {
-			let datas = await this.select(key, value).collection()
-			return datas.pluck(key, value)
-		}
-		return this.getQueryBuilder().pluck(key)
+		this.getQueryBuilder().noWait(...arguments)
+		return this;
 	}
 
 	clone() {
@@ -476,11 +419,6 @@ class Builder {
 
 	column() {
 		this.getQueryBuilder().column(...arguments)
-		return this
-	}
-
-	select() {
-		this.getQueryBuilder().select(...arguments)
 		return this
 	}
 
@@ -531,8 +469,13 @@ class Builder {
 		})
 	}
 
-	latest() {
-		this.getQueryBuilder().orderBy('id', 'desc');
+	latest(column = 'id') {
+		this.getQueryBuilder().orderBy(column, 'desc');
+		return this;
+	}
+
+	oldest(column = 'id') {
+		this.getQueryBuilder().orderBy(column, 'asc');
 		return this;
 	}
 
@@ -555,9 +498,64 @@ class Builder {
 		return this.getQueryBuilder()
 	}
 
+	insert(...args) {
+		return this.getQueryBuilder().insert(...args);
+	}
+
+	update(...args) {
+		return this.getQueryBuilder().update(...args);
+	}
+
+	delete(...args) {
+		return this.getQueryBuilder().delete(...args);
+	}
+
+	truncate() {
+		return this.getQueryBuilder().truncate();
+	}
+
+	async count(...args) {
+		const res = await this.getQueryBuilder().count(...args);
+		if (!res || !res.length) return 0;
+		const val = Object.values(res[0])[0];
+		return Number(val) || 0;
+	}
+
+	min(...args) {
+		return this.getQueryBuilder().min(...args);
+	}
+
+	max(...args) {
+		return this.getQueryBuilder().max(...args);
+	}
+
+	sum(...args) {
+		return this.getQueryBuilder().sum(...args);
+	}
+
+	avg(...args) {
+		return this.getQueryBuilder().avg(...args);
+	}
+
+	pluck(...args) {
+		return this.getQueryBuilder().pluck(...args);
+	}
+
+	increment(...args) {
+		return this.getQueryBuilder().increment(...args);
+	}
+
+	decrement(...args) {
+		return this.getQueryBuilder().decrement(...args);
+	}
+
 	async exists() {
 		const count = await this.count();
 		return Boolean(count);
+	}
+
+	async doesntExist() {
+		return !(await this.exists());
 	}
 
 	forPage($page = 1, $perPage) {
@@ -576,23 +574,26 @@ class Builder {
 
 	async paginate($perPage = 15, $pageName = 'page', $page = null, $total = null) {
 
-		$page = parseInt($page || this.$request.input($pageName, 1));
-		$total = $total ?? await this.clone().count();
-		$perPage = typeof $perPage == 'function?' ? $perPage($total) : $perPage;
+		$page = parseInt($page || (this.$request ? this.$request.input($pageName, 1) : 1));
+		if ($total === null || $total === undefined) {
+			const countQuery = new this.constructor(this.$connection, this.$grammar, this.getQueryBuilder().clone());
+			$total = await countQuery.count();
+		}
+		$perPage = typeof $perPage == 'function' ? $perPage($total) : $perPage;
 		const $results = $total ? await this.forPage($page, $perPage).get() : new Collection([]);
 
 		return this[kPaginator]($results, $total, $perPage, $page, {
-			"$path": this.$request.path(),
+			"$path": this.$request ? this.$request.path() : '/',
 			'$pageName': $pageName,
 		});
 	}
 
-	async simplePaginate($perPage = 15, $page = 1) {
+	async simplePaginate($perPage = 15, $page = 1, $pageName = 'page') {
 
-		$page = parseInt($page || this.$request.input($pageName));
+		$page = parseInt($page || (this.$request ? this.$request.input($pageName, 1) : 1));
 		this.offset(($page - 1) * $perPage).limit($perPage + 1);
 		return this[kSimplePaginator](await this.get(), $perPage, $page, {
-			"$path": this.$request.path(),
+			"$path": this.$request ? this.$request.path() : '/',
 			'$pageName': $pageName,
 		});
 	}

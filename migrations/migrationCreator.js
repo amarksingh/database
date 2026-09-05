@@ -1,4 +1,7 @@
+const path = require('path')
 const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException')
+const { dirname, date } = require('@ostro/support/function')
+const { pascal } = require('@ostro/support/string')
 
 class MigrationCreator {
 
@@ -76,7 +79,7 @@ class MigrationCreator {
     }
 
     getClassName($name) {
-        return String.pascal($name);
+        return pascal($name);
     }
 
     getPath($name, $path) {

@@ -1,3 +1,4 @@
+const { get_class_name } = require('@ostro/support/function');
 class RelationNotFoundException {
     constructor(message) {
         this.name = this.constructor.name;

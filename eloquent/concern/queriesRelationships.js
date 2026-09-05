@@ -1,3 +1,5 @@
+const { is_string, strpos, empty, head, count, is_null, is_array, is_numeric } = require('@ostro/support/function');
+const { snake, lower } = require('@ostro/support/string');
 const Relation = require('../relations/relation');
 const RelationNotFoundException = require('../relationNotFoundException');
 const knex = require('knex');
@@ -93,11 +95,12 @@ class QueriesRelationships {
     }
 
     getBelongsToRelation($relation, $type) {
-        $belongsTo = Relation.noConstraints(() => {
-            return this.model.belongsTo(
+        let $belongsTo = Relation.noConstraints(() => {
+            return this.getModel().belongsTo(
                 $type,
                 $relation.getForeignKeyName(),
-                $relation.getOwnerKeyName()
+                $relation.getOwnerKeyName(),
+                $relation.getRelationName()
             );
         });
 
@@ -111,21 +114,23 @@ class QueriesRelationships {
         if (empty($relations)) {
             return this;
         }
-        let selftColumns = this.getQuery()._statements.filter(statement => statement.grouping === 'columns')
+        let selfBuilder = this.getQueryBuilder();
+        let statements = selfBuilder._statements;
+        let selftColumns = statements.filter(statement => statement.grouping === 'columns')
             .flatMap(statement => statement.value);
-        if (is_null(selftColumns)) {
+        if (selftColumns.length === 0) {
 
             this.select(this.getTable() + '.*');
         }
 
-        $relations = is_array($relations) ? $relations : [$relations];
+        $relations = (typeof $relations === 'object' && !Array.isArray($relations)) ? $relations : (is_array($relations) ? $relations : [$relations]);
         const parsedRelations = this.parseWithRelations($relations);
 
         for (let $name in parsedRelations) {
             const $constraints = parsedRelations[$name];
             let $segments = $name.split(' ');
             let $alias, $expression, $hashedColumn, $wrappedColumn;
-            if (count($segments) === 3 && String.lower($segments[1]) === 'as') {
+            if (count($segments) === 3 && lower($segments[1]) === 'as') {
                 $name = $segments[0];
                 $alias = $segments[2];
             }
@@ -140,55 +145,54 @@ class QueriesRelationships {
                 $wrappedColumn = $column === '*' ? $column : $relation.getRelated().qualifyColumn($hashedColumn);
 
 
-                $expression = $function === 'exists' ? $wrappedColumn : sprintf('%s(%s)', $function, $wrappedColumn);
+                $expression = $function === 'exists' ? $wrappedColumn : `${$function}(${$wrappedColumn})`;
             } else {
                 $expression = $column;
             }
 
+            const rawFn = (sql) => this.raw(sql);
             let $query = $relation.getRelationExistenceQuery(
-                $relation.getRelated().newQuery(), this, this.raw($expression)
+                $relation.getRelated().newQuery(), this, rawFn($expression)
             );
 
             $query.callScope($constraints);
 
             $query = $query.mergeConstraintsFrom($relation.getQuery()).toBase();
 
-            $query.clearOrder();
-            let columns = $query._statements.filter(statement => statement.grouping === 'columns')
+            let queryStatementsSub = $query.getQueryBuilder()._statements;
+            let columns = queryStatementsSub.filter(statement => statement.grouping === 'columns')
                 .flatMap(statement => statement.value);
             if (count(columns) > 1) {
-                $query.clearSelect();
-                $query.select(columns[0]);
+                let col0 = columns[0];
+                let subBuilder = $query.getQueryBuilder();
+                subBuilder._statements = queryStatementsSub.filter(statement => statement.grouping !== 'columns');
+                $query.select(col0);
             }
 
-            $alias = $alias || String.snake(
-                $name + $function + $column.replace('/[^[:alnum:][:space:]_]/u', '')
+            $alias = $alias || (
+                $function === 'count' ? snake($name) + '_count' : snake($name + '_' + $function + ($column !== '*' ? '_' + $column.replace(/[^a-zA-Z0-9_]/g, '') : ''))
             );
 
-            let existingColumns = this.getQuery()._statements
+            let mainBuilder = this.getQueryBuilder();
+            let queryStatements = mainBuilder._statements;
+            let existingColumns = queryStatements
                 .filter(statement => statement.grouping === 'columns')
                 .flatMap(statement => statement.value);
-            existingColumns = existingColumns.length ? existingColumns : [this.getTable() + '.*'];
             this.clearSelect();
             if ($function === 'exists') {
-                this.select(this.newQuery().raw(
-                    sprintf('exists(%s) as %s', $query.toSQL().sql, $alias),
-                )
-                );
+                this.select(rawFn(`exists(${$query.toSQL().sql}) as ${$alias}`));
             } else {
-                $query = $function ? $query : $query.limit(1);
-                this.select(
-                    $query.as($alias)
-                );
+                let sql = $query.toSQL().sql;
+                this.select(rawFn(`(${sql}) as ${$alias}`));
             }
-            this.select(existingColumns)
+            this.select(existingColumns);
         }
 
         return this;
     }
 
     withCount($relations) {
-        return this.withAggregate(Array.isArray($relations) ? $relations : [...arguments], '*', 'count');
+        return this.withAggregate((typeof $relations === 'object' && !Array.isArray($relations)) ? $relations : (Array.isArray($relations) ? $relations : [...arguments]), '*', 'count');
     }
 
     withMax($relation, $column) {
@@ -226,10 +230,11 @@ class QueriesRelationships {
     }
 
     addWhereCountQuery($query, $operator = '>=', $count = 1, $boolean = 'and') {
-
-        let querytype = ($boolean == 'and' ? 'where' : 'orWhere')
+        let querytype = ($boolean == 'and' ? 'where' : 'orWhere');
+        let sql = $query.toSQL().sql;
+        let countVal = is_numeric($count) ? $count : `'${$count}'`;
         return this[querytype](
-            this.raw('(' + $query.toSQL() + ')' + $operator + is_numeric($count) ? $count : $count),
+            this.raw('(' + sql + ') ' + $operator + ' ' + countVal)
         );
     }
 

@@ -1,4 +1,5 @@
 const DateTime = require('@ostro/support/dateTime')
+const { is_null } = require('@ostro/support/function')
 
 class HasTimestamps {
 
@@ -70,6 +71,10 @@ class HasTimestamps {
 
     getQualifiedUpdatedAtColumn() {
         return this.qualifyColumn(this.getUpdatedAtColumn());
+    }
+
+    isIgnoringTouch() {
+        return false;
     }
 }
 

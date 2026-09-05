@@ -1,4 +1,5 @@
 const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException')
+const { get_class_name } = require('@ostro/support/function')
 const kCommand = Symbol('command')
 class Seeder {
 

@@ -1,14 +1,15 @@
+const { implement, is_null } = require('@ostro/support/function')
 const HasOneOrMany = require('./hasOneOrMany')
 const SupportsDefaultModels = require('./concerns/supportsDefaultModels')
 const CanBeOneOfMany = require('./concerns/canBeOneOfMany')
 class HasOne extends implement(HasOneOrMany, SupportsDefaultModels, CanBeOneOfMany) {
 
-    getResults() {
+    async getResults() {
         if (is_null(this.getParentKey())) {
             return this.getDefaultFor(this.$parent);
         }
 
-        return this.$query.first() || this.getDefaultFor(this.$parent);
+        return (await this.$query.first()) || this.getDefaultFor(this.$parent);
     }
 
     initRelation($models, $relation) {
@@ -41,9 +42,9 @@ class HasOne extends implement(HasOneOrMany, SupportsDefaultModels, CanBeOneOfMa
     }
 
     newRelatedInstanceFor($parent) {
-        return this.$related.newInstance().setAttribute(
-            this.getForeignKeyName(), $parent[this.localKey]
-        );
+        const instance = this.$related.newInstance();
+        instance.setAttribute(this.getForeignKeyName(), $parent[this.$localKey]);
+        return instance;
     }
 
     getRelatedKeyFrom($model) {

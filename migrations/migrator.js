@@ -1,4 +1,5 @@
 const Collection = require('@ostro/support/collection')
+const { count, collect, get_class_name } = require('@ostro/support/function')
 const fs = require('fs-extra')
 const path = require('path');
 
@@ -176,28 +177,23 @@ class Migrator {
     }
 
     async runMigration($migration, $method) {
-
+        let $connection = this.resolveConnection(typeof $migration.getConnection === 'function' ? $migration.getConnection() : null);
         if (typeof $migration[$method] == 'function') {
-            await $migration[$method]();
+            await $migration[$method]($connection ? $connection.getSchemaBuilder() : null, $connection);
         }
 
     }
 
     async pretendToRun($migration, $method) {
         try {
-            for (let $query of await this.getQueries($migration, $method)) {
-                $name = get_class_name($migration);
-
-                $reflectionClass = new ReflectionClass($migration);
-
-                if ($reflectionClass.isAnonymous()) {
-                    $name = await this.getMigrationName($reflectionClass.getFileName());
-                }
+            let $queries = await this.getQueries($migration, $method);
+            for (let $query of $queries) {
+                let $name = get_class_name($migration);
 
                 this.note(`<info>${$name}:</info> ${$query['query']}`);
             }
         } catch ($e) {
-            $name = get_class_name($migration);
+            let $name = get_class_name($migration);
 
             this.note(`<info>${$name}:</info> failed to dump queries. This may be due to changing database columns using Doctrine, which is not supported while pretending to run migrations.`);
         }
@@ -209,19 +205,21 @@ class Migrator {
         );
 
         return $db.pretend(function () {
-            if (method_exists($migration, $method)) {
+            if (typeof $migration[$method] === 'function') {
                 $migration[$method]();
             }
         });
     }
 
     resolve($file) {
-        $class = this.getMigrationClass($file);
+        let $class = this.getMigrationClass($file);
 
-        return new $class;
+        return typeof $class === 'function' ? new $class : $class;
     }
 
     resolvePath($path) {
+        const resolved = require.resolve($path);
+        delete require.cache[resolved];
 
         let $migration = require($path);
 
@@ -304,13 +302,13 @@ class Migrator {
     }
 
     setOutput($output) {
-        this.output = $output;
+        this.$output = $output;
         return this;
     }
 
     note($message) {
-        if (this.output) {
-            this.output.writeln($message);
+        if (this.$output) {
+            this.$output.writeln($message);
         }
     }
 

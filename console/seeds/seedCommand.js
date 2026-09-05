@@ -1,6 +1,7 @@
 const Command = require('@ostro/console/command')
 const path = require('path')
 const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException')
+const { is_file } = require('@ostro/support/function')
 class SeedCommand extends Command {
 
     constructor($resolver) {

@@ -4,16 +4,17 @@
   "description": "Database module for OstroJS",
   "main": "databaseManager.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx c8 npx jest --runInBand --no-coverage --forceExit"
   },
   "dependencies": {
     "@ostro/contracts": "^1.0.2",
-    "@ostro/support": "^1.2.0",
     "@ostro/pagination": "^1.0.4",
+    "@ostro/support": "^1.2.0",
     "fs-extra": "^8.1.0",
     "knex": "^2.3.0",
     "lodash": "^4.17.21",
-    "lodash.get": "^4.4.2"
+    "lodash.get": "^4.4.2",
+    "sqlite3": "^6.0.1"
   },
   "engines": {
     "node": ">=12.0.0"

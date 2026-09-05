@@ -1,3 +1,4 @@
+const { is_callable } = require('@ostro/support/function');
 const kWithDefault = Symbol('withDefault')
 class SupportsDefaultModels {
 
@@ -20,7 +21,7 @@ class SupportsDefaultModels {
             return this.$withDefault.call($instance, $parent) || $instance;
         }
 
-        if (Array.isArray(this.$withDefault)) {
+        if (typeof this.$withDefault === 'object' && this.$withDefault !== null) {
             $instance.forceFill(this.$withDefault);
         }
 

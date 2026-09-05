@@ -1,3 +1,4 @@
+const { is_null } = require('@ostro/support/function');
 const Connection = require('./connection');
 const SchemaGrammar = require('../schema/grammars/mysqlGrammar');
 const QueryGrammar = require('../query/grammars/mysqlGrammar');
