@@ -7,7 +7,7 @@ class RelationNotFoundException {
      * Create a new instance.
      * @param {*} message
      */
-    constructor(message) {
+    constructor(message: string) {
         this.name = this.constructor.name;
         this.code = 'ERR_INVALID_ARG_VALUE';
         this.message = message || 'Invalid Argument';
@@ -23,7 +23,7 @@ class RelationNotFoundException {
      * @param {*} $relation
      * @returns {any}
      */
-    static make($model, $relation) {
+    static make($model: any, $relation: any) {
         let $class = get_class_name($model);
 
         let $instance = new this(`Call to undefined relationship [${$relation}] on model [${$class}].`);

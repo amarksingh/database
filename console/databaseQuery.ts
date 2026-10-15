@@ -8,7 +8,7 @@ class DatabaseQuery extends Command {
      * Create a new instance.
      * @param {*} resolver
      */
-    constructor(resolver) {
+    constructor(resolver: any) {
         super()
         this.$resolver = resolver;
     }

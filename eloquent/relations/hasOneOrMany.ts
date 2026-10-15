@@ -18,7 +18,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $foreignKey
      * @param {*} $localKey
      */
-    constructor($query, $parent, $foreignKey, $localKey) {
+    constructor($query: any, $parent: any, $foreignKey: any, $localKey: any) {
         super($query, $parent);
         this.$localKey = $localKey;
         this.$foreignKey = $foreignKey;
@@ -31,7 +31,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $attributes
      * @returns {any}
      */
-    make($attributes = {}) {
+    make($attributes: Record<string, any> = {}) {
         const $instance = this.$related.newInstance();
         $instance.fill($attributes);
         this.setForeignAttributesForCreate($instance);
@@ -43,7 +43,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $records
      * @returns {any}
      */
-    makeMany($records) {
+    makeMany($records: any) {
         let items = [];
 
         for (let $record of $records) {
@@ -73,7 +73,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $models
      * @returns {any}
      */
-    addEagerConstraints($models) {
+    addEagerConstraints($models: any) {
         let $whereIn = this.whereInMethod(this.$parent, this.$localKey);
         return this.getRelationQuery()[$whereIn](
             this.$foreignKey, this.getKeys($models, this.$localKey).filter(res => res)
@@ -87,7 +87,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $relation
      * @returns {any}
      */
-    matchOne($models, $results, $relation) {
+    matchOne($models: any, $results: any, $relation: any) {
         return this.matchOneOrMany($models, $results, $relation, 'one');
     }
 
@@ -98,7 +98,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $relation
      * @returns {any}
      */
-    matchMany($models, $results, $relation) {
+    matchMany($models: any, $results: any, $relation: any) {
         return this.matchOneOrMany($models, $results, $relation, 'many');
     }
 
@@ -110,7 +110,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $type
      * @returns {any}
      */
-    matchOneOrMany($models, $results, $relation, $type) {
+    matchOneOrMany($models: any, $results: any, $relation: any, $type: string) {
         let $dictionary = this.buildDictionary($results);
 
         for (let $model of $models) {
@@ -133,7 +133,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $type
      * @returns {any}
      */
-    getRelationValue($dictionary, $key, $type) {
+    getRelationValue($dictionary: any, $key: string, $type: string) {
         let $value = $dictionary[$key]
         return $type === 'one' ? ($value[0] || null) : this.$related.newCollection($value);
     }
@@ -143,7 +143,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $results
      * @returns {any}
      */
-    buildDictionary($results) {
+    buildDictionary($results: any) {
         let $foreign = this.getForeignKeyName();
         let $res = {}
         $results.forEach(($result) => {
@@ -164,7 +164,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $columns
      * @returns {any}
      */
-    async findOrNew($id, $columns = ['*']) {
+    async findOrNew($id: string, $columns: any[] = ['*']) {
         let $instance = await this.find($id, $columns);
         if (is_null($instance)) {
             $instance = this.$related.newInstance();
@@ -182,7 +182,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $values
      * @returns {any}
      */
-    async firstOrNew($attributes = {}, $values = {}) {
+    async firstOrNew($attributes: Record<string, any> = {}, $values: Record<string, any> = {}) {
         let $instance = await this.where($attributes).first();
         if (is_null($instance)) {
             $instance = this.$related.newInstance();
@@ -201,7 +201,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $values
      * @returns {any}
      */
-    async firstOrCreate($attributes = {}, $values = {}) {
+    async firstOrCreate($attributes: Record<string, any> = {}, $values: Record<string, any> = {}) {
         let $instance = await this.where($attributes).first();
         if (is_null($instance)) {
             $instance = await this.create({ ...$attributes, ...$values });
@@ -217,7 +217,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $values
      * @returns {any}
      */
-    async updateOrCreate($attributes, $values = {}) {
+    async updateOrCreate($attributes: Record<string, any>, $values: Record<string, any> = {}) {
         const $instance = await this.firstOrNew($attributes)
 
         $instance.fill($values);
@@ -231,7 +231,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $model
      * @returns {any}
      */
-    async save($model) {
+    async save($model: any) {
         this.setForeignAttributesForCreate($model);
 
         return await $model.save() ? $model : false;
@@ -243,7 +243,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $models
      * @returns {any}
      */
-    async saveMany($models) {
+    async saveMany($models: any) {
         for (let $model of $models) {
             await this.save($model);
         }
@@ -257,7 +257,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $attributes
      * @returns {any}
      */
-    async create($attributes = {}) {
+    async create($attributes: Record<string, any> = {}) {
         const $instance = this.$related.newInstance();
         $instance.fill($attributes);
         this.setForeignAttributesForCreate($instance);
@@ -271,7 +271,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $records
      * @returns {any}
      */
-    async createMany($records) {
+    async createMany($records: any) {
         let items = [];
 
         for (let $record of $records) {
@@ -285,7 +285,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $model
      * @returns {any}
      */
-    setForeignAttributesForCreate($model) {
+    setForeignAttributesForCreate($model: any) {
         $model.setAttribute(this.getForeignKeyName(), this.getParentKey());
     }
 
@@ -296,7 +296,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $columns
      * @returns {any}
      */
-    getRelationExistenceQuery($query, $parentQuery, $columns = ['*']) {
+    getRelationExistenceQuery($query: any, $parentQuery: any, $columns: any[] = ['*']) {
         if ($query.getTable() == $parentQuery.getTable()) {
             return this.getRelationExistenceQueryForSelfRelation($query, $parentQuery, $columns);
         }
@@ -311,7 +311,7 @@ class HasOneOrMany extends Relation {
      * @param {*} $columns
      * @returns {any}
      */
-    getRelationExistenceQueryForSelfRelation($query, $parentQuery, $columns = ['*']) {
+    getRelationExistenceQueryForSelfRelation($query: any, $parentQuery: any, $columns: any[] = ['*']) {
         let $hash = this.getRelationCountHash()
         $query.from($query.getModel().getTable() + ' as ' + $hash);
 

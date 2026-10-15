@@ -14,7 +14,7 @@ class Connector extends DetectsLostConnections {
      * @param {*} $options
      * @returns {any}
      */
-    createConnection($dsn, $config, $options) {
+    createConnection($dsn: any, $config: Record<string, any>, $options: Record<string, any>) {
         const $username = $config['username'] || null;
         const $password = $config['password'] || null;
 
@@ -37,7 +37,7 @@ class Connector extends DetectsLostConnections {
      * @param {*} $options
      * @returns {any}
      */
-    createConnection($dsn, $username, $password, $options) {
+    createConnection($dsn: any, $username: any, $password: string, $options: Record<string, any>) {
         return new PDO($dsn, $username, $password, $options);
     }
 
@@ -50,7 +50,7 @@ class Connector extends DetectsLostConnections {
      * @param {*} $options
      * @returns {any}
      */
-    tryAgainIfCausedByLostConnection($e, $dsn, $username, $password, $options) {
+    tryAgainIfCausedByLostConnection($e: any, $dsn: any, $username: any, $password: string, $options: Record<string, any>) {
         if (this.causedByLostConnection($e)) {
             return this.createConnection($dsn, $username, $password, $options);
         }
@@ -71,7 +71,7 @@ class Connector extends DetectsLostConnections {
      * @param {*} $options
      * @returns {any}
      */
-    setDefaultOptions($options) {
+    setDefaultOptions($options: Record<string, any>) {
         this.$options = $options;
     }
 }

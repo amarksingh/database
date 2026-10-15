@@ -70,7 +70,7 @@ class FreshCommand extends Command {
      * @param {*} $database
      * @returns {any}
      */
-    runSeeder($database) {
+    runSeeder($database: any) {
         return this.callCommand('db:seed', Object.filter({
             '--database': $database,
             '--class': this.option('seeder') || 'database/seeders/databaseSeeder',

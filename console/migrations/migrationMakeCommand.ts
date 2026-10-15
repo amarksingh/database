@@ -11,7 +11,7 @@ class CreateSchema extends BaseCommand {
      * Create a new instance.
      * @param {*} $creator
      */
-    constructor($creator) {
+    constructor($creator: any) {
         super()
         this.$creator = $creator;
     }
@@ -77,7 +77,7 @@ class CreateSchema extends BaseCommand {
      * @param {*} $create
      * @returns {any}
      */
-    async writeMigration($name, $table, $create) {
+    async writeMigration($name: string, $table: string, $create: any) {
         let $file = await this.$creator.create(
             $name.plural().camelCase().snakeCase(), this.getMigrationPath(), $table, $create
         );

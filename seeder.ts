@@ -18,7 +18,7 @@ class Seeder {
      * Create a new instance.
      * @param {*} $resolver
      */
-    constructor($resolver) {
+    constructor($resolver: any) {
         this.$resolver = $resolver
     }
 
@@ -30,7 +30,7 @@ class Seeder {
      * @param {*} $parameters
      * @returns {any}
      */
-    async call($classes, $silent = false, $parameters = []) {
+    async call($classes: any, $silent: boolean = false, $parameters: any[] = []) {
         $classes = Array.isArray($classes) ? $classes : [$classes];
 
         for (let $class of $classes) {
@@ -60,7 +60,7 @@ class Seeder {
      * @param {*} $parameters
      * @returns {any}
      */
-    callWith($class, $parameters = []) {
+    callWith($class: any, $parameters: any[] = []) {
         return this.call($class, false, $parameters);
     }
 
@@ -70,7 +70,7 @@ class Seeder {
      * @param {*} $parameters
      * @returns {any}
      */
-    callSilent($class, $parameters = []) {
+    callSilent($class: any, $parameters: any[] = []) {
         return this.call($class, true, $parameters);
     }
 
@@ -79,7 +79,7 @@ class Seeder {
      * @param {*} $class
      * @returns {any}
      */
-    resolve($class) {
+    resolve($class: any) {
 
         let $instance
         if (this.$app) {
@@ -102,7 +102,7 @@ class Seeder {
      * @param {*} app
      * @returns {any}
      */
-    setContainer(app) {
+    setContainer(app: any) {
         this.$app = app;
 
         return this;
@@ -113,7 +113,7 @@ class Seeder {
      * @param {*} $command
      * @returns {any}
      */
-    setCommand($command) {
+    setCommand($command: any) {
         this.$command = $command;
 
         return this;
@@ -124,7 +124,7 @@ class Seeder {
      * @param {*} $parameters
      * @returns {any}
      */
-    __invoke($parameters = []) {
+    __invoke($parameters: any[] = []) {
         if (!this['run']) {
             throw new InvalidArgumentException('Method [run] missing from ' + get_class_name(this));
         }

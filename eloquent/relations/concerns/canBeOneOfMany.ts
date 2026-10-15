@@ -30,7 +30,7 @@ class CanBeOneOfMany {
      * @param {*} $column
      * @returns {any}
      */
-    qualifySubSelectColumn($column) {
+    qualifySubSelectColumn($column: string) {
         return this.getRelationName() + '.' + last($column.split('.'));
     }
 
@@ -39,7 +39,7 @@ class CanBeOneOfMany {
      * @param {*} $column
      * @returns {any}
      */
-    qualifyRelatedColumn($column) {
+    qualifyRelatedColumn($column: string) {
         return $column.includes('.') ? $column : this.$query.getModel().getTable() + '.' + $column;
     }
 

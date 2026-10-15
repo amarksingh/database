@@ -28,7 +28,7 @@ class MakeSeederCommand extends GeneratorCommand {
      * @param {*} $stub
      * @returns {any}
      */
-    resolveStubPath($stub) {
+    resolveStubPath($stub: any) {
         let $customPath = this.$app.basePath(trim($stub, '/'))
         return this.$file.exists($customPath).then($exists => ($exists ? $customPath : path.join(__dirname, $stub)))
     }
@@ -39,7 +39,7 @@ class MakeSeederCommand extends GeneratorCommand {
      * @param {*} $name
      * @returns {any}
      */
-    async getPath($name) {
+    async getPath($name: string) {
         if (await isDirectory(this.$app.databasePath('/seeds'))) {
             return this.$app.databasePath('seeds/' + this.getFileName($name).camelCase() + '.js');
         } else {
@@ -52,7 +52,7 @@ class MakeSeederCommand extends GeneratorCommand {
      * @param {*} $name
      * @returns {any}
      */
-    qualifyClass($name) {
+    qualifyClass($name: string) {
         return $name;
     }
 }

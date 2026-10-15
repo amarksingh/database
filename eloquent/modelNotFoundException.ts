@@ -27,7 +27,7 @@ class ModelNotFoundException extends ModelNotFoundExceptionContracts {
      * @param {*} $ids
      * @returns {any}
      */
-    setModel($model, $ids = []) {
+    setModel($model: any, $ids: any[] = []) {
         this.$model = $model;
         this.$ids = $ids;
 

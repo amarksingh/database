@@ -15,7 +15,7 @@ class Pivot {
      * Create a new instance.
      * @param {*} attributes
      */
-    constructor(attributes = {}) {
+    constructor(attributes: Record<string, any> = {}) {
         this.setRawAttributes(attributes);
         return new Proxy(this, {
             /**
@@ -55,7 +55,7 @@ class Pivot {
      * @param {*} table
      * @returns {any}
      */
-    setTable(table) {
+    setTable(table: string) {
         this.$table = table;
         return this;
     }
@@ -74,7 +74,7 @@ class Pivot {
      * @param {*} exists
      * @returns {any}
      */
-    setRawAttributes(attributes, exists = false) {
+    setRawAttributes(attributes: Record<string, any>, exists: boolean = false) {
         this.$attributes = Object.assign({}, attributes);
         this.$exists = exists;
         return this;
@@ -93,7 +93,7 @@ class Pivot {
      * @param {*} attributes
      * @returns {any}
      */
-    fill(attributes) {
+    fill(attributes: Record<string, any>) {
         Object.assign(this.$attributes, attributes);
         return this;
     }
@@ -153,7 +153,7 @@ class Pivot {
      * @param {*} relatedKey
      * @returns {any}
      */
-    setPivotKeys(foreignKey, relatedKey) {
+    setPivotKeys(foreignKey: any, relatedKey: any) {
         this.$foreignKey = foreignKey;
         this.$relatedKey = relatedKey;
 
@@ -169,7 +169,7 @@ class Pivot {
      * @param {*} exists
      * @returns {any}
      */
-    static fromRawAttributes(parent, attributes, table, exists = false) {
+    static fromRawAttributes(parent: any, attributes: Record<string, any>, table: string, exists: boolean = false) {
         const instance = new this();
 
         instance.setTable(table);
@@ -187,7 +187,7 @@ class Pivot {
      * @param {*} exists
      * @returns {any}
      */
-    static fromAttributes(parent, attributes, table, exists = false) {
+    static fromAttributes(parent: any, attributes: Record<string, any>, table: string, exists: boolean = false) {
         const instance = new this();
 
         instance.setTable(table);

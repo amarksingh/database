@@ -20,7 +20,7 @@ class Builder {
      * Create a new instance.
      * @param {*} $connection
      */
-    constructor($connection) {
+    constructor($connection: any) {
         this.$connection = $connection;
         this.$grammar = $connection.getSchemaGrammar();
     }
@@ -35,7 +35,7 @@ class Builder {
      * @param {*} cb
      * @returns {any}
      */
-    create(table, cb) {
+    create(table: string, cb: any) {
         return this.has(table).then(res => {
             if (!res)
                 return this.createTable(table, cb)
@@ -97,7 +97,7 @@ class Builder {
      * @param {*} tableName
      * @returns {any}
      */
-    async getColumnListing(tableName) {
+    async getColumnListing(tableName: any) {
         const info = await this.$connection.table(tableName).columnInfo();
         return Object.keys(info);
     }
@@ -147,7 +147,7 @@ class Builder {
      * @param {*} tableName
      * @returns {any}
      */
-    dropIfExists(tableName) {
+    dropIfExists(tableName: any) {
         return this.dropTableIfExists(tableName)
     }
 
@@ -212,7 +212,7 @@ class Builder {
      * @param {*} tableName
      * @returns {any}
      */
-    dropTableIfExists(tableName) {
+    dropTableIfExists(tableName: any) {
         return this.$schema.dropTableIfExists(tableName)
 
     }

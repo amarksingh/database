@@ -20,7 +20,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $container
      * @param {*} $factory
      */
-    constructor($container, $factory) {
+    constructor($container: any, $factory: any) {
         super();
         this.$app = $container;
         this.$factory = $factory;
@@ -34,7 +34,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $name
      * @returns {any}
      */
-    builder($name = null) {
+    builder($name: any = null) {
         return this.connection($name);
     }
 
@@ -43,7 +43,7 @@ class DatabaseManager extends Macroable {
      * @param {*} name
      * @returns {any}
      */
-    connection(name = null) {
+    connection(name: any = null) {
         const [database, type] = this.parseConnectionName(name);
         name = name || database;
 
@@ -62,7 +62,7 @@ class DatabaseManager extends Macroable {
      * @param {*} name
      * @returns {any}
      */
-    parseConnectionName(name) {
+    parseConnectionName(name: string) {
         name = name || this.getDefaultConnection();
         return name.endsWith('::read') || name.endsWith('::write')
             ? name.split('::', 2)
@@ -74,7 +74,7 @@ class DatabaseManager extends Macroable {
      * @param {*} name
      * @returns {any}
      */
-    makeConnection(name) {
+    makeConnection(name: string) {
         const config = this.configuration(name);
 
         if (this.$extensions[name]) {
@@ -94,7 +94,7 @@ class DatabaseManager extends Macroable {
      * @param {*} name
      * @returns {any}
      */
-    configuration(name) {
+    configuration(name: string) {
         name = name || this.getDefaultConnection();
         const connections = lodash.get(this.$app['config'], 'database.connections', {})
 
@@ -111,7 +111,7 @@ class DatabaseManager extends Macroable {
      * @param {*} type
      * @returns {any}
      */
-    configure(connection, type) {
+    configure(connection: any, type: string) {
         if (connection && typeof connection.setReconnector === 'function') {
             connection.setReconnector(this.$reconnector);
         }
@@ -124,7 +124,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $name
      * @returns {any}
      */
-    purge($name = null) {
+    purge($name: any = null) {
         $name = $name || this.getDefaultConnection();
 
         this.disconnect($name);
@@ -138,7 +138,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $name
      * @returns {any}
      */
-    disconnect($name = null) {
+    disconnect($name: any = null) {
         $name = $name || this.getDefaultConnection();
         if (isset(this.$connections[$name])) {
             this.$connections[$name].disconnect();
@@ -150,7 +150,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $name
      * @returns {any}
      */
-    reconnect($name = null) {
+    reconnect($name: any = null) {
         $name = $name || this.getDefaultConnection();
         this.disconnect($name);
 
@@ -166,7 +166,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $name
      * @returns {any}
      */
-    refreshConnections($name) {
+    refreshConnections($name: string) {
         return this.$connections[$name] = this.configure(
             this.makeConnection($name)
         );
@@ -178,7 +178,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $callback
      * @returns {any}
      */
-    usingConnection($name, $callback) {
+    usingConnection($name: string, $callback: Function) {
         const $previousName = this.getDefaultConnection();
 
         this.setDefaultConnection($name);
@@ -201,7 +201,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $name
      * @returns {any}
      */
-    setDefaultConnection($name) {
+    setDefaultConnection($name: string) {
         lodash.set(this.$app['config'], 'database.default', $name);
     }
 
@@ -219,7 +219,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $resolver
      * @returns {any}
      */
-    extend($name, $resolver) {
+    extend($name: string, $resolver: any) {
         this.$extensions[$name] = $resolver;
     }
 
@@ -228,7 +228,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $name
      * @returns {any}
      */
-    forgetExtension($name) {
+    forgetExtension($name: string) {
         delete this.$extensions[$name];
     }
     /**
@@ -244,7 +244,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $reconnector
      * @returns {any}
      */
-    setReconnector($reconnector) {
+    setReconnector($reconnector: any) {
         this.$reconnector = $reconnector;
     }
 
@@ -261,7 +261,7 @@ class DatabaseManager extends Macroable {
      * @param {*} name
      * @returns {any}
      */
-    getConfig(name) {
+    getConfig(name: string) {
         return lodash.get(this.$app['config'], `database.connections.${name}`);
     }
 
@@ -270,7 +270,7 @@ class DatabaseManager extends Macroable {
      * @param {*} dir
      * @returns {any}
      */
-    registerCommands(dir) {
+    registerCommands(dir: any) {
         const container = this.$container || this.$app;
         if (container && container.console && typeof container.console.load == 'function' && !env('production')) {
             container.console.load(dir);
@@ -283,7 +283,7 @@ class DatabaseManager extends Macroable {
      * @param {*} $parameters
      * @returns {any}
      */
-    __call($target, $method, $parameters) {
+    __call($target: Record<string, any>, $method: string, $parameters: any[]) {
         return $target.connection()[$method](...$parameters);
     }
 

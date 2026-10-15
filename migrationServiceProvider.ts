@@ -78,7 +78,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * @param {*} $commands
      * @returns {any}
      */
-    registerCommands($commands = {}) {
+    registerCommands($commands: Record<string, any> = {}) {
         for (let $command of Object.keys($commands)) {
             this[`register${$command}Command`]();
         }

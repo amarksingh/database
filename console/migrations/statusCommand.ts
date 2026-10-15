@@ -18,7 +18,7 @@ class StatusCommand extends BaseCommand {
      * Create a new instance.
      * @param {*} $migrator
      */
-    constructor($migrator) {
+    constructor($migrator: any) {
         super()
 
         this.$migrator = $migrator;
@@ -54,7 +54,7 @@ class StatusCommand extends BaseCommand {
      * @param {*} $batches
      * @returns {any}
      */
-    async getStatusFor($ran, $batches) {
+    async getStatusFor($ran: any, $batches: any) {
         return (await this.getAllMigrationFiles())
             .map(($migration) => {
                 let $migrationName = this.$migrator.getMigrationName($migration);

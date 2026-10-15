@@ -69,7 +69,7 @@ class PgSqlSchema extends Builder {
      * @param {*} tableNames
      * @returns {any}
      */
-    async dropIfExists(tableNames) {
+    async dropIfExists(tableNames: any) {
         return this.raw('drop table if exists ' + tableNames.join(',') + ' cascade')
     }
 

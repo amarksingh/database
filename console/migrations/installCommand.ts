@@ -16,7 +16,7 @@ class InstallCommand extends Command {
      * Create a new instance.
      * @param {*} $repository
      */
-    constructor($repository) {
+    constructor($repository: any) {
         super()
 
         this.$repository = $repository;

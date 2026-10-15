@@ -14,7 +14,7 @@ class MigrationCreator {
      * Create a new instance.
      * @param {*} $files
      */
-    constructor($files) {
+    constructor($files: any) {
         this.$files = $files;
     }
 
@@ -27,7 +27,7 @@ class MigrationCreator {
      * @param {*} $create
      * @returns {any}
      */
-    async create($name, $path, $table = null, $create = false) {
+    async create($name: string, $path: string, $table: any = null, $create: boolean = false) {
         await this.ensureMigrationDoesntAlreadyExist($name, $path);
 
         let $stub = await this.getStub($table, $create);
@@ -53,7 +53,7 @@ class MigrationCreator {
      * @param {*} $migrationPath
      * @returns {any}
      */
-    async ensureMigrationDoesntAlreadyExist($name, $migrationPath = null) {
+    async ensureMigrationDoesntAlreadyExist($name: string, $migrationPath: any = null) {
         let classes = []
         if (await this.$files.exists($migrationPath)) {
             let $migrationFiles = await this.$files.glob(path.join($migrationPath, '/*.js'));
@@ -75,7 +75,7 @@ class MigrationCreator {
      * @param {*} $create
      * @returns {any}
      */
-    async getStub($table, $create) {
+    async getStub($table: string, $create: any) {
         let $stub = ''
         if ($table == null) {
             let $customPath = path.join(__dirname, '/migration')
@@ -104,7 +104,7 @@ class MigrationCreator {
      * @param {*} $table
      * @returns {any}
      */
-    populateStub($name, $stub, $table) {
+    populateStub($name: string, $stub: any, $table: string) {
         $name = this.getClassName($name)
         $stub = $stub.replaceAll('DummyClass', $name).replaceAll('{{ class }}', $name).replaceAll('{{class}}', $name)
 
@@ -120,7 +120,7 @@ class MigrationCreator {
      * @param {*} $name
      * @returns {any}
      */
-    getClassName($name) {
+    getClassName($name: string) {
         return pascal($name);
     }
 
@@ -130,7 +130,7 @@ class MigrationCreator {
      * @param {*} $path
      * @returns {any}
      */
-    getPath($name, $path) {
+    getPath($name: string, $path: string) {
         return path.join($path, (this.getDatePrefix() + '_' + $name + '.js'));
     }
 
@@ -139,7 +139,7 @@ class MigrationCreator {
      * @param {*} $table
      * @returns {any}
      */
-    firePostCreateHooks($table) {
+    firePostCreateHooks($table: string) {
         for (let $callback of this.$postCreate) {
             $callback($table);
         }
@@ -150,7 +150,7 @@ class MigrationCreator {
      * @param {*} $callback
      * @returns {any}
      */
-    afterCreate($callback) {
+    afterCreate($callback: Function) {
         this.$postCreate.push($callback);
     }
 
@@ -167,7 +167,7 @@ class MigrationCreator {
      * @param {*} $stub
      * @returns {any}
      */
-    stub($stub) {
+    stub($stub: any) {
         return path.join(__dirname, 'stubs', $stub);
     }
 

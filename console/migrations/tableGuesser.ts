@@ -33,7 +33,7 @@ class TableGuesser {
      * @param {*} $migration
      * @returns {any}
      */
-    static guess($migration) {
+    static guess($migration: any) {
         for (let $pattern of this.CREATE_PATTERNS) {
             let $matches = $migration.match($pattern)
             if ($matches) {

@@ -20,7 +20,7 @@ class DumpCommand extends Command {
      * @param {*} $connection
      * @param {*} $file
      */
-    constructor($connection, $file) {
+    constructor($connection: any, $file: any) {
         super()
         this.$connection = $connection
         this.$file = $file
@@ -55,7 +55,7 @@ class DumpCommand extends Command {
      * @param {*} $connection
      * @returns {any}
      */
-    schemaState($connection) {
+    schemaState($connection: any) {
         return $connection.getSchemaState()
             .withMigrationTable($connection.getTablePrefix() + config.get('database.migrations', 'migrations'))
             .handleOutputUsing(function ($type, $buffer) {
@@ -68,7 +68,7 @@ class DumpCommand extends Command {
      * @param {*} $connection
      * @returns {any}
      */
-    path($connection) {
+    path($connection: any) {
         return tap(this.option('path') || database_path('schema/' + $connection.getName() + '-schema.dump'), async ($path) => {
             await this.$file.ensureDirectoryExists(dirname($path));
         });

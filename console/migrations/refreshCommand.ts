@@ -62,7 +62,7 @@ class RefreshCommand extends Command {
      * @param {*} $step
      * @returns {any}
      */
-    runRollback($database, $path, $step) {
+    runRollback($database: any, $path: string, $step: any) {
         return this.callCommand('migrate:rollback', Object.filter({
             '--database': $database,
             '--path': $path,
@@ -78,7 +78,7 @@ class RefreshCommand extends Command {
      * @param {*} $path
      * @returns {any}
      */
-    runReset($database, $path) {
+    runReset($database: any, $path: string) {
         return this.callCommand('migrate:reset', Object.filter({
             '--database': $database,
             '--path': $path,
@@ -100,7 +100,7 @@ class RefreshCommand extends Command {
      * @param {*} $database
      * @returns {any}
      */
-    runSeeder($database) {
+    runSeeder($database: any) {
         return this.callCommand('db:seed', Object.filter({
             '--database': $database,
             '--class': this.option('seeder') || 'database/seeders/databaseSeeder',

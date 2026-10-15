@@ -16,7 +16,7 @@ class InteractsWithPivotTable {
      * @param {*} $touch
      * @returns {any}
      */
-    async toggle($ids, $touch = true) {
+    async toggle($ids: any, $touch: boolean = true) {
         const $changes = {
             'attached': [],
             'detached': [],
@@ -57,7 +57,7 @@ class InteractsWithPivotTable {
      * @param {*} $ids
      * @returns {any}
      */
-    syncWithoutDetaching($ids) {
+    syncWithoutDetaching($ids: any) {
         return this.sync($ids, false);
     }
 
@@ -68,7 +68,7 @@ class InteractsWithPivotTable {
      * @param {*} $detaching
      * @returns {any}
      */
-    async sync($ids, $detaching = true) {
+    async sync($ids: any, $detaching: boolean = true) {
         let $changes = {
             'attached': [],
             'detached': [],
@@ -109,7 +109,7 @@ class InteractsWithPivotTable {
      * @param {*} $detaching
      * @returns {any}
      */
-    syncWithPivotValues($ids, $values, $detaching = true) {
+    syncWithPivotValues($ids: any, $values: Record<string, any>, $detaching: boolean = true) {
         let records = {};
         for (let id of this.parseIds($ids)) {
             records[id] = $values;
@@ -122,7 +122,7 @@ class InteractsWithPivotTable {
      * @param {*} $records
      * @returns {any}
      */
-    formatRecordsList($records) {
+    formatRecordsList($records: any) {
         let result = {};
         if (Array.isArray($records)) {
             for (let id of $records) {
@@ -144,7 +144,7 @@ class InteractsWithPivotTable {
      * @param {*} $touch
      * @returns {any}
      */
-    async attachNew($records = {}, $current, $touch = true) {
+    async attachNew($records: Record<string, any> = {}, $current: any, $touch: boolean = true) {
         const $changes = { 'attached': [], 'updated': [] };
         const currentStrings = (Array.isArray($current) ? $current : []).map(String);
         for (let $id in $records) {
@@ -169,7 +169,7 @@ class InteractsWithPivotTable {
      * @param {*} $touch
      * @returns {any}
      */
-    updateExistingPivot($id, $attributes, $touch = true) {
+    updateExistingPivot($id: string, $attributes: Record<string, any>, $touch: boolean = true) {
         if (this.$using &&
             empty(this.$pivotWheres) &&
             empty(this.$pivotWhereIns) &&
@@ -200,7 +200,7 @@ class InteractsWithPivotTable {
      * @param {*} $touch
      * @returns {any}
      */
-    async updateExistingPivotUsingCustomClass($id, $attributes, $touch) {
+    async updateExistingPivotUsingCustomClass($id: string, $attributes: Record<string, any>, $touch: any) {
         const attachedPivots = await this.getCurrentlyAttachedPivots();
         const $pivot = attachedPivots
             .where(this.$foreignPivotKey, this.$parent[this.$parentKey])
@@ -227,7 +227,7 @@ class InteractsWithPivotTable {
      * @param {*} $touch
      * @returns {any}
      */
-    attach($id = [], $attributes = {}, $touch = true) {
+    attach($id: any[] = [], $attributes: Record<string, any> = {}, $touch: boolean = true) {
         const fn = async () => {
             if (this.$using) {
                 await this.attachUsingCustomClass($id, $attributes);
@@ -253,7 +253,7 @@ class InteractsWithPivotTable {
      * @param {*} $attributes
      * @returns {any}
      */
-    attachUsingCustomClass($id, $attributes) {
+    attachUsingCustomClass($id: string, $attributes: Record<string, any>) {
         let $records = this.formatAttachRecords(
             this.parseIds($id), $attributes
         );
@@ -271,7 +271,7 @@ class InteractsWithPivotTable {
      * @param {*} $attributes
      * @returns {any}
      */
-    formatAttachRecords($ids, $attributes) {
+    formatAttachRecords($ids: any, $attributes: Record<string, any>) {
         const $records = [];
 
         let $hasTimestamps = (this.hasPivotColumn(this.createdAt()) ||
@@ -292,7 +292,7 @@ class InteractsWithPivotTable {
      * @param {*} $hasTimestamps
      * @returns {any}
      */
-    formatAttachRecord($id, $attributes, $hasTimestamps) {
+    formatAttachRecord($id: string, $attributes: Record<string, any>, $hasTimestamps: boolean) {
         return Object.assign(
             this.baseAttachRecord($id, $hasTimestamps), this.castAttributes($attributes)
         );
@@ -305,7 +305,7 @@ class InteractsWithPivotTable {
      * @param {*} $attributes
      * @returns {any}
      */
-    extractAttachIdAndAttributes($key, $value, $attributes) {
+    extractAttachIdAndAttributes($key: string, $value: any, $attributes: Record<string, any>) {
         return is_object($value) ?
             [$key, Object.assign($value, $attributes)] :
             [$value, $attributes];
@@ -317,7 +317,7 @@ class InteractsWithPivotTable {
      * @param {*} $timed
      * @returns {any}
      */
-    baseAttachRecord($id, $timed) {
+    baseAttachRecord($id: string, $timed: any) {
         let $record = {}
         $record[this.$relatedPivotKey] = $id;
 
@@ -335,7 +335,7 @@ class InteractsWithPivotTable {
      * @param {*} $exists
      * @returns {any}
      */
-    addTimestampsToAttachment($record, $exists = false) {
+    addTimestampsToAttachment($record: any, $exists: boolean = false) {
         let $fresh = this.$parent.freshTimestampString();
 
         if (this.$using) {
@@ -360,7 +360,7 @@ class InteractsWithPivotTable {
      * @param {*} $column
      * @returns {any}
      */
-    hasPivotColumn($column) {
+    hasPivotColumn($column: string) {
         return in_array($column, this.$pivotColumns);
     }
 
@@ -370,7 +370,7 @@ class InteractsWithPivotTable {
      * @param {*} $touch
      * @returns {any}
      */
-    detach($ids = null, $touch = true) {
+    detach($ids: any = null, $touch: boolean = true) {
         let $results = 0;
         if (this.$using &&
             !empty($ids) &&
@@ -406,7 +406,7 @@ class InteractsWithPivotTable {
      * @param {*} $ids
      * @returns {any}
      */
-    detachUsingCustomClass($ids) {
+    detachUsingCustomClass($ids: any) {
         let $results = 0;
 
         for (let $id of this.parseIds($ids)) {
@@ -441,7 +441,7 @@ class InteractsWithPivotTable {
      * @param {*} $exists
      * @returns {any}
      */
-    newPivot($attributes = [], $exists = false) {
+    newPivot($attributes: any[] = [], $exists: boolean = false) {
         const $pivot = this.$related.newPivot(
             this.$parent, $attributes, this.$table, $exists, this.$using
         );
@@ -454,7 +454,7 @@ class InteractsWithPivotTable {
      * @param {*} $attributes
      * @returns {any}
      */
-    newExistingPivot($attributes = []) {
+    newExistingPivot($attributes: any[] = []) {
         return this.newPivot($attributes, true);
     }
 
@@ -471,7 +471,7 @@ class InteractsWithPivotTable {
      * @param {*} $id
      * @returns {any}
      */
-    newPivotStatementForId($id) {
+    newPivotStatementForId($id: string) {
         return this.newPivotQuery().whereIn(this.$relatedPivotKey, this.parseIds($id));
     }
 
@@ -502,7 +502,7 @@ class InteractsWithPivotTable {
      * @param {*} $columns
      * @returns {any}
      */
-    withPivot($columns) {
+    withPivot($columns: any[]) {
         this.$pivotColumns = this.$pivotColumns.concat(
             Array.isArray($columns) ? $columns : [...arguments]
         );
@@ -515,7 +515,7 @@ class InteractsWithPivotTable {
      * @param {*} $value
      * @returns {any}
      */
-    parseIds($value) {
+    parseIds($value: any) {
         if ($value instanceof Model) {
             return [$value[this.$relatedKey]];
         }
@@ -540,7 +540,7 @@ class InteractsWithPivotTable {
      * @param {*} $value
      * @returns {any}
      */
-    parseId($value) {
+    parseId($value: any) {
         return $value instanceof Model ? $value[this.$relatedKey] : $value;
     }
 
@@ -549,7 +549,7 @@ class InteractsWithPivotTable {
      * @param {*} $keys
      * @returns {any}
      */
-    castKeys($keys) {
+    castKeys($keys: any) {
         return (Array.isArray($keys) ? $keys : []).map(($v) => {
             return this.castKey($v);
         });
@@ -560,7 +560,7 @@ class InteractsWithPivotTable {
      * @param {*} $key
      * @returns {any}
      */
-    castKey($key) {
+    castKey($key: string) {
         return this.getTypeSwapValue(
             this.$related.getKeyType(),
             $key
@@ -572,7 +572,7 @@ class InteractsWithPivotTable {
      * @param {*} $attributes
      * @returns {any}
      */
-    castAttributes($attributes) {
+    castAttributes($attributes: Record<string, any>) {
         return this.$using ?
             this.newPivot().fill($attributes).getAttributes() :
             $attributes;
@@ -584,7 +584,7 @@ class InteractsWithPivotTable {
      * @param {*} $value
      * @returns {any}
      */
-    getTypeSwapValue($type, $value) {
+    getTypeSwapValue($type: string, $value: any) {
         switch (lower($type)) {
             case 'int':
             case 'integer':

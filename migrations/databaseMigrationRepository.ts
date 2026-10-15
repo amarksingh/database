@@ -10,7 +10,7 @@ class DatabaseMigrationRepository {
      * @param {*} $resolver
      * @param {*} $table
      */
-    constructor($resolver, $table) {
+    constructor($resolver: any, $table: string) {
         this.$resolver = $resolver;
         this.$table = $table;
     }
@@ -31,7 +31,7 @@ class DatabaseMigrationRepository {
      * @param {*} $steps
      * @returns {any}
      */
-    getMigrations($steps) {
+    getMigrations($steps: any) {
         return this.table()
             .where('batch', '>=', '1')
             .orderBy('batch', 'desc')
@@ -70,7 +70,7 @@ class DatabaseMigrationRepository {
      * @param {*} $batch
      * @returns {any}
      */
-    log($file, $batch) {
+    log($file: any, $batch: any) {
         return this.table().insert({ 'migration': $file, 'batch': $batch })
     }
 
@@ -79,7 +79,7 @@ class DatabaseMigrationRepository {
      * @param {*} $migration
      * @returns {any}
      */
-    delete($migration) {
+    delete($migration: any) {
         return this.table().where('migration', $migration.migration).delete();
     }
 
@@ -166,7 +166,7 @@ class DatabaseMigrationRepository {
      * @param {*} $name
      * @returns {any}
      */
-    setSource($name) {
+    setSource($name: string) {
         this.$connection = $name;
     }
 }

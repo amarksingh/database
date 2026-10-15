@@ -26,7 +26,7 @@ class HasOne extends implement(HasOneOrMany, SupportsDefaultModels, CanBeOneOfMa
      * @param {*} $relation
      * @returns {any}
      */
-    initRelation($models, $relation) {
+    initRelation($models: any, $relation: any) {
         for (let $model of $models) {
             $model.setRelation($relation, this.getDefaultFor($model));
         }
@@ -41,7 +41,7 @@ class HasOne extends implement(HasOneOrMany, SupportsDefaultModels, CanBeOneOfMa
      * @param {*} $relation
      * @returns {any}
      */
-    match($models, $results, $relation) {
+    match($models: any, $results: any, $relation: any) {
         return this.matchOne($models, $results, $relation);
     }
 
@@ -52,7 +52,7 @@ class HasOne extends implement(HasOneOrMany, SupportsDefaultModels, CanBeOneOfMa
      * @param {*} $columns
      * @returns {any}
      */
-    getRelationExistenceQuery($query, $parentQuery, $columns = ['*']) {
+    getRelationExistenceQuery($query: any, $parentQuery: any, $columns: any[] = ['*']) {
 
         return super.getRelationExistenceQuery($query, $parentQuery, $columns);
     }
@@ -64,7 +64,7 @@ class HasOne extends implement(HasOneOrMany, SupportsDefaultModels, CanBeOneOfMa
      * @param {*} $aggregate
      * @returns {any}
      */
-    addOneOfManySubQueryConstraints($query, $column = null, $aggregate = null) {
+    addOneOfManySubQueryConstraints($query: any, $column: any = null, $aggregate: any = null) {
         $query.addSelect(this.$foreignKey);
     }
 
@@ -81,7 +81,7 @@ class HasOne extends implement(HasOneOrMany, SupportsDefaultModels, CanBeOneOfMa
      * @param {*} $join
      * @returns {any}
      */
-    addOneOfManyJoinSubQueryConstraints($join) {
+    addOneOfManyJoinSubQueryConstraints($join: any) {
         $join.on(this.qualifySubSelectColumn(this.$foreignKey), '=', this.qualifyRelatedColumn(this.$foreignKey));
     }
 
@@ -90,7 +90,7 @@ class HasOne extends implement(HasOneOrMany, SupportsDefaultModels, CanBeOneOfMa
      * @param {*} $parent
      * @returns {any}
      */
-    newRelatedInstanceFor($parent) {
+    newRelatedInstanceFor($parent: any) {
         const instance = this.$related.newInstance();
         instance.setAttribute(this.getForeignKeyName(), $parent[this.$localKey]);
         return instance;
@@ -101,7 +101,7 @@ class HasOne extends implement(HasOneOrMany, SupportsDefaultModels, CanBeOneOfMa
      * @param {*} $model
      * @returns {any}
      */
-    getRelatedKeyFrom($model) {
+    getRelatedKeyFrom($model: any) {
         return $model.getAttribute(this.getForeignKeyName());
     }
 }

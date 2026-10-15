@@ -11,7 +11,7 @@ class CreateMigration extends BaseCommand {
      * @param {*} migrator
      * @param {*} file
      */
-    constructor(migrator, file) {
+    constructor(migrator: any, file: any) {
         super()
         this.$migrator = migrator;
         this.$file = file;
@@ -99,7 +99,7 @@ class CreateMigration extends BaseCommand {
      * @param {*} $connection
      * @returns {any}
      */
-    schemaPath($connection) {
+    schemaPath($connection: any) {
         if (this.input.option('schema-path')) {
             return this.input.option('schema-path');
         }

@@ -62,7 +62,7 @@ class DetectsLostConnections {
      * @param {*} $e
      * @returns {any}
      */
-    causedByLostConnection($e) {
+    causedByLostConnection($e: any) {
         const $message = typeof $e == 'string' ? $e : $e.message;
 
         return this.$errorMessages.includes($message);

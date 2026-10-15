@@ -47,7 +47,7 @@ class HasTimestamps {
      * @param {*} $value
      * @returns {any}
      */
-    setCreatedAt($value) {
+    setCreatedAt($value: any) {
         this.setAttribute(this.getCreatedAtColumn(), $value)
         return this;
     }
@@ -57,7 +57,7 @@ class HasTimestamps {
      * @param {*} $value
      * @returns {any}
      */
-    setUpdatedAt($value) {
+    setUpdatedAt($value: any) {
         this.setAttribute(this.getUpdatedAtColumn(), $value)
         return this;
     }
@@ -83,7 +83,7 @@ class HasTimestamps {
      * @param {*} time
      * @returns {any}
      */
-    fromDateTime(time) {
+    fromDateTime(time: any) {
         return time.format(this.$dateFormat);
     }
 

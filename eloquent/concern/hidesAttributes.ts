@@ -22,7 +22,7 @@ class HidesAttributes {
      * @param {*} $hidden
      * @returns {any}
      */
-    setHidden($hidden) {
+    setHidden($hidden: any) {
         this.$hidden = $hidden;
 
         return this;
@@ -41,7 +41,7 @@ class HidesAttributes {
      * @param {*} $visible
      * @returns {any}
      */
-    setVisible($visible) {
+    setVisible($visible: any) {
         this.$visible = $visible;
         return this;
     }
@@ -51,7 +51,7 @@ class HidesAttributes {
      * @param {*} $attributes
      * @returns {any}
      */
-    makeVisible($attributes) {
+    makeVisible($attributes: Record<string, any>) {
         $attributes = Array.isArray($attributes) ? $attributes : Array.from(arguments);
 
         this.$hidden = difference(this.$hidden, $attributes);
@@ -69,7 +69,7 @@ class HidesAttributes {
      * @param {*} $attributes
      * @returns {any}
      */
-    makeVisibleIf($condition, $attributes) {
+    makeVisibleIf($condition: any, $attributes: Record<string, any>) {
         return value($condition, this) ? this.makeVisible($attributes) : this;
     }
 
@@ -78,7 +78,7 @@ class HidesAttributes {
      * @param {*} $attributes
      * @returns {any}
      */
-    makeHidden($attributes) {
+    makeHidden($attributes: Record<string, any>) {
         $attributes = Array.isArray($attributes) ? $attributes : Array.from(arguments);
         this.$hidden = union(this.$hidden, $attributes);
 
@@ -91,7 +91,7 @@ class HidesAttributes {
      * @param {*} $attributes
      * @returns {any}
      */
-    makeHiddenIf($condition, $attributes) {
+    makeHiddenIf($condition: any, $attributes: Record<string, any>) {
         return value($condition, this) ? this.makeHidden($attributes) : this;
     }
 }

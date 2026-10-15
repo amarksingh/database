@@ -9,7 +9,7 @@ class Processor {
      * @param {*} $results
      * @returns {any}
      */
-    processSelect($query, $results) {
+    processSelect($query: any, $results: any) {
         return $results;
     }
 
@@ -21,7 +21,7 @@ class Processor {
      * @param {*} $sequence
      * @returns {any}
      */
-    processInsertGetId($query, $sql, $values, $sequence = null) {
+    processInsertGetId($query: any, $sql: any, $values: Record<string, any>, $sequence: any = null) {
         return $sequence
     }
 
@@ -30,7 +30,7 @@ class Processor {
      * @param {*} $results
      * @returns {any}
      */
-    processTables($results) {
+    processTables($results: any) {
         return $results;
     }
 
@@ -39,7 +39,7 @@ class Processor {
      * @param {*} $results
      * @returns {any}
      */
-    processViews($results) {
+    processViews($results: any) {
         return $results;
     }
 
@@ -48,7 +48,7 @@ class Processor {
      * @param {*} $results
      * @returns {any}
      */
-    processTypes($results) {
+    processTypes($results: any) {
         return $results;
     }
 
@@ -57,7 +57,7 @@ class Processor {
      * @param {*} $results
      * @returns {any}
      */
-    processColumns($results) {
+    processColumns($results: any) {
         return $results;
     }
 
@@ -66,7 +66,7 @@ class Processor {
      * @param {*} $results
      * @returns {any}
      */
-    processIndexes($results) {
+    processIndexes($results: any) {
         return $results;
     }
 
@@ -75,7 +75,7 @@ class Processor {
      * @param {*} $results
      * @returns {any}
      */
-    processForeignKeys($results) {
+    processForeignKeys($results: any) {
         return $results;
     }
 
@@ -84,7 +84,7 @@ class Processor {
      * @param {*} $results
      * @returns {any}
      */
-    processColumnListing($results) {
+    processColumnListing($results: any) {
         return $results;
     }
 

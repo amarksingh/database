@@ -29,7 +29,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @param {*} $stub
      * @returns {any}
      */
-    resolveStubPath($stub) {
+    resolveStubPath($stub: any) {
         let $customPath = this.$app.basePath(trim($stub, '/'))
         return this.$file.exists($customPath).then($exists => ($exists ? $customPath : path.join(__dirname, $stub)))
     }
@@ -40,7 +40,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @param {*} $name
      * @returns {any}
      */
-    async buildClass($name) {
+    async buildClass($name: string) {
         let $factory = $name.replace('Factory', '');
         $factory = this.getFileName($factory)
         let $namespaceModel = this.option('model') ?
@@ -70,7 +70,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @param {*} $name
      * @returns {any}
      */
-    async getPath($name) {
+    async getPath($name: string) {
         $name = $name.finish('Factory').toString();
 
         return this.$app.databasePath('factories/' + this.getFileName($name).camelCase() + '.js');
@@ -83,7 +83,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @param {*} $name
      * @returns {any}
      */
-    async guessModelName($name) {
+    async guessModelName($name: string) {
         if (String.endsWith($name, 'Factory')) {
             $name = $name.substr(0, -7);
         }

@@ -21,7 +21,7 @@ class HasOneThrough extends implement(HasManyThrough, SupportsDefaultModels, Int
      * @param {*} $relation
      * @returns {any}
      */
-    initRelation($models, $relation) {
+    initRelation($models: any, $relation: any) {
         for (let $model of $models) {
             $model.setRelation($relation, this.getDefaultFor($model));
         }
@@ -36,7 +36,7 @@ class HasOneThrough extends implement(HasManyThrough, SupportsDefaultModels, Int
      * @param {*} $relation
      * @returns {any}
      */
-    match($models, $results, $relation) {
+    match($models: any, $results: any, $relation: any) {
         let $dictionary = this.buildDictionary($results);
 
         for (let $model of $models) {
@@ -58,7 +58,7 @@ class HasOneThrough extends implement(HasManyThrough, SupportsDefaultModels, Int
      * @param {*} $parent
      * @returns {any}
      */
-    newRelatedInstanceFor($parent) {
+    newRelatedInstanceFor($parent: any) {
         return this.$related.newInstance();
     }
 }

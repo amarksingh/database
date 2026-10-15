@@ -11,7 +11,7 @@ class SqlServerConnector {
      * @param {*} prefix
      * @returns {any}
      */
-    connect(config, database, prefix) {
+    connect(config: Record<string, any>, database: any, prefix: any) {
         config.port = Number(config.port);
         return Knex({
             client: 'mssql',

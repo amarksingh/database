@@ -58,7 +58,7 @@ class SqlServerConnection extends Connection {
      * @param {*} parameters
      * @returns {any}
      */
-    __call(target, method, parameters) {
+    __call(target: Record<string, any>, method: string, parameters: any[]) {
         return target.$connection[method](...parameters)
     }
 

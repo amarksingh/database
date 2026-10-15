@@ -9,7 +9,7 @@ class SqliteGrammar extends Grammar {
      * @param {*} tables
      * @returns {any}
      */
-    compileDropAllTables(tables) {
+    compileDropAllTables(tables: any) {
         let sql = ``;
         for (let table of tables) {
             sql += `DROP TABLE IF EXISTS ${table};`;

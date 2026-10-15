@@ -11,7 +11,7 @@ class SeedCommand extends Command {
      * Create a new instance.
      * @param {*} $resolver
      */
-    constructor($resolver) {
+    constructor($resolver: any) {
         super()
         this.$resolver = $resolver;
     }
@@ -57,7 +57,7 @@ class SeedCommand extends Command {
      * @param {*} $connection
      * @returns {any}
      */
-    async getSeeder($connection) {
+    async getSeeder($connection: any) {
         let $class = this.input.getArgument('file') || this.input.getOption('class');
 
         if ($class.includes('/') === false) {

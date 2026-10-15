@@ -51,7 +51,7 @@ class WipeCommand extends Command {
      * @param {*} $database
      * @returns {any}
      */
-    dropAllTables($database) {
+    dropAllTables($database: any) {
         return this.$app.db.connection($database)
             .getSchemaBuilder()
             .dropAllTables();
@@ -62,7 +62,7 @@ class WipeCommand extends Command {
      * @param {*} $database
      * @returns {any}
      */
-    dropAllViews($database) {
+    dropAllViews($database: any) {
         return this.$app.db.connection($database)
             .getSchemaBuilder()
             .dropAllViews();
@@ -73,7 +73,7 @@ class WipeCommand extends Command {
      * @param {*} $database
      * @returns {any}
      */
-    dropAllTypes($database) {
+    dropAllTypes($database: any) {
         return this.$app.db.connection($database)
             .getSchemaBuilder()
             .dropAllTypes();

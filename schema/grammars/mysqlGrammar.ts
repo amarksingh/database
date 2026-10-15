@@ -9,7 +9,7 @@ class MysqlGrammar extends Grammar {
      * @param {*} tables
      * @returns {any}
      */
-    compileDropAllTables(tables) {
+    compileDropAllTables(tables: any) {
         return `DROP TABLE IF EXISTS ${tables.join(', ')}; `;
     }
 }

@@ -22,7 +22,7 @@ class ResetCommand extends BaseCommand {
      * Create a new instance.
      * @param {*} $migrator
      */
-    constructor($migrator) {
+    constructor($migrator: any) {
         super()
 
         this.$migrator = $migrator;

@@ -28,7 +28,7 @@ class Grammar {
      * @param {*} $prefix
      * @returns {any}
      */
-    setTablePrefix($prefix) {
+    setTablePrefix($prefix: any) {
         this.$tablePrefix = $prefix;
 
         return this;
@@ -39,7 +39,7 @@ class Grammar {
      * @param {*} $connection
      * @returns {any}
      */
-    setConnection($connection) {
+    setConnection($connection: any) {
         this.$connection = $connection;
 
         return this;

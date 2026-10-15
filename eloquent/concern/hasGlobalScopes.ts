@@ -9,7 +9,7 @@ class HasGlobalScopes {
      * @param {*} $implementation
      * @returns {any}
      */
-    addGlobalScope($scope, $implementation = null) {
+    addGlobalScope($scope: any, $implementation: any = null) {
         if (is_string($scope) && !is_null($implementation)) {
             return this.constructor.$globalScopes[this.constructor.class][$scope] = $implementation;
         } else if (typeof $scope == 'function') {
@@ -26,7 +26,7 @@ class HasGlobalScopes {
      * @param {*} $scope
      * @returns {any}
      */
-    hasGlobalScope($scope) {
+    hasGlobalScope($scope: any) {
         return !is_null(this.constructor.getGlobalScope($scope));
     }
 
@@ -35,7 +35,7 @@ class HasGlobalScopes {
      * @param {*} $scope
      * @returns {any}
      */
-    getGlobalScope($scope) {
+    getGlobalScope($scope: any) {
         if (is_string($scope)) {
             return Arr.get(this.constructor.$globalScopes, this.constructor.class +
                 '.' + $scope);
