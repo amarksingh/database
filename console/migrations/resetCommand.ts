@@ -1,6 +1,9 @@
 const BaseCommand = require('./baseCommand')
 const path = require('path')
 
+/**
+ * Class ResetCommand.
+ */
 class ResetCommand extends BaseCommand {
 
     $signature = 'migrate:reset';
@@ -15,12 +18,21 @@ class ResetCommand extends BaseCommand {
         this.createOption('--pretend', 'Dump the SQL queries that would be run'),
     ];
 
+    /**
+     * Create a new instance.
+     * @param {*} $migrator
+     */
     constructor($migrator) {
         super()
 
         this.$migrator = $migrator;
     }
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         if (!this.input.getOption('force') && !await this.confirmToProceed()) {
             return 1;

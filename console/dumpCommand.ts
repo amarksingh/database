@@ -1,5 +1,8 @@
 const Command = require('@ostro/console/command')
 
+/**
+ * Class DumpCommand.
+ */
 class DumpCommand extends Command {
 
     $signature = 'schema:dump';
@@ -12,12 +15,22 @@ class DumpCommand extends Command {
         this.createOption('--prune [prune]', 'Delete all existing migration files'),
     ];
 
+    /**
+     * Create a new instance.
+     * @param {*} $connection
+     * @param {*} $file
+     */
     constructor($connection, $file) {
         super()
         this.$connection = $connection
         this.$file = $file
     }
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         let $database = this.input.getOption('database')
         let $connection = this.$connection.connection($database);
@@ -37,6 +50,11 @@ class DumpCommand extends Command {
         }
     }
 
+    /**
+     * schemaState method.
+     * @param {*} $connection
+     * @returns {any}
+     */
     schemaState($connection) {
         return $connection.getSchemaState()
             .withMigrationTable($connection.getTablePrefix() + config.get('database.migrations', 'migrations'))
@@ -45,6 +63,11 @@ class DumpCommand extends Command {
             });
     }
 
+    /**
+     * path method.
+     * @param {*} $connection
+     * @returns {any}
+     */
     path($connection) {
         return tap(this.option('path') || database_path('schema/' + $connection.getName() + '-schema.dump'), async ($path) => {
             await this.$file.ensureDirectoryExists(dirname($path));

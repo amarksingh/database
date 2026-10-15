@@ -27,6 +27,9 @@ const { is_array, count, in_array, clone, isset, is_null, empty, implement, get_
 const { snake, plural, studly, contains, startsWith } = require('@ostro/support/string')
 const { intersection } = require('lodash')
 
+/**
+ * Class Model.
+ */
 class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRelationships, HasRelationships, HasAttributes, HidesAttributes, HasTimestamps) {
 
 	$table = plural(snake(this.constructor.name));
@@ -64,6 +67,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	[kModel] = null;
 
 
+	/**
+	 * Create a new instance.
+	 * @param {*} $attributes
+	 * @param {*} newInstance
+	 */
 	constructor($attributes = {}, newInstance = true) {
 		super()
 		Object.defineProperty(this, kQuery, { value: null, writable: true });
@@ -75,19 +83,36 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return instance
 	}
 
+	/**
+	 * raw method.
+	 * @returns {any}
+	 */
 	raw() {
 		return Model.getConnectionResolver().raw(...arguments)
 	}
 
+	/**
+	 * getConnection method.
+	 * @returns {any}
+	 */
 	getConnection() {
 
 		return get_class(this).resolveConnection(this.getConnectionName());
 	}
 
+	/**
+	 * getConnectionName method.
+	 * @returns {any}
+	 */
 	getConnectionName() {
 		return this.$connection;
 	}
 
+	/**
+	 * setConnection method.
+	 * @param {*} $name
+	 * @returns {any}
+	 */
 	setConnection($name) {
 
 		this.$connection = $name;
@@ -95,22 +120,49 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this;
 	}
 
+	/**
+	 * resolveConnection method.
+	 * @static
+	 * @param {*} $connection
+	 * @returns {any}
+	 */
 	static resolveConnection($connection = null) {
 		return this[kResolver].connection($connection);
 	}
 
+	/**
+	 * getConnectionResolver method.
+	 * @static
+	 * @returns {any}
+	 */
 	static getConnectionResolver() {
 		return this[kResolver];
 	}
 
+	/**
+	 * setConnectionResolver method.
+	 * @static
+	 * @param {*} $resolver
+	 * @returns {any}
+	 */
 	static setConnectionResolver($resolver) {
 		this[kResolver] = $resolver;
 	}
 
+	/**
+	 * unsetConnectionResolver method.
+	 * @static
+	 * @returns {any}
+	 */
 	static unsetConnectionResolver() {
 		this[kResolver] = null;
 	}
 
+	/**
+	 * fillable method.
+	 * @param {*} obj
+	 * @returns {any}
+	 */
 	fillable(obj = {}) {
 		let fillKeys = Object.keys(obj)
 		let $massAssign = intersection(this.$fillable, fillKeys)
@@ -131,6 +183,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 	}
 
+	/**
+	 * fill method.
+	 * @param {*} $attributes
+	 * @returns {any}
+	 */
 	fill($attributes = {}) {
 		let $totallyGuarded = this.totallyGuarded();
 		let $fillableAttributes = this.fillableFromArray($attributes)
@@ -148,6 +205,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this;
 	}
 
+	/**
+	 * addTimestampsToInsertValues method.
+	 * @param {*} datas
+	 * @returns {any}
+	 */
 	addTimestampsToInsertValues(datas) {
 		if (this.$timestamps == true) {
 			let datetime = DateTime.now().format(this.$dateFormat);
@@ -160,6 +222,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 	}
 
+	/**
+	 * updateInserdtId method.
+	 * @param {*} $datas
+	 * @param {*} $ids
+	 * @returns {any}
+	 */
 	updateInserdtId($datas, $ids) {
 		const keys = this.getKeyName();
 		for (var i = 0; i < $datas.length; i++) {
@@ -181,45 +249,84 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		}
 	}
 
+	/**
+	 * getTable method.
+	 * @returns {any}
+	 */
 	getTable() {
 		return this.$table;
 	}
 
+	/**
+	 * setTable method.
+	 * @param {*} $table
+	 * @returns {any}
+	 */
 	setTable($table) {
 		this.$table = $table;
 		return this;
 	}
 
+	/**
+	 * getKeyName method.
+	 * @returns {any}
+	 */
 	getKeyName() {
 		return this.$primaryKey;
 	}
 
+	/**
+	 * setKeyName method.
+	 * @param {*} $key
+	 * @returns {any}
+	 */
 	setKeyName($key) {
 		this.$primaryKey = $key;
 
 		return this;
 	}
 
+	/**
+	 * getKeyType method.
+	 * @returns {any}
+	 */
 	getKeyType() {
 		return this.$keyType;
 	}
 
+	/**
+	 * setKeyType method.
+	 * @param {*} $type
+	 * @returns {any}
+	 */
 	setKeyType($type) {
 		this.$keyType = $type;
 
 		return this;
 	}
 
+	/**
+	 * getKey method.
+	 * @returns {any}
+	 */
 	getKey() {
 		return this.getAttribute(this.getKeyName());
 	}
 
+	/**
+	 * getQualifiedKeyName method.
+	 * @returns {any}
+	 */
 	getQualifiedKeyName() {
 		return this.qualifyColumn(this.getKeyName());
 	}
 
 
 
+	/**
+	 * first method.
+	 * @returns {any}
+	 */
 	first() {
 		this.$query.limit(1)
 		// if (this.$attributes && Object.keys(this.$attributes).length) {
@@ -234,12 +341,24 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 	}
 
+	/**
+	 * forceFill method.
+	 * @param {*} $attributes
+	 * @returns {any}
+	 */
 	forceFill($attributes) {
 		return this.constructor.unguarded(() => {
 			return this.fill($attributes);
 		});
 	}
 
+	/**
+	 * addWhereExistsQuery method.
+	 * @param {*} $query
+	 * @param {*} $boolean
+	 * @param {*} $not
+	 * @returns {any}
+	 */
 	addWhereExistsQuery($query, $boolean = 'and', $not = false) {
 		let raw = $query && typeof $query.getQueryBuilder == 'function' ? $query.getQueryBuilder() : ($query && $query.$query ? $query.$query : $query);
 		if ($boolean === 'or') {
@@ -249,6 +368,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		}
 		return this;
 	}
+	/**
+	 * create method.
+	 * @param {*} data
+	 * @returns {any}
+	 */
 	create(data = {}) {
 		let isArray = Array.isArray(data);
 		if (isArray && !data.length) {
@@ -279,11 +403,25 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		});
 	}
 
+	/**
+	 * upsert method.
+	 * @param {*} datas
+	 * @param {*} $uniqueBy
+	 * @param {*} $update
+	 * @returns {any}
+	 */
 	upsert(datas, $uniqueBy, $update = null) {
 
 		throw Error('Under development')
 	}
 
+	/**
+	 * insert method.
+	 * @async
+	 * @param {*} $values
+	 * @param {*} $ids
+	 * @returns {any}
+	 */
 	async insert($values, $ids) {
 		this.addTimestampsToInsertValues($values)
 		let query = this.$query.insert($values)
@@ -296,6 +434,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		})
 	}
 
+	/**
+	 * createSelectWithConstraint method.
+	 * @param {*} $name
+	 * @returns {any}
+	 */
 	createSelectWithConstraint($name) {
 		return [$name.split(':')[0], function ($query) {
 			$query.select($name.split(':')[1].split(',').map(function ($column) {
@@ -310,6 +453,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		}];
 	}
 
+	/**
+	 * parseWithRelations method.
+	 * @param {*} $relations
+	 * @returns {any}
+	 */
 	parseWithRelations($relations) {
 		let $results = {};
 		$relations = Array.isArray($relations) ? { ...$relations } : $relations
@@ -330,6 +478,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $results;
 	}
 
+	/**
+	 * addNestedWiths method.
+	 * @param {*} $name
+	 * @param {*} $results
+	 * @returns {any}
+	 */
 	addNestedWiths($name, $results = {}) {
 		let $progress = [];
 
@@ -346,6 +500,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $results;
 	}
 
+	/**
+	 * with method.
+	 * @param {*} $relations
+	 * @param {*} $callback
+	 * @returns {any}
+	 */
 	with($relations, $callback = null) {
 		let $eagerLoad = null
 		if (typeof $callback == 'function') {
@@ -360,14 +520,27 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this;
 	}
 
+	/**
+	 * defaultKeyName method.
+	 * @returns {any}
+	 */
 	defaultKeyName() {
 		return this.getModel().getKeyName();
 	}
 
+	/**
+	 * getModel method.
+	 * @returns {any}
+	 */
 	getModel() {
 		return this[kModel] || this;
 	}
 
+	/**
+	 * setModel method.
+	 * @param {*} $model
+	 * @returns {any}
+	 */
 	setModel($model) {
 		this[kModel] = $model;
 
@@ -376,6 +549,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this;
 	}
 
+	/**
+	 * instanceValues method.
+	 * @param {*} $values
+	 * @returns {any}
+	 */
 	instanceValues($values) {
 		return $values.map($value => {
 			let $instance = this.newInstance()
@@ -383,6 +561,13 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		})
 	}
 
+	/**
+	 * newInstance method.
+	 * @param {*} attributes
+	 * @param {*} $exists
+	 * @param {*} newInstance
+	 * @returns {any}
+	 */
 	newInstance(attributes, $exists = false, newInstance = false) {
 
 		let $model = new (this.constructor)(attributes, newInstance)
@@ -396,6 +581,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $model
 	}
 
+	/**
+	 * newModelInstance method.
+	 * @param {*} $attributes
+	 * @returns {any}
+	 */
 	newModelInstance($attributes) {
 		const $instance = this.newInstance();
 		$instance.fill($attributes);
@@ -404,22 +594,40 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		);
 	}
 
+	/**
+	 * newModelQuery method.
+	 * @returns {any}
+	 */
 	newModelQuery() {
 		return this.newEloquentBuilder(
 			this.newBaseQueryBuilder()
 		).setModel(this);
 	}
 
+	/**
+	 * newBaseQueryBuilder method.
+	 * @returns {any}
+	 */
 	newBaseQueryBuilder() {
 		return Model.getConnectionResolver().table(this.$table)
 	}
 
+	/**
+	 * newEloquentBuilder method.
+	 * @param {*} $query
+	 * @returns {any}
+	 */
 	newEloquentBuilder($query) {
 		const $model = this.newInstance()
 		$model.$query = $query
 		return $model
 	}
 
+	/**
+	 * hydrate method.
+	 * @param {*} $items
+	 * @returns {any}
+	 */
 	hydrate($items) {
 
 		let $instance = this.newInstance();
@@ -429,16 +637,32 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		}));
 	}
 
+	/**
+	 * newCollection method.
+	 * @param {*} $data
+	 * @returns {any}
+	 */
 	newCollection($data) {
 		return Collection.collect($data || [])
 	}
 
+	/**
+	 * getModels method.
+	 * @async
+	 * @returns {any}
+	 */
 	async getModels() {
 		return this.hydrate(
 			await this.$query.get()
 		);
 	}
 
+	/**
+	 * newFromBuilder method.
+	 * @param {*} $attributes
+	 * @param {*} $connection
+	 * @returns {any}
+	 */
 	newFromBuilder($attributes = {}, $connection = null) {
 		let $model = this.newInstance({}, true, false);
 		$model.setRawAttributes($attributes, true);
@@ -447,18 +671,35 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $model;
 	}
 
+	/**
+	 * newQuery method.
+	 * @returns {any}
+	 */
 	newQuery() {
 		return this.newModelQuery();
 	}
 
+	/**
+	 * newQueryWithoutRelationships method.
+	 * @returns {any}
+	 */
 	newQueryWithoutRelationships() {
 		return this.newModelQuery();
 	}
 
+	/**
+	 * getQuery method.
+	 * @returns {any}
+	 */
 	getQuery() {
 		return this.$query
 	}
 
+	/**
+	 * qualifyColumn method.
+	 * @param {*} $column
+	 * @returns {any}
+	 */
 	qualifyColumn($column) {
 		if (contains($column, '.')) {
 			return $column;
@@ -467,10 +708,21 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this.getTable() + '.' + $column;
 	}
 
+	/**
+	 * isNestedUnder method.
+	 * @param {*} $relation
+	 * @param {*} $name
+	 * @returns {any}
+	 */
 	isNestedUnder($relation, $name) {
 		return contains($name, '.') && startsWith($name, $relation + '.');
 	}
 
+	/**
+	 * relationsNestedUnder method.
+	 * @param {*} $relation
+	 * @returns {any}
+	 */
 	relationsNestedUnder($relation) {
 		let $nested = {};
 
@@ -484,10 +736,19 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $nested;
 	}
 
+	/**
+	 * getForeignKey method.
+	 * @returns {any}
+	 */
 	getForeignKey() {
 		return snake(get_class_name(this)) + '_' + this.getKeyName();
 	}
 
+	/**
+	 * getRelation method.
+	 * @param {*} $name
+	 * @returns {any}
+	 */
 	getRelation($name) {
 
 		let $relation = Relation.noConstraints(() => {
@@ -507,14 +768,30 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $relation;
 	}
 
+	/**
+	 * toJSON method.
+	 * @returns {any}
+	 */
 	toJSON() {
 		return this.serialize()
 	}
 
+	/**
+	 * serialize method.
+	 * @returns {any}
+	 */
 	serialize() {
 		return this.toJson()
 	}
 
+	/**
+	 * eagerLoadRelation method.
+	 * @async
+	 * @param {*} $models
+	 * @param {*} $name
+	 * @param {*} $constraints
+	 * @returns {any}
+	 */
 	async eagerLoadRelation($models, $name, $constraints) {
 
 		let $relation = this.getRelation($name);
@@ -530,6 +807,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $relation;
 	}
 
+	/**
+	 * eagerLoadRelations method.
+	 * @async
+	 * @param {*} $models
+	 * @returns {any}
+	 */
 	async eagerLoadRelations($models) {
 		for (let $name in this[kEagerLoad]) {
 			let $constraints = this[kEagerLoad][$name]
@@ -540,6 +823,10 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $models;
 	}
 
+	/**
+	 * clone method.
+	 * @returns {any}
+	 */
 	clone() {
 		const $model = this.newModelInstance();
 		$model.$query.$query = this.getQuery().clone();
@@ -548,6 +835,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 	}
 
+	/**
+	 * withAttributes method.
+	 * @param {*} skipColumns
+	 * @param {*} withTimestamp
+	 * @returns {any}
+	 */
 	withAttributes(skipColumns = [], withTimestamp = false) {
 		const $attributes = this.getAttributes();
 
@@ -571,6 +864,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this
 	}
 
+	/**
+	 * get method.
+	 * @async
+	 * @returns {any}
+	 */
 	async get() {
 		let $models = await this.getModels();
 		if ($models.length > 0) {
@@ -580,6 +878,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $models
 	}
 
+	/**
+	 * save method.
+	 * @async
+	 * @param {*} $options
+	 * @returns {any}
+	 */
 	async save($options = {}) {
 		let $saved = false
 
@@ -604,6 +908,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $saved;
 	}
 
+	/**
+	 * finishSave method.
+	 * @param {*} $options
+	 * @returns {any}
+	 */
 	finishSave($options = {}) {
 
 		if (this.isDirty() && ($options['touch'] || true)) {
@@ -613,6 +922,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		this.syncOriginal();
 	}
 
+	/**
+	 * performUpdate method.
+	 * @async
+	 * @param {*} $query
+	 * @returns {any}
+	 */
 	async performUpdate($query) {
 
 		if (this.usesTimestamps()) {
@@ -630,6 +945,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return true;
 	}
 
+	/**
+	 * setKeysForSaveQuery method.
+	 * @param {*} $query
+	 * @returns {any}
+	 */
 	setKeysForSaveQuery($query) {
 		const keys = this.getKeyName();
 		const obj = {
@@ -648,14 +968,30 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	}
 
 
+	/**
+	 * getKeyForSaveQuery method.
+	 * @param {*} key
+	 * @returns {any}
+	 */
 	getKeyForSaveQuery(key) {
 		return this.getOriginal(key || this.getKeyName()) || this.getKey();
 	}
 
+	/**
+	 * getIncrementing method.
+	 * @returns {any}
+	 */
 	getIncrementing() {
 		return this.$incrementing;
 	}
 
+	/**
+	 * insertAndSetId method.
+	 * @async
+	 * @param {*} $query
+	 * @param {*} $attributes
+	 * @returns {any}
+	 */
 	async insertAndSetId($query, $attributes) {
 		let $keyName = this.getKeyName();
 		const $id = await $query.insert([$attributes], $keyName);
@@ -671,6 +1007,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 	}
 
+	/**
+	 * performInsert method.
+	 * @async
+	 * @param {*} $query
+	 * @returns {any}
+	 */
 	async performInsert($query) {
 		if (this.usesTimestamps()) {
 			this.updateTimestamps();
@@ -699,6 +1041,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return Promise.all(this[kLazyQueries].map(fn => fn()))
 	}
 
+	/**
+	 * setLazyQuery method.
+	 * @param {*} fn
+	 * @returns {any}
+	 */
 	setLazyQuery(fn) {
 		if (Array.isArray(fn)) {
 			return this[kLazyQueries] = this[kLazyQueries].concat(fn)
@@ -706,6 +1053,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this[kLazyQueries].push(fn)
 	}
 
+	/**
+	 * whereKey method.
+	 * @param {*} $id
+	 * @returns {any}
+	 */
 	whereKey($id) {
 		if ($id instanceof Model) {
 			$id = $id.getKey();
@@ -728,6 +1080,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this.where(this.getModel().getQualifiedKeyName(), '=', $id);
 	}
 
+	/**
+	 * whereKeyNot method.
+	 * @param {*} $id
+	 * @returns {any}
+	 */
 	whereKeyNot($id) {
 		if ($id instanceof Model) {
 			$id = $id.getKey();
@@ -750,6 +1107,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this.where(this.getModel().getQualifiedKeyName(), '!=', $id);
 	}
 
+	/**
+	 * destroy method.
+	 * @param {*} id
+	 * @returns {any}
+	 */
 	destroy(id) {
 		let where = {
 			[this.$primaryKey]: id
@@ -758,6 +1120,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this.delete();
 	}
 
+	/**
+	 * delete method.
+	 * @async
+	 * @returns {any}
+	 */
 	async delete() {
 		if (is_null(this.getKeyName())) {
 			throw new Error('No primary key defined on model.');
@@ -771,6 +1138,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 	}
 
+	/**
+	 * performDeleteOnModel method.
+	 * @async
+	 * @returns {any}
+	 */
 	async performDeleteOnModel() {
 		if (Object.keys(this.getAttributes()).length) {
 			if (this.$primaryKey in this.getAttributes()) {
@@ -787,6 +1159,13 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		this.$exists = false;
 	}
 
+	/**
+	 * firstOrNew method.
+	 * @async
+	 * @param {*} $attributes
+	 * @param {*} $values
+	 * @returns {any}
+	 */
 	async firstOrNew($attributes = {}, $values = {}) {
 		const $instance = await this.where($attributes).first()
 		if (!is_null($instance)) {
@@ -796,6 +1175,13 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this.newModelInstance(Object.assign($attributes, $values));
 	}
 
+	/**
+	 * findOrFail method.
+	 * @async
+	 * @param {*} $id
+	 * @param {*} $columns
+	 * @returns {any}
+	 */
 	async findOrFail($id = [], $columns = ['*']) {
 		const $result = await this.find($id, $columns);
 
@@ -819,6 +1205,13 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $result;
 	}
 
+	/**
+	 * findOrNew method.
+	 * @async
+	 * @param {*} $id
+	 * @param {*} $columns
+	 * @returns {any}
+	 */
 	async findOrNew($id, $columns = ['*']) {
 		const $model = await this.find($id, $columns);
 		if (!is_null($model)) {
@@ -828,6 +1221,14 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this.newModelInstance();
 	}
 
+	/**
+	 * findOr method.
+	 * @async
+	 * @param {*} $id
+	 * @param {*} $columns
+	 * @param {*} $callback
+	 * @returns {any}
+	 */
 	async findOr($id, $columns = ['*'], $callback = null) {
 		if (typeof $columns == 'function') {
 			$callback = $columns;
@@ -842,6 +1243,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $callback();
 	}
 
+	/**
+	 * firstOrFail method.
+	 * @async
+	 * @param {*} $columns
+	 * @returns {any}
+	 */
 	async firstOrFail($columns = ['*']) {
 		const $model = await this.first($columns);
 		if (!is_null($model)) {
@@ -851,6 +1258,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		throw (new ModelNotFoundException).setModel(get_class(this.getModel()));
 	}
 
+	/**
+	 * firstOrCreate method.
+	 * @param {*} where
+	 * @param {*} create
+	 * @returns {any}
+	 */
 	firstOrCreate(where, create = {}) {
 		return this.where(where).first().then(res => {
 			if (!res) {
@@ -859,6 +1272,13 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 			return res
 		})
 	}
+	/**
+	 * firstOr method.
+	 * @async
+	 * @param {*} $columns
+	 * @param {*} $callback
+	 * @returns {any}
+	 */
 	async firstOr($columns = ['*'], $callback = null) {
 		if (typeof $columns == 'function') {
 			$callback = $columns;
@@ -873,6 +1293,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return $callback();
 	}
 
+	/**
+	 * updateOrCreate method.
+	 * @param {*} where
+	 * @param {*} update
+	 * @returns {any}
+	 */
 	updateOrCreate(where = {}, update = {}) {
 		return this.where(where).first().then(async res => {
 			if (res) {
@@ -884,6 +1310,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		})
 	}
 
+	/**
+	 * find method.
+	 * @param {*} $id
+	 * @returns {any}
+	 */
 	find($id) {
 		if (!this.$primaryKey) {
 			throw Error('No primary key defined on model');
@@ -894,10 +1325,21 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 	}
 
+	/**
+	 * withSavepointIfNeeded method.
+	 * @param {*} $scope
+	 * @returns {any}
+	 */
 	withSavepointIfNeeded($scope) {
 		return $scope()
 	}
 
+	/**
+	 * callScope method.
+	 * @param {*} $scope
+	 * @param {*} $parameters
+	 * @returns {any}
+	 */
 	callScope($scope, $parameters = []) {
 		$parameters.unshift(this);
 		const $query = this.getQuery();
@@ -910,6 +1352,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	}
 
 
+	/**
+	 * withoutGlobalScopes method.
+	 * @param {*} $scopes
+	 * @returns {any}
+	 */
 	withoutGlobalScopes($scopes = null) {
 		if (!is_array($scopes)) {
 			$scopes = Object.keys(this[kScopes] || {});
@@ -921,6 +1368,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 		return this;
 	}
+	/**
+	 * withGlobalScope method.
+	 * @param {*} $identifier
+	 * @param {*} $scope
+	 * @returns {any}
+	 */
 	withGlobalScope($identifier, $scope) {
 		if (!this[kScopes]) {
 			this[kScopes] = {};
@@ -934,6 +1387,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this;
 	}
 
+	/**
+	 * withoutGlobalScope method.
+	 * @param {*} $scope
+	 * @returns {any}
+	 */
 	withoutGlobalScope($scope) {
 		if (!is_string($scope)) {
 			$scope = get_class($scope);
@@ -945,22 +1403,44 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this;
 	}
 
+	/**
+	 * removedScopes method.
+	 * @returns {any}
+	 */
 	removedScopes() {
 		return this[kRemovedScopes];
 	}
 
+	/**
+	 * toBase method.
+	 * @returns {any}
+	 */
 	toBase() {
 		return this.getQuery();
 	}
 
+	/**
+	 * toArray method.
+	 * @returns {any}
+	 */
 	toArray() {
 		return this.attributesToJson();
 	}
 
+	/**
+	 * toJson method.
+	 * @returns {any}
+	 */
 	toJson() {
 		return this.attributesToJson();
 	}
 
+	/**
+	 * fresh method.
+	 * @async
+	 * @param {*} $columns
+	 * @returns {any}
+	 */
 	async fresh($columns = ['*']) {
 		if (!this.$exists) {
 			return null;
@@ -968,6 +1448,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return (new this.constructor).where(this.getKeyName(), this.getKey()).first($columns);
 	}
 
+	/**
+	 * refresh method.
+	 * @async
+	 * @returns {any}
+	 */
 	async refresh() {
 		if (!this.$exists) {
 			return this;
@@ -979,6 +1464,13 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return this;
 	}
 
+	/**
+	 * __set method.
+	 * @param {*} target
+	 * @param {*} key
+	 * @param {*} value
+	 * @returns {any}
+	 */
 	__set(target, key, value) {
 		if (typeof key == 'symbol') {
 			return target[key] = value
@@ -986,6 +1478,13 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return target.setAttribute(key, value)
 	}
 
+	/**
+	 * __get method.
+	 * @param {*} target
+	 * @param {*} key
+	 * @param {*} receiver
+	 * @returns {any}
+	 */
 	__get(target, key, receiver) {
 		const self = receiver || target;
 		if (typeof target[key] === 'function') {
@@ -998,6 +1497,13 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		return target.getAttribute(key);
 	}
 
+	/**
+	 * __call method.
+	 * @param {*} target
+	 * @param {*} method
+	 * @param {*} args
+	 * @returns {any}
+	 */
 	__call(target, method, args) {
 		if (typeof target[method] == 'function') {
 			return target[method](...args);
@@ -1013,6 +1519,14 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		throw new MethodNotAvailable('Method [' + method + '] was not available on [' + target.constructor.name + ']');
 	}
 
+	/**
+	 * __call method.
+	 * @static
+	 * @param {*} target
+	 * @param {*} method
+	 * @param {*} args
+	 * @returns {any}
+	 */
 	static __call(target, method, args) {
 
 		let instance = Macroable(new target())

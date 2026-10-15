@@ -1,4 +1,7 @@
 const BaseCommand = require('./baseCommand')
+/**
+ * Class StatusCommand.
+ */
 class StatusCommand extends BaseCommand {
 
     $signature = 'migrate:status';
@@ -11,12 +14,20 @@ class StatusCommand extends BaseCommand {
         this.createOption('--realpath', 'Indicate any provided migration file paths are pre-resolved absolute paths'),
     ];
 
+    /**
+     * Create a new instance.
+     * @param {*} $migrator
+     */
     constructor($migrator) {
         super()
 
         this.$migrator = $migrator;
     }
 
+    /**
+     * handle method.
+     * @returns {any}
+     */
     handle() {
         return this.$migrator.usingConnection(this.option('database')).then(async ($connection) => {
             if (!await this.$migrator.repositoryExists()) {
@@ -36,6 +47,13 @@ class StatusCommand extends BaseCommand {
         });
     }
 
+    /**
+     * getStatusFor method.
+     * @async
+     * @param {*} $ran
+     * @param {*} $batches
+     * @returns {any}
+     */
     async getStatusFor($ran, $batches) {
         return (await this.getAllMigrationFiles())
             .map(($migration) => {
@@ -44,6 +62,10 @@ class StatusCommand extends BaseCommand {
             });
     }
 
+    /**
+     * getAllMigrationFiles method.
+     * @returns {any}
+     */
     getAllMigrationFiles() {
         return this.$migrator.getMigrationFiles(this.getMigrationPaths());
     }

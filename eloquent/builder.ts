@@ -1,3 +1,6 @@
+/**
+ * Class Builder.
+ */
 class Builder {
 
 }

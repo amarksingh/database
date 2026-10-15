@@ -1,6 +1,14 @@
 const { is_object } = require('@ostro/support/function');
+/**
+ * Class InteractsWithDictionary.
+ */
 class InteractsWithDictionary {
 
+    /**
+     * getDictionaryKey method.
+     * @param {*} $attribute
+     * @returns {any}
+     */
     getDictionaryKey($attribute) {
         if ($attribute != null && is_object($attribute)) {
             if (typeof $attribute.toString === 'function' && $attribute.toString !== Object.prototype.toString) {

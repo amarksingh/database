@@ -1,5 +1,8 @@
 const Command = require('@ostro/console/command')
 
+/**
+ * Class FreshCommand.
+ */
 class FreshCommand extends Command {
 
     $signature = 'migrate:fresh';
@@ -19,6 +22,11 @@ class FreshCommand extends Command {
         this.createOption('--step', 'Force the migrations to be run so they can be rolled back individually'),
     ];
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         if (!this.input.getOption('force') && !await this.confirmToProceed()) {
             return 1;
@@ -49,10 +57,19 @@ class FreshCommand extends Command {
         return 0;
     }
 
+    /**
+     * needsSeeding method.
+     * @returns {any}
+     */
     needsSeeding() {
         return this.option('seed') || this.option('seeder');
     }
 
+    /**
+     * runSeeder method.
+     * @param {*} $database
+     * @returns {any}
+     */
     runSeeder($database) {
         return this.callCommand('db:seed', Object.filter({
             '--database': $database,

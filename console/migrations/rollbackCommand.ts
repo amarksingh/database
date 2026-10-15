@@ -1,5 +1,8 @@
 const BaseCommand = require('./baseCommand')
 
+/**
+ * Class RollbackCommand.
+ */
 class RollbackCommand extends BaseCommand {
 
     $signature = 'migrate:rollback';
@@ -15,12 +18,21 @@ class RollbackCommand extends BaseCommand {
         this.createOption('--step [step]', 'The number of migrations to be reverted'),
     ];
 
+    /**
+     * Create a new instance.
+     * @param {*} $migrator
+     */
     constructor($migrator) {
         super()
 
         this.$migrator = $migrator;
     }
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         if (!this.input.getOption('force') && !await this.confirmToProceed()) {
             return 1;

@@ -1,5 +1,8 @@
 const Command = require('@ostro/console/command')
 
+/**
+ * Class RefreshCommand.
+ */
 class RefreshCommand extends Command {
 
     $signature = 'migrate:refresh';
@@ -16,6 +19,11 @@ class RefreshCommand extends Command {
         this.createOption('--step', 'Force the migrations to be run so they can be rolled back individually'),
     ];
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         if (!this.input.getOption('force') && !await this.confirmToProceed()) {
             return 1;
@@ -47,6 +55,13 @@ class RefreshCommand extends Command {
         return 0;
     }
 
+    /**
+     * runRollback method.
+     * @param {*} $database
+     * @param {*} $path
+     * @param {*} $step
+     * @returns {any}
+     */
     runRollback($database, $path, $step) {
         return this.callCommand('migrate:rollback', Object.filter({
             '--database': $database,
@@ -57,6 +72,12 @@ class RefreshCommand extends Command {
         }));
     }
 
+    /**
+     * runReset method.
+     * @param {*} $database
+     * @param {*} $path
+     * @returns {any}
+     */
     runReset($database, $path) {
         return this.callCommand('migrate:reset', Object.filter({
             '--database': $database,
@@ -66,10 +87,19 @@ class RefreshCommand extends Command {
         }));
     }
 
+    /**
+     * needsSeeding method.
+     * @returns {any}
+     */
     needsSeeding() {
         return this.option('seed') || this.option('seeder');
     }
 
+    /**
+     * runSeeder method.
+     * @param {*} $database
+     * @returns {any}
+     */
     runSeeder($database) {
         return this.callCommand('db:seed', Object.filter({
             '--database': $database,

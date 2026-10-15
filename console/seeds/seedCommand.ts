@@ -2,8 +2,15 @@ const Command = require('@ostro/console/command')
 const path = require('path')
 const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException')
 const { is_file } = require('@ostro/support/function')
+/**
+ * Class SeedCommand.
+ */
 class SeedCommand extends Command {
 
+    /**
+     * Create a new instance.
+     * @param {*} $resolver
+     */
     constructor($resolver) {
         super()
         this.$resolver = $resolver;
@@ -23,6 +30,11 @@ class SeedCommand extends Command {
         this.createArgument('<file>', 'Enter seeder files name')
     ];
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         if (!this.input.getOption('force') && !await this.confirmToProceed()) {
             return 1;
@@ -39,6 +51,12 @@ class SeedCommand extends Command {
 
     }
 
+    /**
+     * getSeeder method.
+     * @async
+     * @param {*} $connection
+     * @returns {any}
+     */
     async getSeeder($connection) {
         let $class = this.input.getArgument('file') || this.input.getOption('class');
 
@@ -55,6 +73,10 @@ class SeedCommand extends Command {
 
     }
 
+    /**
+     * getDatabase method.
+     * @returns {any}
+     */
     getDatabase() {
         let $database = this.input.getOption('database');
 

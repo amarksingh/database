@@ -1,12 +1,24 @@
+/**
+ * Class DatabaseMigrationRepository.
+ */
 class DatabaseMigrationRepository {
     $resolver;
     $table;
     $connection;
+    /**
+     * Create a new instance.
+     * @param {*} $resolver
+     * @param {*} $table
+     */
     constructor($resolver, $table) {
         this.$resolver = $resolver;
         this.$table = $table;
     }
 
+    /**
+     * getRan method.
+     * @returns {any}
+     */
     getRan() {
         return this.table()
             .orderBy('batch', 'asc')
@@ -14,6 +26,11 @@ class DatabaseMigrationRepository {
             .pluck('migration')
     }
 
+    /**
+     * getMigrations method.
+     * @param {*} $steps
+     * @returns {any}
+     */
     getMigrations($steps) {
         return this.table()
             .where('batch', '>=', '1')
@@ -23,6 +40,11 @@ class DatabaseMigrationRepository {
             .get();
     }
 
+    /**
+     * getLast method.
+     * @async
+     * @returns {any}
+     */
     async getLast() {
         const lastBatch = await this.getLastBatchNumber();
         return this.table()
@@ -31,6 +53,10 @@ class DatabaseMigrationRepository {
             .get();
     }
 
+    /**
+     * getMigrationBatches method.
+     * @returns {any}
+     */
     getMigrationBatches() {
         return this.table()
             .orderBy('batch', 'asc')
@@ -38,18 +64,39 @@ class DatabaseMigrationRepository {
             .pluck('batch', 'migration')
     }
 
+    /**
+     * log method.
+     * @param {*} $file
+     * @param {*} $batch
+     * @returns {any}
+     */
     log($file, $batch) {
         return this.table().insert({ 'migration': $file, 'batch': $batch })
     }
 
+    /**
+     * delete method.
+     * @param {*} $migration
+     * @returns {any}
+     */
     delete($migration) {
         return this.table().where('migration', $migration.migration).delete();
     }
 
+    /**
+     * getNextBatchNumber method.
+     * @async
+     * @returns {any}
+     */
     async getNextBatchNumber() {
         return (await this.getLastBatchNumber()) + 1;
     }
 
+    /**
+     * getLastBatchNumber method.
+     * @async
+     * @returns {any}
+     */
     async getLastBatchNumber() {
         const res = await this.table().max('batch as batch');
         if (!res || !res.length) return 0;
@@ -57,6 +104,10 @@ class DatabaseMigrationRepository {
         return Number(val) || 0;
     }
 
+    /**
+     * createRepository method.
+     * @returns {any}
+     */
     createRepository() {
         let $schema = this.getConnection().getSchemaBuilder();
 
@@ -67,29 +118,54 @@ class DatabaseMigrationRepository {
         });
     }
 
+    /**
+     * repositoryExists method.
+     * @returns {any}
+     */
     repositoryExists() {
         let $schema = this.getConnection().getSchemaBuilder();
         return $schema.hasTable(this.$table)
     }
 
+    /**
+     * deleteRepository method.
+     * @returns {any}
+     */
     deleteRepository() {
         let $schema = this.getConnection().getSchemaBuilder();
 
         return $schema.dropTable(this.$table);
     }
 
+    /**
+     * table method.
+     * @returns {any}
+     */
     table() {
         return this.getConnection().table(this.$table);
     }
 
+    /**
+     * getConnectionResolver method.
+     * @returns {any}
+     */
     getConnectionResolver() {
         return this.$resolver;
     }
 
+    /**
+     * getConnection method.
+     * @returns {any}
+     */
     getConnection() {
         return this.getConnectionResolver().connection(this.$connection);
     }
 
+    /**
+     * setSource method.
+     * @param {*} $name
+     * @returns {any}
+     */
     setSource($name) {
         this.$connection = $name;
     }

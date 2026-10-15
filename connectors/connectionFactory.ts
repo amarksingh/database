@@ -2,14 +2,27 @@ const { random, shuffle, wrap } = require('lodash');
 const Connection = require('@ostro/database/connections/connection');
 const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException');
 const { empty } = require('@ostro/support/function');
+/**
+ * Class ConnectionFactory.
+ */
 class ConnectionFactory {
 
     $container;
 
+    /**
+     * Create a new instance.
+     * @param {*} container
+     */
     constructor(container) {
         this.$container = container;
     }
 
+    /**
+     * make method.
+     * @param {*} config
+     * @param {*} name
+     * @returns {any}
+     */
     make(config, name = null) {
         config = this.parseConfig(config, name);
 
@@ -20,47 +33,100 @@ class ConnectionFactory {
         return this.createSingleConnection(config);
     }
 
+    /**
+     * parseConfig method.
+     * @param {*} config
+     * @param {*} name
+     * @returns {any}
+     */
     parseConfig(config, name) {
         return { prefix: '', ...config, name };
     }
 
+    /**
+     * createSingleConnection method.
+     * @param {*} config
+     * @returns {any}
+     */
     createSingleConnection(config) {
         const connection = this.createConnectionResolver(config);
 
         return this.createConnection(config.driver, connection, config.database, config.prefix, config);
     }
 
+    /**
+     * createReadWriteConnection method.
+     * @param {*} config
+     * @returns {any}
+     */
     createReadWriteConnection(config) {
         const connection = this.createSingleConnection(this.getWriteConfig(config));
 
         return connection.setReadConnection(this.createReadConnection(config));
     }
 
+    /**
+     * createReadConnection method.
+     * @param {*} config
+     * @returns {any}
+     */
     createReadConnection(config) {
         return this.createConnectionResolver(this.getReadConfig(config));
     }
 
+    /**
+     * getReadConfig method.
+     * @param {*} config
+     * @returns {any}
+     */
     getReadConfig(config) {
         return this.mergeReadWriteConfig(config, this.getReadWriteConfig(config, 'read'));
     }
 
+    /**
+     * getWriteConfig method.
+     * @param {*} config
+     * @returns {any}
+     */
     getWriteConfig(config) {
         return this.mergeReadWriteConfig(config, this.getReadWriteConfig(config, 'write'));
     }
 
+    /**
+     * getReadWriteConfig method.
+     * @param {*} config
+     * @param {*} type
+     * @returns {any}
+     */
     getReadWriteConfig(config, type) {
         return config[type] && config[type][0] ? random(config[type]) : config[type];
     }
 
+    /**
+     * mergeReadWriteConfig method.
+     * @param {*} config
+     * @param {*} merge
+     * @returns {any}
+     */
     mergeReadWriteConfig(config, merge) {
         const { read, write, ...mergedConfig } = { ...config, ...merge };
         return mergedConfig;
     }
 
+    /**
+     * createConnectionResolver method.
+     * @param {*} config
+     * @returns {any}
+     */
     createConnectionResolver(config) {
         return config.host ? this.createConnectionResolverWithHosts(config) : this.createConnectionResolverWithoutHosts(config);
     }
 
+    /**
+     * createConnectionResolverWithHosts method.
+     * @param {*} config
+     * @returns {any}
+     */
     createConnectionResolverWithHosts(config) {
         return (database, prefix) => {
             config = { ...config, host: this.parseHost(config) }
@@ -68,6 +134,11 @@ class ConnectionFactory {
         };
     }
 
+    /**
+     * parseHost method.
+     * @param {*} $config
+     * @returns {any}
+     */
     parseHost($config) {
         const hosts = Array.isArray($config['host']) ? $config['host'] : [$config['host']];
         if (empty(hosts)) {
@@ -78,12 +149,22 @@ class ConnectionFactory {
     }
 
 
+    /**
+     * createConnectionResolverWithoutHosts method.
+     * @param {*} config
+     * @returns {any}
+     */
     createConnectionResolverWithoutHosts(config) {
         return (database, prefix) => {
             return this.createConnector(config).connect(config, database, prefix);
         }
     }
 
+    /**
+     * createConnector method.
+     * @param {*} config
+     * @returns {any}
+     */
     createConnector(config) {
         if (!config.driver) {
             throw new Error('A driver must be specified.');
@@ -111,6 +192,15 @@ class ConnectionFactory {
         }
     }
 
+    /**
+     * createConnection method.
+     * @param {*} driver
+     * @param {*} connection
+     * @param {*} database
+     * @param {*} prefix
+     * @param {*} config
+     * @returns {any}
+     */
     createConnection(driver, connection, database, prefix = '', config = {}) {
         const resolver = Connection.getResolver(driver);
 

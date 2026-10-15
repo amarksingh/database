@@ -1,8 +1,16 @@
 const BaseCommand = require('./baseCommand')
 const path = require('path')
 
+/**
+ * Class CreateMigration.
+ */
 class CreateMigration extends BaseCommand {
 
+    /**
+     * Create a new instance.
+     * @param {*} migrator
+     * @param {*} file
+     */
     constructor(migrator, file) {
         super()
         this.$migrator = migrator;
@@ -24,6 +32,10 @@ class CreateMigration extends BaseCommand {
         this.createOption('--step [step]', 'Force the migrations to be run so they can be rolled back individually')
     ];
 
+    /**
+     * handle method.
+     * @returns {any}
+     */
     handle() {
         return this.$migrator.usingConnection(this.input.option('database')).then(($connection) => {
             return this.prepareDatabase().then(success => {
@@ -43,6 +55,10 @@ class CreateMigration extends BaseCommand {
         })
     }
 
+    /**
+     * prepareDatabase method.
+     * @returns {any}
+     */
     prepareDatabase() {
         return this.$migrator.repositoryExists().then(exists => {
             if (!exists) {
@@ -59,6 +75,10 @@ class CreateMigration extends BaseCommand {
         })
     }
 
+    /**
+     * loadSchemaState method.
+     * @returns {any}
+     */
     loadSchemaState() {
         let $connection = this.$migrator.resolveConnection(this.input.option('database'));
 
@@ -74,6 +94,11 @@ class CreateMigration extends BaseCommand {
 
     }
 
+    /**
+     * schemaPath method.
+     * @param {*} $connection
+     * @returns {any}
+     */
     schemaPath($connection) {
         if (this.input.option('schema-path')) {
             return this.input.option('schema-path');

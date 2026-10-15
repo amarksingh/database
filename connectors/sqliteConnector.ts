@@ -1,5 +1,15 @@
 const Knex = require('knex');
+/**
+ * Class SqliteConnector.
+ */
 class SqliteConnector {
+    /**
+     * connect method.
+     * @param {*} config
+     * @param {*} database
+     * @param {*} prefix
+     * @returns {any}
+     */
     connect(config, database, prefix) {
         return Knex({
             client: config.version || 'sqlite3',

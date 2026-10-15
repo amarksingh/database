@@ -2,8 +2,15 @@ const BaseCommand = require('./baseCommand')
 const TableGuesser = require('./tableGuesser')
 const path = require('path')
 const InvalidArgumentException = require('@ostro/contracts/exception/invalidArgumentException')
+/**
+ * Class CreateSchema.
+ */
 class CreateSchema extends BaseCommand {
 
+    /**
+     * Create a new instance.
+     * @param {*} $creator
+     */
     constructor($creator) {
         super()
         this.$creator = $creator;
@@ -29,6 +36,11 @@ class CreateSchema extends BaseCommand {
         ]
     }
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
 
         let $name = this.input.getArgument('name');
@@ -57,6 +69,14 @@ class CreateSchema extends BaseCommand {
 
     }
 
+    /**
+     * writeMigration method.
+     * @async
+     * @param {*} $name
+     * @param {*} $table
+     * @param {*} $create
+     * @returns {any}
+     */
     async writeMigration($name, $table, $create) {
         let $file = await this.$creator.create(
             $name.plural().camelCase().snakeCase(), this.getMigrationPath(), $table, $create
@@ -69,6 +89,10 @@ class CreateSchema extends BaseCommand {
         this.line(`<info>Created Migration:</info> ${$file.replace(this.getMigrationPath(), '').slice(1)}`);
     }
 
+    /**
+     * getMigrationPath method.
+     * @returns {any}
+     */
     getMigrationPath() {
         let $targetPath = this.input.getOption('path')
         if ($targetPath != null) {

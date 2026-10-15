@@ -1,12 +1,24 @@
 const Builder = require('./builder');
 
+/**
+ * Class SqliteBuilder.
+ */
 class SqliteBuilder extends Builder {
+    /**
+     * getAllTables method.
+     * @returns {any}
+     */
     getAllTables() {
         return this.$connection.table('sqlite_master')
             .where('type', this.$connection.getConfig('schema', 'table'))
             .whereNot('name', 'like', 'sqlite_%') // Exclude system tables
             .pluck('name');
     }
+    /**
+     * dropAllTables method.
+     * @async
+     * @returns {any}
+     */
     async dropAllTables() {
         const tables = await this.getAllTables();
         if (tables.length) {

@@ -4,6 +4,9 @@ const InteractsWithDictionary = require('./concerns/interactsWithDictionary')
 const ModelNotFoundException = require('../modelNotFoundException')
 const MultipleRecordsFoundException = require('../multipleRecordsFoundException')
 
+/**
+ * Class Relation.
+ */
 class Relation extends Macroable.implement(InteractsWithDictionary) {
 
     $query = null;
@@ -20,6 +23,11 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
 
     $performQueries = [];
 
+    /**
+     * Create a new instance.
+     * @param {*} $query
+     * @param {*} $parent
+     */
     constructor($query, $parent) {
         super()
         this.$query = $query;
@@ -27,6 +35,12 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
         this.$related = $query.getModel();
     }
 
+    /**
+     * noConstraints method.
+     * @static
+     * @param {*} $callback
+     * @returns {any}
+     */
     static noConstraints($callback) {
         let $previous = this.$constraints;
 
@@ -39,30 +53,66 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
         }
     }
 
+    /**
+     * addConstraints method.
+     * @returns {any}
+     */
     addConstraints() {
 
     }
 
+    /**
+     * addEagerConstraints method.
+     * @param {*} $models
+     * @returns {any}
+     */
     addEagerConstraints($models) {
 
     }
 
+    /**
+     * initRelation method.
+     * @param {*} $models
+     * @param {*} $relation
+     * @returns {any}
+     */
     initRelation($models, $relation) {
 
     }
 
+    /**
+     * match method.
+     * @param {*} $models
+     * @param {*} $results
+     * @param {*} $relation
+     * @returns {any}
+     */
     match($models, $results, $relation) {
 
     }
 
+    /**
+     * getResults method.
+     * @returns {any}
+     */
     getResults() {
 
     }
 
+    /**
+     * getEager method.
+     * @returns {any}
+     */
     getEager() {
         return this.get();
     }
 
+    /**
+     * sole method.
+     * @async
+     * @param {*} $columns
+     * @returns {any}
+     */
     async sole($columns = ['*']) {
         const $result = await this.take(2).get($columns);
 
@@ -77,11 +127,19 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
         return $result.first();
     }
 
+    /**
+     * get method.
+     * @returns {any}
+     */
     get() {
 
         return this.$query.get();
     }
 
+    /**
+     * touch method.
+     * @returns {any}
+     */
     touch() {
         $model = this.getRelated();
 
@@ -92,69 +150,142 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
         }
     }
 
+    /**
+     * rawUpdate method.
+     * @param {*} $attributes
+     * @returns {any}
+     */
     rawUpdate($attributes = []) {
         return this.$query.withoutGlobalScopes().update($attributes);
     }
 
+    /**
+     * getRelationExistenceCountQuery method.
+     * @param {*} $query
+     * @param {*} $parentQuery
+     * @returns {any}
+     */
     getRelationExistenceCountQuery($query, $parentQuery) {
         return this.getRelationExistenceQuery(
             $query, $parentQuery, $query.raw('count(*)')
         );
     }
 
+    /**
+     * getRelationExistenceQuery method.
+     * @param {*} $query
+     * @param {*} $parentQuery
+     * @param {*} $columns
+     * @returns {any}
+     */
     getRelationExistenceQuery($query, $parentQuery, $columns = ['*']) {
         return $query.select($columns).whereRaw(
             this.getQualifiedParentKeyName() + '=' + this.getExistenceCompareKey()
         );
     }
 
+    /**
+     * getRelationCountHash method.
+     * @param {*} $incrementJoinCount
+     * @returns {any}
+     */
     getRelationCountHash($incrementJoinCount = true) {
 
         return 'ostro_reserved_' + ($incrementJoinCount ? this.constructor.$selfJoinCount++ : this.constructor.$selfJoinCount);
     }
 
+    /**
+     * getKeys method.
+     * @param {*} $models
+     * @param {*} $key
+     * @returns {any}
+     */
     getKeys($models, $key = null) {
         return $models.map(function ($value) {
             return $key ? $value.getAttribute($key) : $value.getKey();
         }).values().unique(null, true).sortBy().all();
     }
 
+    /**
+     * getRelationQuery method.
+     * @returns {any}
+     */
     getRelationQuery() {
         return this.$query;
     }
 
+    /**
+     * getQuery method.
+     * @returns {any}
+     */
     getQuery() {
         return this.$query;
     }
 
+    /**
+     * getBaseQuery method.
+     * @returns {any}
+     */
     getBaseQuery() {
         return this.$query.getQuery();
     }
 
+    /**
+     * getParent method.
+     * @returns {any}
+     */
     getParent() {
         return this.$parent;
     }
 
+    /**
+     * getQualifiedParentKeyName method.
+     * @returns {any}
+     */
     getQualifiedParentKeyName() {
         return this.$parent.getQualifiedKeyName();
     }
 
+    /**
+     * getRelated method.
+     * @returns {any}
+     */
     getRelated() {
         return this.$related;
     }
 
+    /**
+     * createdAt method.
+     * @returns {any}
+     */
     createdAt() {
         return this.$parent.getCreatedAtColumn();
     }
 
+    /**
+     * updatedAt method.
+     * @returns {any}
+     */
     updatedAt() {
         return this.$parent.getUpdatedAtColumn();
     }
 
+    /**
+     * relatedUpdatedAt method.
+     * @returns {any}
+     */
     relatedUpdatedAt() {
         return this.$related.getUpdatedAtColumn();
     }
 
+    /**
+     * whereInEager method.
+     * @param {*} $whereIn
+     * @param {*} $key
+     * @param {*} $modelKeys
+     * @param {*} $query
+     * @returns {any}
+     */
     whereInEager($whereIn, $key, $modelKeys, $query = null) {
         ($query ?? this.$query)[$whereIn]($key, $modelKeys);
 
@@ -163,6 +294,12 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
         }
     }
 
+    /**
+     * whereInMethod method.
+     * @param {*} $model
+     * @param {*} $key
+     * @returns {any}
+     */
     whereInMethod($model, $key) {
         if ($model.getKeyName() === $key.split('.').pop() &&
             ['int', 'integer'].includes($model.getKeyType())) {
@@ -171,15 +308,31 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
             return 'whereIn';
         }
     }
+    /**
+     * setPerformQuery method.
+     * @param {*} fn
+     * @returns {any}
+     */
     setPerformQuery(fn) {
         if (Array.isArray(fn)) {
             return this.$performQueries = this.$performQueries.concat(fn)
         }
         return this.$performQueries.push(fn)
     }
+    /**
+     * getPerformQueries method.
+     * @returns {any}
+     */
     getPerformQueries() {
         return this.$performQueries
     }
+    /**
+     * morphMap method.
+     * @static
+     * @param {*} $map
+     * @param {*} $merge
+     * @returns {any}
+     */
     static morphMap($map = null, $merge = true) {
         $map = this.buildMorphMapFromModels($map);
 
@@ -194,6 +347,12 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
         return this.$morphMap;
     }
 
+    /**
+     * buildMorphMapFromModels method.
+     * @static
+     * @param {*} $models
+     * @returns {any}
+     */
     static buildMorphMapFromModels($models = null) {
         if (is_null($models) || !Array.isArray($models)) {
             return $models;
@@ -204,10 +363,23 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
         }));
     }
 
+    /**
+     * getMorphedModel method.
+     * @static
+     * @param {*} $alias
+     * @returns {any}
+     */
     static getMorphedModel($alias) {
         return this.$morphMap[$alias] || null;
     }
 
+    /**
+     * __call method.
+     * @param {*} $target
+     * @param {*} $method
+     * @param {*} $parameters
+     * @returns {any}
+     */
     __call($target, $method, $parameters) {
 
         let $fn = this.$query[$method];

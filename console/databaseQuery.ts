@@ -1,6 +1,13 @@
 const Command = require('@ostro/console/command')
+/**
+ * Class DatabaseQuery.
+ */
 class DatabaseQuery extends Command {
 
+    /**
+     * Create a new instance.
+     * @param {*} resolver
+     */
     constructor(resolver) {
         super()
         this.$resolver = resolver;
@@ -14,6 +21,10 @@ class DatabaseQuery extends Command {
 
     $description = 'database query';
 
+    /**
+     * handle method.
+     * @returns {any}
+     */
     handle() {
         return this.$resolver.connection().raw(this.input.argument('query')).then(res => {
             console.log(res)

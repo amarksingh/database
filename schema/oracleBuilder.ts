@@ -1,5 +1,13 @@
 const Builder = require('./builder')
+/**
+ * Class OracleSchema.
+ */
 class OracleSchema extends Builder {
+    /**
+     * dropAllTables method.
+     * @async
+     * @returns {any}
+     */
     async dropAllTables() {
         const tables = await this.getAllTables();
         const promises = [];
@@ -10,6 +18,10 @@ class OracleSchema extends Builder {
 
     }
 
+    /**
+     * getAllTables method.
+     * @returns {any}
+     */
     getAllTables() {
         return this.$connection.table('user_tables')
             .pluck('table_name');

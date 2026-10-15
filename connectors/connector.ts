@@ -1,9 +1,19 @@
 
 const DetectsLostConnections = require('@ostro/database/detectsLostConnections')
+/**
+ * Class Connector.
+ */
 class Connector extends DetectsLostConnections {
 
     $options = {};
 
+    /**
+     * createConnection method.
+     * @param {*} $dsn
+     * @param {*} $config
+     * @param {*} $options
+     * @returns {any}
+     */
     createConnection($dsn, $config, $options) {
         const $username = $config['username'] || null;
         const $password = $config['password'] || null;
@@ -19,10 +29,27 @@ class Connector extends DetectsLostConnections {
         }
     }
 
+    /**
+     * createConnection method.
+     * @param {*} $dsn
+     * @param {*} $username
+     * @param {*} $password
+     * @param {*} $options
+     * @returns {any}
+     */
     createConnection($dsn, $username, $password, $options) {
         return new PDO($dsn, $username, $password, $options);
     }
 
+    /**
+     * tryAgainIfCausedByLostConnection method.
+     * @param {*} $e
+     * @param {*} $dsn
+     * @param {*} $username
+     * @param {*} $password
+     * @param {*} $options
+     * @returns {any}
+     */
     tryAgainIfCausedByLostConnection($e, $dsn, $username, $password, $options) {
         if (this.causedByLostConnection($e)) {
             return this.createConnection($dsn, $username, $password, $options);
@@ -31,10 +58,19 @@ class Connector extends DetectsLostConnections {
         throw $e;
     }
 
+    /**
+     * getDefaultOptions method.
+     * @returns {any}
+     */
     getDefaultOptions() {
         return this.$options;
     }
 
+    /**
+     * setDefaultOptions method.
+     * @param {*} $options
+     * @returns {any}
+     */
     setDefaultOptions($options) {
         this.$options = $options;
     }

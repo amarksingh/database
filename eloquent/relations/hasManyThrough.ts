@@ -5,7 +5,20 @@ const CanBeOneOfMany = require('./concerns/canBeOneOfMany')
 const InteractsWithDictionary = require('./concerns/interactsWithDictionary')
 const Relation = require('./relation')
 const ModelNotFoundException = require('../modelNotFoundException');
+/**
+ * Class HasManyThrough.
+ */
 class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneOfMany, InteractsWithDictionary) {
+    /**
+     * Create a new instance.
+     * @param {*} query
+     * @param {*} farParent
+     * @param {*} throughParent
+     * @param {*} firstKey
+     * @param {*} secondKey
+     * @param {*} localKey
+     * @param {*} secondLocalKey
+     */
     constructor(query, farParent, throughParent, firstKey, secondKey, localKey, secondLocalKey) {
         super(query, throughParent);
         this.$localKey = localKey;
@@ -19,6 +32,10 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
 
     
 
+    /**
+     * addConstraints method.
+     * @returns {any}
+     */
     addConstraints() {
         const localValue = this.$farParent[this.$localKey];
 
@@ -29,6 +46,11 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         }
     }
 
+    /**
+     * performJoin method.
+     * @param {*} query
+     * @returns {any}
+     */
     performJoin(query = null) {
         query = query || this.$query;
 
@@ -43,21 +65,38 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         }
     }
 
+    /**
+     * getQualifiedParentKeyName method.
+     * @returns {any}
+     */
     getQualifiedParentKeyName() {
         return this.$parent.qualifyColumn(this.$secondLocalKey);
     }
 
+    /**
+     * throughParentSoftDeletes method.
+     * @returns {any}
+     */
     throughParentSoftDeletes() {
         return this.$throughParent.constructor.name.includes('SoftDeletes') || 
                typeof this.$throughParent.getQualifiedDeletedAtColumn === 'function';
     }
 
+    /**
+     * withTrashedParents method.
+     * @returns {any}
+     */
     withTrashedParents() {
         this.$query.withoutGlobalScope('SoftDeletableHasManyThrough');
 
         return this;
     }
 
+    /**
+     * addEagerConstraints method.
+     * @param {*} models
+     * @returns {any}
+     */
     addEagerConstraints(models) {
         const whereIn = this.whereInMethod(this.$farParent, this.$localKey);
 
@@ -68,6 +107,12 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         );
     }
 
+    /**
+     * initRelation method.
+     * @param {*} models
+     * @param {*} relation
+     * @returns {any}
+     */
     initRelation(models, relation) {
         models.forEach(model => {
             model.setRelation(relation, this.$related.newCollection());
@@ -76,6 +121,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return models;
     }
 
+    /**
+     * match method.
+     * @param {*} models
+     * @param {*} results
+     * @param {*} relation
+     * @returns {any}
+     */
     match(models, results, relation) {
         const dictionary = this.buildDictionary(results);
 
@@ -91,6 +143,11 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return models;
     }
 
+    /**
+     * buildDictionary method.
+     * @param {*} results
+     * @returns {any}
+     */
     buildDictionary(results) {
         const dictionary = {};
 
@@ -104,6 +161,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return dictionary;
     }
 
+    /**
+     * firstOrNew method.
+     * @async
+     * @param {*} attributes
+     * @param {*} values
+     * @returns {any}
+     */
     async firstOrNew(attributes = {}, values = {}) {
         const instance = await this.where(attributes).first();
         if (instance !== null) {
@@ -115,6 +179,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return model;
     }
 
+    /**
+     * firstOrCreate method.
+     * @async
+     * @param {*} attributes
+     * @param {*} values
+     * @returns {any}
+     */
     async firstOrCreate(attributes = {}, values = {}) {
         const instance = await this.where(attributes).first();
         if (instance !== null) {
@@ -124,6 +195,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return this.createOrFirst({...attributes, ...values});
     }
 
+    /**
+     * createOrFirst method.
+     * @async
+     * @param {*} attributes
+     * @param {*} values
+     * @returns {any}
+     */
     async createOrFirst(attributes = {}, values = {}) {
         try {
             return await this.getQuery().withSavepointIfNeeded(() => {
@@ -138,6 +216,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         }
     }
 
+    /**
+     * updateOrCreate method.
+     * @async
+     * @param {*} attributes
+     * @param {*} values
+     * @returns {any}
+     */
     async updateOrCreate(attributes, values = {}) {
         const instance = await this.firstOrCreate(attributes, values);
 
@@ -148,16 +233,36 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return instance;
     }
 
+    /**
+     * firstWhere method.
+     * @param {*} column
+     * @param {*} operator
+     * @param {*} value
+     * @param {*} boolean
+     * @returns {any}
+     */
     firstWhere(column, operator = null, value = null, boolean = 'and') {
         return this.where(column, operator, value, boolean).first();
     }
 
+    /**
+     * first method.
+     * @async
+     * @param {*} columns
+     * @returns {any}
+     */
     async first(columns = ['*']) {
         const results = await this.take(1).get(columns);
 
         return results.length > 0 ? results.first() : null;
     }
 
+    /**
+     * firstOrFail method.
+     * @async
+     * @param {*} columns
+     * @returns {any}
+     */
     async firstOrFail(columns = ['*']) {
         const model = await this.first(columns);
         if (model !== null) {
@@ -167,6 +272,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         throw new ModelNotFoundException().setModel(get_class(this.$related));
     }
 
+    /**
+     * firstOr method.
+     * @async
+     * @param {*} columns
+     * @param {*} callback
+     * @returns {any}
+     */
     async firstOr(columns = ['*'], callback = null) {
         if (typeof columns === 'function') {
             callback = columns;
@@ -181,6 +293,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return callback();
     }
 
+    /**
+     * find method.
+     * @async
+     * @param {*} id
+     * @param {*} columns
+     * @returns {any}
+     */
     async find(id, columns = ['*']) {
         if (Array.isArray(id) || (id && typeof id.toArray === 'function')) {
             return this.findMany(id, columns);
@@ -191,6 +310,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         ).first(columns);
     }
 
+    /**
+     * findMany method.
+     * @async
+     * @param {*} ids
+     * @param {*} columns
+     * @returns {any}
+     */
     async findMany(ids, columns = ['*']) {
         ids = (ids && typeof ids.toArray === 'function') ? ids.toArray() : ids;
 
@@ -203,6 +329,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         ).get(columns);
     }
 
+    /**
+     * findOrFail method.
+     * @async
+     * @param {*} id
+     * @param {*} columns
+     * @returns {any}
+     */
     async findOrFail(id, columns = ['*']) {
         const result = await this.find(id, columns);
 
@@ -220,6 +353,14 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         throw new ModelNotFoundException().setModel(get_class(this.$related), id);
     }
 
+    /**
+     * findOr method.
+     * @async
+     * @param {*} id
+     * @param {*} columns
+     * @param {*} callback
+     * @returns {any}
+     */
     async findOr(id, columns = ['*'], callback = null) {
         if (typeof columns === 'function') {
             callback = columns;
@@ -242,12 +383,22 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return callback();
     }
 
+    /**
+     * getResults method.
+     * @returns {any}
+     */
     getResults() {
         return this.$farParent[this.$localKey] !== null
                 ? this.get()
                 : this.$related.newCollection();
     }
 
+    /**
+     * get method.
+     * @async
+     * @param {*} columns
+     * @returns {any}
+     */
     async get(columns = ['*']) {
         const builder = this.prepareQueryBuilder(columns);
 
@@ -260,24 +411,53 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return this.$related.newCollection(models);
     }
 
+    /**
+     * paginate method.
+     * @param {*} perPage
+     * @param {*} columns
+     * @param {*} pageName
+     * @param {*} page
+     * @returns {any}
+     */
     paginate(perPage = null, columns = ['*'], pageName = 'page', page = null) {
         this.$query.addSelect(this.shouldSelect(columns));
 
         return this.$query.paginate(perPage, columns, pageName, page);
     }
 
+    /**
+     * simplePaginate method.
+     * @param {*} perPage
+     * @param {*} columns
+     * @param {*} pageName
+     * @param {*} page
+     * @returns {any}
+     */
     simplePaginate(perPage = null, columns = ['*'], pageName = 'page', page = null) {
         this.$query.addSelect(this.shouldSelect(columns));
 
         return this.$query.simplePaginate(perPage, columns, pageName, page);
     }
 
+    /**
+     * cursorPaginate method.
+     * @param {*} perPage
+     * @param {*} columns
+     * @param {*} cursorName
+     * @param {*} cursor
+     * @returns {any}
+     */
     cursorPaginate(perPage = null, columns = ['*'], cursorName = 'cursor', cursor = null) {
         this.$query.addSelect(this.shouldSelect(columns));
 
         return this.$query.cursorPaginate(perPage, columns, cursorName, cursor);
     }
 
+    /**
+     * shouldSelect method.
+     * @param {*} columns
+     * @returns {any}
+     */
     shouldSelect(columns = ['*']) {
         if (columns.includes('*') && columns.length == 1) {
             columns = [this.$related.getTable()+'.*'];
@@ -286,10 +466,24 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return [...columns, `${this.getQualifiedFirstKeyName()} as ostro_through_key`];
     }
 
+    /**
+     * chunk method.
+     * @param {*} count
+     * @param {*} callback
+     * @returns {any}
+     */
     chunk(count, callback) {
         return this.prepareQueryBuilder().chunk(count, callback);
     }
 
+    /**
+     * chunkById method.
+     * @param {*} count
+     * @param {*} callback
+     * @param {*} column
+     * @param {*} alias
+     * @returns {any}
+     */
     chunkById(count, callback, column = null, alias = null) {
         column ??= this.getRelated().getQualifiedKeyName();
 
@@ -298,6 +492,14 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return this.prepareQueryBuilder().chunkById(count, callback, column, alias);
     }
 
+    /**
+     * chunkByIdDesc method.
+     * @param {*} count
+     * @param {*} callback
+     * @param {*} column
+     * @param {*} alias
+     * @returns {any}
+     */
     chunkByIdDesc(count, callback, column = null, alias = null) {
         column ??= this.getRelated().getQualifiedKeyName();
 
@@ -306,6 +508,14 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return this.prepareQueryBuilder().chunkByIdDesc(count, callback, column, alias);
     }
 
+    /**
+     * eachById method.
+     * @param {*} callback
+     * @param {*} count
+     * @param {*} column
+     * @param {*} alias
+     * @returns {any}
+     */
     eachById(callback, count = 1000, column = null, alias = null) {
         column = column ?? this.getRelated().getQualifiedKeyName();
 
@@ -314,10 +524,20 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return this.prepareQueryBuilder().eachById(callback, count, column, alias);
     }
 
+    /**
+     * cursor method.
+     * @returns {any}
+     */
     cursor() {
         return this.prepareQueryBuilder().cursor();
     }
 
+    /**
+     * each method.
+     * @param {*} callback
+     * @param {*} count
+     * @returns {any}
+     */
     each(callback, count = 1000) {
         return this.chunk(count, (results) => {
             for (const [key, value] of results.entries()) {
@@ -328,10 +548,22 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         });
     }
 
+    /**
+     * lazy method.
+     * @param {*} chunkSize
+     * @returns {any}
+     */
     lazy(chunkSize = 1000) {
         return this.prepareQueryBuilder().lazy(chunkSize);
     }
 
+    /**
+     * lazyById method.
+     * @param {*} chunkSize
+     * @param {*} column
+     * @param {*} alias
+     * @returns {any}
+     */
     lazyById(chunkSize = 1000, column = null, alias = null) {
         column ??= this.getRelated().getQualifiedKeyName();
 
@@ -340,6 +572,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return this.prepareQueryBuilder().lazyById(chunkSize, column, alias);
     }
 
+    /**
+     * lazyByIdDesc method.
+     * @param {*} chunkSize
+     * @param {*} column
+     * @param {*} alias
+     * @returns {any}
+     */
     lazyByIdDesc(chunkSize = 1000, column = null, alias = null) {
         column ??= this.getRelated().getQualifiedKeyName();
 
@@ -348,10 +587,22 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         return this.prepareQueryBuilder().lazyByIdDesc(chunkSize, column, alias);
     }
 
+    /**
+     * prepareQueryBuilder method.
+     * @param {*} columns
+     * @returns {any}
+     */
     prepareQueryBuilder(columns = ['*']) {
         return this.$query.select(this.shouldSelect(columns));
     }
 
+    /**
+     * getRelationExistenceQuery method.
+     * @param {*} query
+     * @param {*} parentQuery
+     * @param {*} columns
+     * @returns {any}
+     */
     getRelationExistenceQuery(query, parentQuery, columns = ['*']) {
         if (parentQuery.getTable() === query.getTable()) {
             return this.getRelationExistenceQueryForSelfRelation(query, parentQuery, columns);
@@ -368,6 +619,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         );
     }
 
+    /**
+     * getRelationExistenceQueryForSelfRelation method.
+     * @param {*} query
+     * @param {*} parentQuery
+     * @param {*} columns
+     * @returns {any}
+     */
     getRelationExistenceQueryForSelfRelation(query, parentQuery, columns = ['*']) {
         const hash = this.getRelationCountHash();
         query.from(`${query.getModel().getTable()} as ${hash}`);
@@ -385,6 +643,13 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         );
     }
 
+    /**
+     * getRelationExistenceQueryForThroughSelfRelation method.
+     * @param {*} query
+     * @param {*} parentQuery
+     * @param {*} columns
+     * @returns {any}
+     */
     getRelationExistenceQueryForThroughSelfRelation(query, parentQuery, columns = ['*']) {
         const hash = this.getRelationCountHash();
         const table = `${this.$throughParent.getTable()} as ${hash}`;
@@ -400,34 +665,66 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
         );
     }
 
+    /**
+     * getQualifiedFarKeyName method.
+     * @returns {any}
+     */
     getQualifiedFarKeyName() {
         return this.getQualifiedForeignKeyName();
     }
 
+    /**
+     * getFirstKeyName method.
+     * @returns {any}
+     */
     getFirstKeyName() {
         return this.$firstKey;
     }
 
+    /**
+     * getQualifiedFirstKeyName method.
+     * @returns {any}
+     */
     getQualifiedFirstKeyName() {
         return this.$throughParent.qualifyColumn(this.$firstKey);
     }
 
+    /**
+     * getForeignKeyName method.
+     * @returns {any}
+     */
     getForeignKeyName() {
         return this.$secondKey;
     }
 
+    /**
+     * getQualifiedForeignKeyName method.
+     * @returns {any}
+     */
     getQualifiedForeignKeyName() {
         return this.$related.qualifyColumn(this.$secondKey);
     }
 
+    /**
+     * getLocalKeyName method.
+     * @returns {any}
+     */
     getLocalKeyName() {
         return this.$localKey;
     }
 
+    /**
+     * getQualifiedLocalKeyName method.
+     * @returns {any}
+     */
     getQualifiedLocalKeyName() {
         return this.$farParent.qualifyColumn(this.$localKey);
     }
 
+    /**
+     * getSecondLocalKeyName method.
+     * @returns {any}
+     */
     getSecondLocalKeyName() {
         return this.$secondLocalKey;
     }

@@ -1,5 +1,8 @@
 const { get_class_name, isset, empty, count } = require('@ostro/support/function')
 const { intersection } = require('lodash')
+/**
+ * Class GuardsAttributes.
+ */
 class GuardsAttributes {
     $fillable = [];
 
@@ -8,10 +11,19 @@ class GuardsAttributes {
     static $unguarded = false;
 
     static $guardableColumns = [];
+    /**
+     * getFillable method.
+     * @returns {any}
+     */
     getFillable() {
         return this.$fillable;
     }
 
+    /**
+     * fillableData method.
+     * @param {*} $values
+     * @returns {any}
+     */
     fillableData($values) {
         const datas = [];
         if (!Array.isArray($values)) {
@@ -30,47 +42,89 @@ class GuardsAttributes {
         return datas;
     }
 
+    /**
+     * fillable method.
+     * @param {*} $fillable
+     * @returns {any}
+     */
     fillable($fillable) {
         this.$fillable = $fillable;
 
         return this;
     }
 
+    /**
+     * mergeFillable method.
+     * @param {*} $fillable
+     * @returns {any}
+     */
     mergeFillable($fillable) {
         this.$fillable = this.$fillable.concat($fillable);
 
         return this;
     }
 
+    /**
+     * getGuarded method.
+     * @returns {any}
+     */
     getGuarded() {
         return this.$guarded === false ? [] :
             this.$guarded;
     }
 
+    /**
+     * guard method.
+     * @param {*} $guarded
+     * @returns {any}
+     */
     guard($guarded) {
         this.$guarded = $guarded;
 
         return this;
     }
 
+    /**
+     * mergeGuarded method.
+     * @param {*} $guarded
+     * @returns {any}
+     */
     mergeGuarded($guarded) {
         this.$guarded = this.$guarded.concat($guarded);
 
         return this;
     }
 
+    /**
+     * unguard method.
+     * @param {*} $state
+     * @returns {any}
+     */
     unguard($state = true) {
         this.constructor.$unguarded = $state;
     }
 
+    /**
+     * reguard method.
+     * @returns {any}
+     */
     reguard() {
         this.constructor.$unguarded = false;
     }
 
+    /**
+     * isUnguarded method.
+     * @returns {any}
+     */
     isUnguarded() {
         return this.constructor.$unguarded;
     }
 
+    /**
+     * unguarded method.
+     * @param {*} $callback
+     * @returns {any}
+     */
     unguarded($callback) {
         if (this.constructor.$unguarded) {
             return $callback();
@@ -85,6 +139,11 @@ class GuardsAttributes {
         }
     }
 
+    /**
+     * isFillable method.
+     * @param {*} $key
+     * @returns {any}
+     */
     isFillable($key) {
         if (this.constructor.$unguarded) {
             return true;
@@ -103,6 +162,11 @@ class GuardsAttributes {
             !$key.startsWith('_');
     }
 
+    /**
+     * isGuarded method.
+     * @param {*} $key
+     * @returns {any}
+     */
     isGuarded($key) {
         if (empty(this.getGuarded())) {
             return false;
@@ -114,6 +178,12 @@ class GuardsAttributes {
             !empty(this.getGuarded().filter(item => reg.test(item)));
     }
 
+    /**
+     * isGuardableColumn method.
+     * @async
+     * @param {*} $key
+     * @returns {any}
+     */
     async isGuardableColumn($key) {
         const className = get_class_name(this);
         if (!isset(this.constructor.$guardableColumns[className])) {
@@ -124,10 +194,19 @@ class GuardsAttributes {
         return this.constructor.$guardableColumns[className].indexOf($key) > -1;
     }
 
+    /**
+     * totallyGuarded method.
+     * @returns {any}
+     */
     totallyGuarded() {
         return count(this.getFillable()) === 0 && this.getGuarded().toString() === ['*'].toString();
     }
 
+    /**
+     * fillableFromArray method.
+     * @param {*} $attributes
+     * @returns {any}
+     */
     fillableFromArray($attributes) {
         if (count(this.getFillable()) > 0 && !this.constructor.$unguarded) {
             return intersection(this.getFillable(), Object.keys($attributes));

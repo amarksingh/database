@@ -1,6 +1,14 @@
 const Builder = require('./builder')
+/**
+ * Class MySqlBuilder.
+ */
 class MySqlBuilder extends Builder {
 
+	/**
+	 * dropAllTables method.
+	 * @async
+	 * @returns {any}
+	 */
 	async dropAllTables() {
 		const tables = await this.getAllTables();
 		if (tables.length > 0) {
@@ -9,6 +17,10 @@ class MySqlBuilder extends Builder {
 
 	}
 
+	/**
+	 * getAllTables method.
+	 * @returns {any}
+	 */
 	getAllTables() {
 		return this.$connection.table('information_schema.tables')
 			.where('table_schema', this.$connection.getConfig('database')) // Replace with your database name

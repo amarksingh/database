@@ -1,4 +1,7 @@
 const Command = require('@ostro/console/command')
+/**
+ * Class WipeCommand.
+ */
 class WipeCommand extends Command {
 
     $signature = 'db:wipe';
@@ -12,6 +15,11 @@ class WipeCommand extends Command {
         this.createOption('--force', 'Force the operation to run when in production'),
     ];
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         if (!this.input.getOption('force') && !await this.confirmToProceed()) {
             return 1;
@@ -38,18 +46,33 @@ class WipeCommand extends Command {
         return 0;
     }
 
+    /**
+     * dropAllTables method.
+     * @param {*} $database
+     * @returns {any}
+     */
     dropAllTables($database) {
         return this.$app.db.connection($database)
             .getSchemaBuilder()
             .dropAllTables();
     }
 
+    /**
+     * dropAllViews method.
+     * @param {*} $database
+     * @returns {any}
+     */
     dropAllViews($database) {
         return this.$app.db.connection($database)
             .getSchemaBuilder()
             .dropAllViews();
     }
 
+    /**
+     * dropAllTypes method.
+     * @param {*} $database
+     * @returns {any}
+     */
     dropAllTypes($database) {
         return this.$app.db.connection($database)
             .getSchemaBuilder()

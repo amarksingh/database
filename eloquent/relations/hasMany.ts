@@ -1,14 +1,27 @@
 const HasOneOrMany = require('./hasOneOrMany')
 const { is_null } = require('@ostro/support/function')
 
+/**
+ * Class HasMany.
+ */
 class HasMany extends HasOneOrMany {
 
+    /**
+     * getResults method.
+     * @returns {any}
+     */
     getResults() {
         return !is_null(this.getParentKey()) ?
             this.$query.get() :
             this.$related.newCollection();
     }
 
+    /**
+     * initRelation method.
+     * @param {*} $models
+     * @param {*} $relation
+     * @returns {any}
+     */
     initRelation($models, $relation) {
         for (let $model of $models) {
             $model.setRelation($relation, this.$related.newCollection());
@@ -17,6 +30,13 @@ class HasMany extends HasOneOrMany {
         return $models;
     }
 
+    /**
+     * match method.
+     * @param {*} $models
+     * @param {*} $results
+     * @param {*} $relation
+     * @returns {any}
+     */
     match($models, $results, $relation) {
         return this.matchMany($models, $results, $relation);
     }

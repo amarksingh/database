@@ -1,3 +1,6 @@
+/**
+ * Class DetectsLostConnections.
+ */
 class DetectsLostConnections {
     $errorMessages = [
         'server has gone away',
@@ -54,6 +57,11 @@ class DetectsLostConnections {
         'SQLSTATE[HY000] [2002] A socket operation was attempted to an unreachable network',
         'SQLSTATE[HY000]: General error: 3989',
     ]
+    /**
+     * causedByLostConnection method.
+     * @param {*} $e
+     * @returns {any}
+     */
     causedByLostConnection($e) {
         const $message = typeof $e == 'string' ? $e : $e.message;
 

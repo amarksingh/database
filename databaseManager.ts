@@ -2,6 +2,9 @@ const lodash = require('lodash')
 const ConfigurationUrlParser = require('@ostro/support/configurationUrlParser');
 const { Macroable } = require('@ostro/support/macro');
 const { isset, tap, env } = require('@ostro/support/function');
+/**
+ * Class DatabaseManager.
+ */
 class DatabaseManager extends Macroable {
 
     $type = 'database';
@@ -12,6 +15,11 @@ class DatabaseManager extends Macroable {
     $factory;
     $reconnector;
 
+    /**
+     * Create a new instance.
+     * @param {*} $container
+     * @param {*} $factory
+     */
     constructor($container, $factory) {
         super();
         this.$app = $container;
@@ -21,10 +29,20 @@ class DatabaseManager extends Macroable {
         };
     }
 
+    /**
+     * builder method.
+     * @param {*} $name
+     * @returns {any}
+     */
     builder($name = null) {
         return this.connection($name);
     }
 
+    /**
+     * connection method.
+     * @param {*} name
+     * @returns {any}
+     */
     connection(name = null) {
         const [database, type] = this.parseConnectionName(name);
         name = name || database;
@@ -39,6 +57,11 @@ class DatabaseManager extends Macroable {
         return this.$connections[name];
     }
 
+    /**
+     * parseConnectionName method.
+     * @param {*} name
+     * @returns {any}
+     */
     parseConnectionName(name) {
         name = name || this.getDefaultConnection();
         return name.endsWith('::read') || name.endsWith('::write')
@@ -46,6 +69,11 @@ class DatabaseManager extends Macroable {
             : [name, null];
     }
 
+    /**
+     * makeConnection method.
+     * @param {*} name
+     * @returns {any}
+     */
     makeConnection(name) {
         const config = this.configuration(name);
 
@@ -61,6 +89,11 @@ class DatabaseManager extends Macroable {
 
         return this.$factory.make(config, name);
     }
+    /**
+     * configuration method.
+     * @param {*} name
+     * @returns {any}
+     */
     configuration(name) {
         name = name || this.getDefaultConnection();
         const connections = lodash.get(this.$app['config'], 'database.connections', {})
@@ -72,6 +105,12 @@ class DatabaseManager extends Macroable {
         return new ConfigurationUrlParser().parseConfiguration(connections[name]);
     }
 
+    /**
+     * configure method.
+     * @param {*} connection
+     * @param {*} type
+     * @returns {any}
+     */
     configure(connection, type) {
         if (connection && typeof connection.setReconnector === 'function') {
             connection.setReconnector(this.$reconnector);
@@ -80,6 +119,11 @@ class DatabaseManager extends Macroable {
         return connection;
     }
 
+    /**
+     * purge method.
+     * @param {*} $name
+     * @returns {any}
+     */
     purge($name = null) {
         $name = $name || this.getDefaultConnection();
 
@@ -89,6 +133,11 @@ class DatabaseManager extends Macroable {
     }
 
 
+    /**
+     * disconnect method.
+     * @param {*} $name
+     * @returns {any}
+     */
     disconnect($name = null) {
         $name = $name || this.getDefaultConnection();
         if (isset(this.$connections[$name])) {
@@ -96,6 +145,11 @@ class DatabaseManager extends Macroable {
         }
     }
 
+    /**
+     * reconnect method.
+     * @param {*} $name
+     * @returns {any}
+     */
     reconnect($name = null) {
         $name = $name || this.getDefaultConnection();
         this.disconnect($name);
@@ -107,12 +161,23 @@ class DatabaseManager extends Macroable {
         return this.refreshConnections($name);
     }
 
+    /**
+     * refreshConnections method.
+     * @param {*} $name
+     * @returns {any}
+     */
     refreshConnections($name) {
         return this.$connections[$name] = this.configure(
             this.makeConnection($name)
         );
     }
 
+    /**
+     * usingConnection method.
+     * @param {*} $name
+     * @param {*} $callback
+     * @returns {any}
+     */
     usingConnection($name, $callback) {
         const $previousName = this.getDefaultConnection();
 
@@ -123,47 +188,101 @@ class DatabaseManager extends Macroable {
         });
     }
 
+    /**
+     * getDefaultConnection method.
+     * @returns {any}
+     */
     getDefaultConnection() {
         return lodash.get(this.$app['config'], 'database.default');
     }
 
+    /**
+     * setDefaultConnection method.
+     * @param {*} $name
+     * @returns {any}
+     */
     setDefaultConnection($name) {
         lodash.set(this.$app['config'], 'database.default', $name);
     }
 
+    /**
+     * supportedDrivers method.
+     * @returns {any}
+     */
     supportedDrivers() {
         return ['mysql', 'pgsql', 'sqlite', 'sqlsrv', 'oracle'];
     }
 
+    /**
+     * extend method.
+     * @param {*} $name
+     * @param {*} $resolver
+     * @returns {any}
+     */
     extend($name, $resolver) {
         this.$extensions[$name] = $resolver;
     }
 
+    /**
+     * forgetExtension method.
+     * @param {*} $name
+     * @returns {any}
+     */
     forgetExtension($name) {
         delete this.$extensions[$name];
     }
+    /**
+     * getConnections method.
+     * @returns {any}
+     */
     getConnections() {
         return this.$connections;
     }
 
+    /**
+     * setReconnector method.
+     * @param {*} $reconnector
+     * @returns {any}
+     */
     setReconnector($reconnector) {
         this.$reconnector = $reconnector;
     }
 
+    /**
+     * getPrefix method.
+     * @returns {any}
+     */
     getPrefix() {
         return this.getConfig(`prefix`);
     }
 
+    /**
+     * getConfig method.
+     * @param {*} name
+     * @returns {any}
+     */
     getConfig(name) {
         return lodash.get(this.$app['config'], `database.connections.${name}`);
     }
 
+    /**
+     * registerCommands method.
+     * @param {*} dir
+     * @returns {any}
+     */
     registerCommands(dir) {
         const container = this.$container || this.$app;
         if (container && container.console && typeof container.console.load == 'function' && !env('production')) {
             container.console.load(dir);
         }
     }
+    /**
+     * __call method.
+     * @param {*} $target
+     * @param {*} $method
+     * @param {*} $parameters
+     * @returns {any}
+     */
     __call($target, $method, $parameters) {
         return $target.connection()[$method](...$parameters);
     }

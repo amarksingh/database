@@ -4,6 +4,9 @@ const Model = require('@ostro/contracts/database/eloquent/model')
 const Relation = require('./relation')
 const SupportsDefaultModels = require('./concerns/supportsDefaultModels')
 
+/**
+ * Class BelongsTo.
+ */
 class BelongsTo extends implement(Relation, SupportsDefaultModels) {
 
     $child;
@@ -14,6 +17,14 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
 
     $relationName;
 
+    /**
+     * Create a new instance.
+     * @param {*} $query
+     * @param {*} $child
+     * @param {*} $foreignKey
+     * @param {*} $ownerKey
+     * @param {*} $relationName
+     */
     constructor($query, $child, $foreignKey, $ownerKey, $relationName) {
         super($query, $child);
 
@@ -25,6 +36,11 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
 
     }
 
+    /**
+     * getResults method.
+     * @async
+     * @returns {any}
+     */
     async getResults() {
         if (is_null(this.$child[this.$foreignKey])) {
             return this.getDefaultFor(this.$parent);
@@ -33,6 +49,10 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
         return (await this.$query.first()) || this.getDefaultFor(this.$parent);
     }
 
+    /**
+     * addConstraints method.
+     * @returns {any}
+     */
     addConstraints() {
         if (this.constructor.$constraints) {
 
@@ -42,6 +62,11 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
         }
     }
 
+    /**
+     * addEagerConstraints method.
+     * @param {*} $models
+     * @returns {any}
+     */
     addEagerConstraints($models) {
 
         let $key = this.$related.getTable() + '.' + this.$ownerKey;
@@ -49,6 +74,11 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
         this.$query[$whereIn]($key, this.getEagerModelKeys($models));
     }
 
+    /**
+     * getEagerModelKeys method.
+     * @param {*} $models
+     * @returns {any}
+     */
     getEagerModelKeys($models) {
         let $keys = [];
 
@@ -64,6 +94,12 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
         return $keys.filter((value, index, self) => self.indexOf(value) === index);
     }
 
+    /**
+     * initRelation method.
+     * @param {*} $models
+     * @param {*} $relation
+     * @returns {any}
+     */
     initRelation($models, $relation) {
         for (let $model of $models) {
             $model.setRelation($relation, this.getDefaultFor($model));
@@ -72,6 +108,13 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
         return $models;
     }
 
+    /**
+     * match method.
+     * @param {*} $models
+     * @param {*} $results
+     * @param {*} $relation
+     * @returns {any}
+     */
     match($models, $results, $relation) {
         let $foreign = this.$foreignKey;
 
@@ -98,6 +141,11 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
     }
 
 
+    /**
+     * associate method.
+     * @param {*} $model
+     * @returns {any}
+     */
     associate($model) {
         let $ownerKey = $model instanceof Model ? $model.getAttribute(this.$ownerKey) : $model;
 
@@ -112,16 +160,31 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
         return this.$child;
     }
 
+    /**
+     * dissociate method.
+     * @returns {any}
+     */
     dissociate() {
         this.$child.setAttribute(this.$foreignKey, null);
 
         return this.$child.setRelation(this.$relationName, null);
     }
 
+    /**
+     * disassociate method.
+     * @returns {any}
+     */
     disassociate() {
         return this.dissociate();
     }
 
+    /**
+     * getRelationExistenceQuery method.
+     * @param {*} $query
+     * @param {*} $parentQuery
+     * @param {*} $columns
+     * @returns {any}
+     */
     getRelationExistenceQuery($query, $parentQuery, $columns = ['*']) {
         if ($parentQuery.getTable() == $query.getTable()) {
             return this.getRelationExistenceQueryForSelfRelation($query, $parentQuery, $columns);
@@ -132,6 +195,13 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
         );
     }
 
+    /**
+     * getRelationExistenceQueryForSelfRelation method.
+     * @param {*} $query
+     * @param {*} $parentQuery
+     * @param {*} $columns
+     * @returns {any}
+     */
     getRelationExistenceQueryForSelfRelation($query, $parentQuery, $columns = ['*']) {
         let $hash = this.getRelationCountHash()
         $query.select($columns).from(
@@ -145,42 +215,84 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
         );
     }
 
+    /**
+     * relationHasIncrementingId method.
+     * @returns {any}
+     */
     relationHasIncrementingId() {
         return this.$related.getIncrementing() && ['int', 'integer'].includes(this.$related.getKeyType());
     }
 
+    /**
+     * newRelatedInstanceFor method.
+     * @param {*} $parent
+     * @returns {any}
+     */
     newRelatedInstanceFor($parent) {
         return this.$related.newInstance();
     }
 
+    /**
+     * getChild method.
+     * @returns {any}
+     */
     getChild() {
         return this.$child;
     }
 
+    /**
+     * getForeignKeyName method.
+     * @returns {any}
+     */
     getForeignKeyName() {
         return this.$foreignKey;
     }
 
+    /**
+     * getQualifiedForeignKeyName method.
+     * @returns {any}
+     */
     getQualifiedForeignKeyName() {
         return this.$child.qualifyColumn(this.$foreignKey);
     }
 
+    /**
+     * getParentKey method.
+     * @returns {any}
+     */
     getParentKey() {
         return this.$child[this.$foreignKey];
     }
 
+    /**
+     * getOwnerKeyName method.
+     * @returns {any}
+     */
     getOwnerKeyName() {
         return this.$ownerKey;
     }
 
+    /**
+     * getQualifiedOwnerKeyName method.
+     * @returns {any}
+     */
     getQualifiedOwnerKeyName() {
         return this.$related.qualifyColumn(this.$ownerKey);
     }
 
+    /**
+     * getRelatedKeyFrom method.
+     * @param {*} $model
+     * @returns {any}
+     */
     getRelatedKeyFrom($model) {
         return $model.getAttribute ? $model.getAttribute(this.$ownerKey) : $model[this.$ownerKey];
     }
 
+    /**
+     * getRelationName method.
+     * @returns {any}
+     */
     getRelationName() {
         return this.$relationName;
     }

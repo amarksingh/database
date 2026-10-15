@@ -1,4 +1,12 @@
+/**
+ * Class TableGuesser.
+ */
 class TableGuesser {
+    /**
+     * Get CREATE_PATTERNS.
+     * @static
+     * @returns {any}
+     */
     static get CREATE_PATTERNS() {
         return [
             /^create_(\w+)_table/,
@@ -6,6 +14,11 @@ class TableGuesser {
         ]
     }
 
+    /**
+     * Get CHANGE_PATTERNS.
+     * @static
+     * @returns {any}
+     */
     static get CHANGE_PATTERNS() {
 
         return [
@@ -14,6 +27,12 @@ class TableGuesser {
         ]
     }
 
+    /**
+     * guess method.
+     * @static
+     * @param {*} $migration
+     * @returns {any}
+     */
     static guess($migration) {
         for (let $pattern of this.CREATE_PATTERNS) {
             let $matches = $migration.match($pattern)

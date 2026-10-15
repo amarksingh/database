@@ -1,5 +1,8 @@
 const GeneratorCommand = require('@ostro/console/generatorCommand')
 
+/**
+ * Class FactoryMakeCommand.
+ */
 class FactoryMakeCommand extends GeneratorCommand {
 
     $signature = 'make:factory';
@@ -13,15 +16,30 @@ class FactoryMakeCommand extends GeneratorCommand {
 
     $type = 'Factory';
 
+    /**
+     * getStub method.
+     * @returns {any}
+     */
     getStub() {
         return this.resolveStubPath('/stubs/factory.stub');
     }
 
+    /**
+     * resolveStubPath method.
+     * @param {*} $stub
+     * @returns {any}
+     */
     resolveStubPath($stub) {
         let $customPath = this.$app.basePath(trim($stub, '/'))
         return this.$file.exists($customPath).then($exists => ($exists ? $customPath : path.join(__dirname, $stub)))
     }
 
+    /**
+     * buildClass method.
+     * @async
+     * @param {*} $name
+     * @returns {any}
+     */
     async buildClass($name) {
         let $factory = $name.replace('Factory', '');
         $factory = this.getFileName($factory)
@@ -46,6 +64,12 @@ class FactoryMakeCommand extends GeneratorCommand {
         return super.buildClass($name).then(content => content.replaceAllArray(Object.keys($replace), Object.values($replace)))
     }
 
+    /**
+     * getPath method.
+     * @async
+     * @param {*} $name
+     * @returns {any}
+     */
     async getPath($name) {
         $name = $name.finish('Factory').toString();
 
@@ -53,6 +77,12 @@ class FactoryMakeCommand extends GeneratorCommand {
 
     }
 
+    /**
+     * guessModelName method.
+     * @async
+     * @param {*} $name
+     * @returns {any}
+     */
     async guessModelName($name) {
         if (String.endsWith($name, 'Factory')) {
             $name = $name.substr(0, -7);

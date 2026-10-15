@@ -5,7 +5,14 @@ const QueryGrammar = require('../query/grammars/mysqlGrammar');
 const QueryProcessor = require('../query/processors/mysqlProcessor');
 const SchemaBuilder = require('../schema/mysqlBuilder');
 
+/**
+ * Class MysqlConnection.
+ */
 class MysqlConnection extends Connection {
+    /**
+     * getDefaultSchemaGrammar method.
+     * @returns {any}
+     */
     getDefaultSchemaGrammar() {
         const $grammar = new SchemaGrammar
         $grammar.setConnection(this);
@@ -13,6 +20,10 @@ class MysqlConnection extends Connection {
         return this.withTablePrefix($grammar)
     }
 
+    /**
+     * getDefaultQueryGrammar method.
+     * @returns {any}
+     */
     getDefaultQueryGrammar() {
         const $grammar = new QueryGrammar()
         $grammar.setConnection(this);
@@ -20,6 +31,10 @@ class MysqlConnection extends Connection {
         return this.withTablePrefix($grammar);
     }
 
+    /**
+     * getSchemaBuilder method.
+     * @returns {any}
+     */
     getSchemaBuilder() {
         if (is_null(this.$schemaGrammar)) {
             this.useDefaultSchemaGrammar();
@@ -28,10 +43,21 @@ class MysqlConnection extends Connection {
         return new SchemaBuilder(this);
     }
 
+    /**
+     * getDefaultPostProcessor method.
+     * @returns {any}
+     */
     getDefaultPostProcessor() {
         return new QueryProcessor;
     }
 
+    /**
+     * __call method.
+     * @param {*} target
+     * @param {*} method
+     * @param {*} parameters
+     * @returns {any}
+     */
     __call(target, method, parameters) {
         return target.$connection[method](...parameters)
     }

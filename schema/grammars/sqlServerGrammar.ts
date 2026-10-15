@@ -1,6 +1,13 @@
 const Grammar = require('./grammar');
 
+/**
+ * Class SqlServerGrammar.
+ */
 class SqlServerGrammar extends Grammar {
+    /**
+     * compileDropAllForeignKeys method.
+     * @returns {any}
+     */
     compileDropAllForeignKeys() {
         return `DECLARE @sql NVARCHAR(MAX) = N'';
             SELECT @sql += 'ALTER TABLE '
@@ -11,6 +18,10 @@ class SqlServerGrammar extends Grammar {
         `;
     }
 
+    /**
+     * compileDropAllTables method.
+     * @returns {any}
+     */
     compileDropAllTables() {
         return `DECLARE @sql NVARCHAR(MAX) = N'';
 

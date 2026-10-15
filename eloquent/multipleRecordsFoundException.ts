@@ -1,4 +1,11 @@
+/**
+ * Class MultipleRecordsFoundException.
+ */
 class MultipleRecordsFoundException extends Error {
+    /**
+     * Create a new instance.
+     * @param {*} count
+     */
     constructor(count = null) {
         let message = count 
             ? `${count} records were found.`

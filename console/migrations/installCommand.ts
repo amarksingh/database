@@ -1,4 +1,7 @@
 const Command = require('@ostro/console/command')
+/**
+ * Class InstallCommand.
+ */
 class InstallCommand extends Command {
 
     $signature = 'migrate:install';
@@ -9,12 +12,20 @@ class InstallCommand extends Command {
         this.createOption('--database [database]', 'The database connection to use'),
     ];
 
+    /**
+     * Create a new instance.
+     * @param {*} $repository
+     */
     constructor($repository) {
         super()
 
         this.$repository = $repository;
     }
 
+    /**
+     * handle method.
+     * @returns {any}
+     */
     handle() {
         this.$repository.setSource(this.input.getOption('database'));
 

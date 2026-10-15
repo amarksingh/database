@@ -1,15 +1,28 @@
 const { is_callable } = require('@ostro/support/function');
 const kWithDefault = Symbol('withDefault')
+/**
+ * Class SupportsDefaultModels.
+ */
 class SupportsDefaultModels {
 
     $withDefault = null;
 
+    /**
+     * withDefault method.
+     * @param {*} $callback
+     * @returns {any}
+     */
     withDefault($callback = true) {
         this.$withDefault = $callback;
 
         return this;
     }
 
+    /**
+     * getDefaultFor method.
+     * @param {*} $parent
+     * @returns {any}
+     */
     getDefaultFor($parent) {
         if (!this.$withDefault) {
             return;

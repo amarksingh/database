@@ -1,11 +1,17 @@
 const { get_class_name, count } = require("@ostro/support/function");
 const ModelNotFoundExceptionContracts = require("@ostro/contracts/database/eloquent/modelNotFoundException");
 
+/**
+ * Class ModelNotFoundException.
+ */
 class ModelNotFoundException extends ModelNotFoundExceptionContracts {
     $model;
 
     $ids;
 
+    /**
+     * Create a new instance.
+     */
     constructor() {
         super();
         this.name = this.constructor.name;
@@ -15,6 +21,12 @@ class ModelNotFoundException extends ModelNotFoundExceptionContracts {
     }
 
 
+    /**
+     * setModel method.
+     * @param {*} $model
+     * @param {*} $ids
+     * @returns {any}
+     */
     setModel($model, $ids = []) {
         this.$model = $model;
         this.$ids = $ids;
@@ -30,10 +42,18 @@ class ModelNotFoundException extends ModelNotFoundExceptionContracts {
         return this;
     }
 
+    /**
+     * getModel method.
+     * @returns {any}
+     */
     getModel() {
         return this.$model;
     }
 
+    /**
+     * getIds method.
+     * @returns {any}
+     */
     getIds() {
         return this.$ids;
     }

@@ -3,14 +3,30 @@ const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgum
 const { dirname, date } = require('@ostro/support/function')
 const { pascal } = require('@ostro/support/string')
 
+/**
+ * Class MigrationCreator.
+ */
 class MigrationCreator {
 
     $postCreate = [];
 
+    /**
+     * Create a new instance.
+     * @param {*} $files
+     */
     constructor($files) {
         this.$files = $files;
     }
 
+    /**
+     * create method.
+     * @async
+     * @param {*} $name
+     * @param {*} $path
+     * @param {*} $table
+     * @param {*} $create
+     * @returns {any}
+     */
     async create($name, $path, $table = null, $create = false) {
         await this.ensureMigrationDoesntAlreadyExist($name, $path);
 
@@ -30,6 +46,13 @@ class MigrationCreator {
         return $path;
     }
 
+    /**
+     * ensureMigrationDoesntAlreadyExist method.
+     * @async
+     * @param {*} $name
+     * @param {*} $migrationPath
+     * @returns {any}
+     */
     async ensureMigrationDoesntAlreadyExist($name, $migrationPath = null) {
         let classes = []
         if (await this.$files.exists($migrationPath)) {
@@ -45,6 +68,13 @@ class MigrationCreator {
         }
     }
 
+    /**
+     * getStub method.
+     * @async
+     * @param {*} $table
+     * @param {*} $create
+     * @returns {any}
+     */
     async getStub($table, $create) {
         let $stub = ''
         if ($table == null) {
@@ -67,6 +97,13 @@ class MigrationCreator {
         return this.$files.get($stub);
     }
 
+    /**
+     * populateStub method.
+     * @param {*} $name
+     * @param {*} $stub
+     * @param {*} $table
+     * @returns {any}
+     */
     populateStub($name, $stub, $table) {
         $name = this.getClassName($name)
         $stub = $stub.replaceAll('DummyClass', $name).replaceAll('{{ class }}', $name).replaceAll('{{class}}', $name)
@@ -78,32 +115,66 @@ class MigrationCreator {
         return $stub;
     }
 
+    /**
+     * getClassName method.
+     * @param {*} $name
+     * @returns {any}
+     */
     getClassName($name) {
         return pascal($name);
     }
 
+    /**
+     * getPath method.
+     * @param {*} $name
+     * @param {*} $path
+     * @returns {any}
+     */
     getPath($name, $path) {
         return path.join($path, (this.getDatePrefix() + '_' + $name + '.js'));
     }
 
+    /**
+     * firePostCreateHooks method.
+     * @param {*} $table
+     * @returns {any}
+     */
     firePostCreateHooks($table) {
         for (let $callback of this.$postCreate) {
             $callback($table);
         }
     }
 
+    /**
+     * afterCreate method.
+     * @param {*} $callback
+     * @returns {any}
+     */
     afterCreate($callback) {
         this.$postCreate.push($callback);
     }
 
+    /**
+     * getDatePrefix method.
+     * @returns {any}
+     */
     getDatePrefix() {
         return date('yyyy_MM_dd_hhmmss');
     }
 
+    /**
+     * stub method.
+     * @param {*} $stub
+     * @returns {any}
+     */
     stub($stub) {
         return path.join(__dirname, 'stubs', $stub);
     }
 
+    /**
+     * getFilesystem method.
+     * @returns {any}
+     */
     getFilesystem() {
         return this.$files;
     }

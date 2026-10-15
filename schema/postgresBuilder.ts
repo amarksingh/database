@@ -1,16 +1,32 @@
 const { empty } = require('@ostro/support/function');
 const Builder = require('./builder')
+/**
+ * Class PgSqlSchema.
+ */
 class PgSqlSchema extends Builder {
+    /**
+     * getAllTables method.
+     * @returns {any}
+     */
     getAllTables() {
         return this.$connection.table('pg_tables')
             .where('schemaname', this.$connection.getConfig('schema', 'public'))
             .pluck('tablename');
     }
+    /**
+     * dropAllTables method.
+     * @async
+     * @returns {any}
+     */
     async dropAllTables() {
         const tables = await this.getAllTables()
         await this.dropIfExists(tables);
         // await this.dropAllTypes();
     }
+    /**
+     * compileGetTypes method.
+     * @returns {any}
+     */
     compileGetTypes() {
         return this.raw(`
                     SELECT
@@ -47,10 +63,21 @@ class PgSqlSchema extends Builder {
         )
     }
 
+    /**
+     * dropIfExists method.
+     * @async
+     * @param {*} tableNames
+     * @returns {any}
+     */
     async dropIfExists(tableNames) {
         return this.raw('drop table if exists ' + tableNames.join(',') + ' cascade')
     }
 
+    /**
+     * dropAllTypes method.
+     * @async
+     * @returns {any}
+     */
     async dropAllTypes() {
         const types = await this.compileGetTypes();
         const $types = [];

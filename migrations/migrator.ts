@@ -3,12 +3,21 @@ const { count, collect, get_class_name } = require('@ostro/support/function')
 const fs = require('fs-extra')
 const path = require('path');
 
+/**
+ * Class Migrator.
+ */
 class Migrator {
 
     $paths = [];
 
     $output = null;
 
+    /**
+     * Create a new instance.
+     * @param {*} $repository
+     * @param {*} $resolver
+     * @param {*} $file
+     */
     constructor($repository, $resolver, $file) {
 
         this.$repository = $repository;
@@ -17,6 +26,12 @@ class Migrator {
 
     }
 
+    /**
+     * run method.
+     * @param {*} $paths
+     * @param {*} $options
+     * @returns {any}
+     */
     run($paths = [], $options = []) {
 
         return this.getMigrationFiles($paths).then($files => {
@@ -30,6 +45,12 @@ class Migrator {
 
     }
 
+    /**
+     * pendingMigrations method.
+     * @param {*} $files
+     * @param {*} $ran
+     * @returns {any}
+     */
     pendingMigrations($files, $ran) {
 
         return Collection.make($files)
@@ -38,6 +59,13 @@ class Migrator {
             }).values().all();
     }
 
+    /**
+     * runPending method.
+     * @async
+     * @param {*} $migrations
+     * @param {*} $options
+     * @returns {any}
+     */
     async runPending($migrations, $options = []) {
 
         if ($migrations.length === 0) {
@@ -62,6 +90,14 @@ class Migrator {
 
     }
 
+    /**
+     * runUp method.
+     * @async
+     * @param {*} $file
+     * @param {*} $batch
+     * @param {*} $pretend
+     * @returns {any}
+     */
     async runUp($file, $batch, $pretend) {
 
         let $migration = this.resolvePath($file);
@@ -84,6 +120,13 @@ class Migrator {
         this.note(`<info>Migrated:</info>  ${$name} (${$runTime}ms)`);
     }
 
+    /**
+     * rollback method.
+     * @async
+     * @param {*} $paths
+     * @param {*} $options
+     * @returns {any}
+     */
     async rollback($paths = [], $options = []) {
 
         let $migrations = await this.getMigrationsForRollback($options);
@@ -97,6 +140,12 @@ class Migrator {
         return this.rollbackMigrations($migrations, $paths, $options);
     }
 
+    /**
+     * getMigrationsForRollback method.
+     * @async
+     * @param {*} $options
+     * @returns {any}
+     */
     async getMigrationsForRollback($options = []) {
         let $steps = $options['step'] ? $options['step'] : 0
         if ($steps > 0) {
@@ -106,6 +155,14 @@ class Migrator {
         return this.$repository.getLast();
     }
 
+    /**
+     * rollbackMigrations method.
+     * @async
+     * @param {*} $migrations
+     * @param {*} $paths
+     * @param {*} $options
+     * @returns {any}
+     */
     async rollbackMigrations($migrations, $paths, $options) {
         let $rolledBack = [];
         let $files = await this.getMigrationFiles($paths)
@@ -130,6 +187,13 @@ class Migrator {
         return $rolledBack;
     }
 
+    /**
+     * reset method.
+     * @async
+     * @param {*} $paths
+     * @param {*} $pretend
+     * @returns {any}
+     */
     async reset($paths = [], $pretend = false) {
 
         let $migrations = (await this.$repository.getRan()).reverse();
@@ -142,6 +206,14 @@ class Migrator {
         return this.resetMigrations($migrations, $paths, $pretend);
     }
 
+    /**
+     * resetMigrations method.
+     * @async
+     * @param {*} $migrations
+     * @param {*} $paths
+     * @param {*} $pretend
+     * @returns {any}
+     */
     async resetMigrations($migrations, $paths, $pretend = false) {
 
         $migrations = collect($migrations).map(function ($m) {
@@ -155,6 +227,14 @@ class Migrator {
         );
     }
 
+    /**
+     * runDown method.
+     * @async
+     * @param {*} $file
+     * @param {*} $migration
+     * @param {*} $pretend
+     * @returns {any}
+     */
     async runDown($file, $migration, $pretend) {
 
         let $instance = this.resolvePath($file);
@@ -176,6 +256,13 @@ class Migrator {
         this.note(`<info>Rolled back:</info>  ${$migration.migration} (${$runTime}ms)`);
     }
 
+    /**
+     * runMigration method.
+     * @async
+     * @param {*} $migration
+     * @param {*} $method
+     * @returns {any}
+     */
     async runMigration($migration, $method) {
         let $connection = this.resolveConnection(typeof $migration.getConnection === 'function' ? $migration.getConnection() : null);
         if (typeof $migration[$method] == 'function') {
@@ -184,6 +271,13 @@ class Migrator {
 
     }
 
+    /**
+     * pretendToRun method.
+     * @async
+     * @param {*} $migration
+     * @param {*} $method
+     * @returns {any}
+     */
     async pretendToRun($migration, $method) {
         try {
             let $queries = await this.getQueries($migration, $method);
@@ -199,6 +293,12 @@ class Migrator {
         }
     }
 
+    /**
+     * getQueries method.
+     * @param {*} $migration
+     * @param {*} $method
+     * @returns {any}
+     */
     getQueries($migration, $method) {
         let $db = this.resolveConnection(
             $migration.getConnection()
@@ -211,12 +311,22 @@ class Migrator {
         });
     }
 
+    /**
+     * resolve method.
+     * @param {*} $file
+     * @returns {any}
+     */
     resolve($file) {
         let $class = this.getMigrationClass($file);
 
         return typeof $class === 'function' ? new $class : $class;
     }
 
+    /**
+     * resolvePath method.
+     * @param {*} $path
+     * @returns {any}
+     */
     resolvePath($path) {
         const resolved = require.resolve($path);
         delete require.cache[resolved];
@@ -226,10 +336,21 @@ class Migrator {
         return typeof $migration == 'object' ? $migration : new $migration;
     }
 
+    /**
+     * getMigrationClass method.
+     * @param {*} $migrationName
+     * @returns {any}
+     */
     getMigrationClass($migrationName) {
 
     }
 
+    /**
+     * getMigrationFiles method.
+     * @async
+     * @param {*} $paths
+     * @returns {any}
+     */
     async getMigrationFiles($paths) {
         let datas = Collection.make($paths).flatMap(async ($path) => {
             return $path.endsWith('.js') ? [$path] : this.$file.glob($path + path.sep + '*_*.js')
@@ -242,6 +363,11 @@ class Migrator {
 
     }
 
+    /**
+     * requireFiles method.
+     * @param {*} $files
+     * @returns {any}
+     */
     requireFiles($files = []) {
         for (var i = 0; i < $files.length; i++) {
             $files[i] = fs.readFile($files[i]).then(res => res.toString());
@@ -250,41 +376,81 @@ class Migrator {
 
     }
 
+    /**
+     * getMigrationName method.
+     * @param {*} $path
+     * @returns {any}
+     */
     getMigrationName($path = '') {
 
         return path.basename($path)
 
     }
 
+    /**
+     * paths method.
+     * @returns {any}
+     */
     paths() {
         return this.$paths;
     }
 
+    /**
+     * getConnection method.
+     * @returns {any}
+     */
     getConnection() {
         return this.connection;
     }
 
+    /**
+     * usingConnection method.
+     * @param {*} $name
+     * @returns {any}
+     */
     usingConnection($name) {
         return Promise.resolve(this.resolveConnection($name))
 
     }
 
+    /**
+     * setConnection method.
+     * @param {*} $name
+     * @returns {any}
+     */
     setConnection($name) {
         this.connection = $name;
     }
 
+    /**
+     * resolveConnection method.
+     * @param {*} $connection
+     * @returns {any}
+     */
     resolveConnection($connection) {
         return this.$resolver.connection($connection || this.connection);
     }
 
+    /**
+     * getRepository method.
+     * @returns {any}
+     */
     getRepository() {
         return this.$repository;
     }
 
+    /**
+     * repositoryExists method.
+     * @returns {any}
+     */
     repositoryExists() {
         return this.$repository.repositoryExists();
     }
 
+    /**
+     * hasRunAnyMigrations method.
+     * @returns {any}
+     */
     hasRunAnyMigrations() {
         return this.repositoryExists().then(res => {
             if (res == true) {
@@ -293,19 +459,37 @@ class Migrator {
         })
     }
 
+    /**
+     * deleteRepository method.
+     * @returns {any}
+     */
     deleteRepository() {
         return this.$repository.deleteRepository();
     }
 
+    /**
+     * getFilesystem method.
+     * @returns {any}
+     */
     getFilesystem() {
         return this.$file;
     }
 
+    /**
+     * setOutput method.
+     * @param {*} $output
+     * @returns {any}
+     */
     setOutput($output) {
         this.$output = $output;
         return this;
     }
 
+    /**
+     * note method.
+     * @param {*} $message
+     * @returns {any}
+     */
     note($message) {
         if (this.$output) {
             this.$output.writeln($message);

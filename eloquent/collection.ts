@@ -1,12 +1,23 @@
 const BaseCollection = require('@ostro/support/collection')
 const ModelInterface = require('@ostro/contracts/database/eloquent/model')
+/**
+ * Class Collection.
+ */
 class Collection extends BaseCollection {
 
+    /**
+     * toArray method.
+     * @returns {any}
+     */
     toArray() {
         return this.map($value => {
             return $value instanceof ModelInterface ? $value.toJson() : $value
         }).all()
     }
+    /**
+     * serialize method.
+     * @returns {any}
+     */
     serialize() {
         let $value = this.all();
         if (Array.isArray($value)) {
@@ -17,6 +28,10 @@ class Collection extends BaseCollection {
         }
 
     }
+    /**
+     * toJSON method.
+     * @returns {any}
+     */
     toJSON() {
         let $value = this.all();
         if (Array.isArray($value)) {
@@ -29,6 +44,10 @@ class Collection extends BaseCollection {
         return $value instanceof ModelInterface ? $value.toJson() : $value
     }
 
+    /**
+     * toJson method.
+     * @returns {any}
+     */
     toJson() {
         return this.toJSON()
     }

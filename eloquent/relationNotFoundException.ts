@@ -1,5 +1,12 @@
 const { get_class_name } = require('@ostro/support/function');
+/**
+ * Class RelationNotFoundException.
+ */
 class RelationNotFoundException {
+    /**
+     * Create a new instance.
+     * @param {*} message
+     */
     constructor(message) {
         this.name = this.constructor.name;
         this.code = 'ERR_INVALID_ARG_VALUE';
@@ -9,6 +16,13 @@ class RelationNotFoundException {
     }
 
 
+    /**
+     * make method.
+     * @static
+     * @param {*} $model
+     * @param {*} $relation
+     * @returns {any}
+     */
     static make($model, $relation) {
         let $class = get_class_name($model);
 

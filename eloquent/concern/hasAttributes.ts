@@ -3,6 +3,9 @@ const { studly, snake, lowerFirst } = require('@ostro/support/string')
 const CollectionInterface = require('@ostro/contracts/collection/collect')
 const ModelInterface = require('@ostro/contracts/database/eloquent/model')
 const { omit, pick } = require('lodash')
+/**
+ * Class HasAttributes.
+ */
 class HasAttributes {
 
     static $mutatorCache = {};
@@ -52,6 +55,10 @@ class HasAttributes {
 
     static $encrypter;
 
+    /**
+     * attributesToJson method.
+     * @returns {any}
+     */
     attributesToJson() {
         let $attributes = { ...this.getJsonableAttributes(), ...this.getJsonableAppends() }
         let $mutatedAttributes = this.getMutatedAttributes()
@@ -74,10 +81,18 @@ class HasAttributes {
         return $attributes;
     }
 
+    /**
+     * getJsonableAttributes method.
+     * @returns {any}
+     */
     getJsonableAttributes() {
         return this.getJsonableItems(this.getAttributes());
     }
 
+    /**
+     * getJsonableAppends method.
+     * @returns {any}
+     */
     getJsonableAppends() {
         if (!count(this.$appends)) {
             return [];
@@ -86,6 +101,11 @@ class HasAttributes {
         return this.getJsonableItems(this.$appends);
     }
 
+    /**
+     * getJsonableItems method.
+     * @param {*} $values
+     * @returns {any}
+     */
     getJsonableItems($values) {
         if (count(this.getVisible()) > 0) {
             $values = pick($values, this.getVisible());
@@ -98,6 +118,12 @@ class HasAttributes {
         return $values;
     }
 
+    /**
+     * mutateAttributeForJSON method.
+     * @param {*} $key
+     * @param {*} $value
+     * @returns {any}
+     */
     mutateAttributeForJSON($key, $value) {
         $value = this.mutateAttribute($key, $value);
         if ($value instanceof CollectionInterface) {
@@ -108,12 +134,21 @@ class HasAttributes {
         return $value;
     }
 
+    /**
+     * getRelationValue method.
+     * @param {*} $key
+     * @returns {any}
+     */
     getRelationValue($key) {
         if (this.relationLoaded($key)) {
             return this.getRelations()[$key];
         }
     }
 
+    /**
+     * relationsToJson method.
+     * @returns {any}
+     */
     relationsToJson() {
         let $attributes = {};
         let jsonableRelations = this.getJsonableableRelations()
@@ -138,11 +173,21 @@ class HasAttributes {
         return $attributes;
     }
 
+    /**
+     * getJsonableableRelations method.
+     * @returns {any}
+     */
     getJsonableableRelations() {
         return this.getJsonableItems(this.getRelations());
     }
 
 
+    /**
+     * addMutatedAttributesToJSON method.
+     * @param {*} $attributes
+     * @param {*} $mutatedAttributes
+     * @returns {any}
+     */
     addMutatedAttributesToJSON($attributes, $mutatedAttributes) {
         for (let $key of $mutatedAttributes) {
 
@@ -158,6 +203,12 @@ class HasAttributes {
         return $attributes;
     }
 
+    /**
+     * setRawAttributes method.
+     * @param {*} $attributes
+     * @param {*} $sync
+     * @returns {any}
+     */
     setRawAttributes($attributes, $sync = false) {
         this.$attributes = $attributes;
 
@@ -168,20 +219,38 @@ class HasAttributes {
         return this;
     }
 
+    /**
+     * syncOriginal method.
+     * @returns {any}
+     */
     syncOriginal() {
 
         this.$original = { ...this.getAttributes() }
     }
 
+    /**
+     * getOriginal method.
+     * @param {*} key
+     * @returns {any}
+     */
     getOriginal(key) {
         return this.$original[key];
     }
 
+    /**
+     * getAttributes method.
+     * @returns {any}
+     */
     getAttributes() {
 
         return this.$attributes;
     }
 
+    /**
+     * getAttribute method.
+     * @param {*} $key
+     * @returns {any}
+     */
     getAttribute($key) {
         if (!$key) {
             return;
@@ -194,6 +263,12 @@ class HasAttributes {
         return this.getRelationValue($key);
     }
 
+    /**
+     * setAttribute method.
+     * @param {*} $key
+     * @param {*} value
+     * @returns {any}
+     */
     setAttribute($key, value) {
         if (this.hasSetMutator($key)) {
             return this.setMutatedAttributeValue($key, value);
@@ -202,10 +277,19 @@ class HasAttributes {
 
     }
 
+    /**
+     * getAttributesForInsert method.
+     * @returns {any}
+     */
     getAttributesForInsert() {
         return this.getAttributes();
     }
 
+    /**
+     * isDirty method.
+     * @param {*} $attributes
+     * @returns {any}
+     */
     isDirty($attributes = null) {
         const attrs = Array.isArray($attributes) ? $attributes : (arguments.length === 1 && typeof $attributes === 'string' ? [$attributes] : Array.from(arguments));
         return this.hasChanges(
@@ -213,10 +297,21 @@ class HasAttributes {
         );
     }
 
+    /**
+     * isClean method.
+     * @param {*} $attributes
+     * @returns {any}
+     */
     isClean($attributes = null) {
         return !this.isDirty(...arguments);
     }
 
+    /**
+     * hasChanges method.
+     * @param {*} $changes
+     * @param {*} $attributes
+     * @returns {any}
+     */
     hasChanges($changes, $attributes = null) {
 
         if (empty($attributes)) {
@@ -232,6 +327,10 @@ class HasAttributes {
         return false;
     }
 
+    /**
+     * getDirty method.
+     * @returns {any}
+     */
     getDirty() {
         let $dirty = {};
         let $attributes = this.getAttributes()
@@ -247,10 +346,19 @@ class HasAttributes {
         return $dirty;
     }
 
+    /**
+     * getChanges method.
+     * @returns {any}
+     */
     getChanges() {
         return this.$changes;
     }
 
+    /**
+     * originalIsEquivalent method.
+     * @param {*} $key
+     * @returns {any}
+     */
     originalIsEquivalent($key) {
         if (!this.$original.hasOwnProperty($key)) {
             return false;
@@ -268,30 +376,67 @@ class HasAttributes {
         return $attribute == $original;
     }
 
+    /**
+     * hasGetMutator method.
+     * @param {*} $key
+     * @returns {any}
+     */
     hasGetMutator($key) {
         return method_exists(this, 'get' + studly($key) + 'Attribute');
     }
 
+    /**
+     * mutateAttribute method.
+     * @param {*} $key
+     * @param {*} $value
+     * @returns {any}
+     */
     mutateAttribute($key, $value) {
         return this['get' + studly($key) + 'Attribute']($value);
     }
 
+    /**
+     * hasSetMutator method.
+     * @param {*} $key
+     * @returns {any}
+     */
     hasSetMutator($key) {
         return method_exists(this, 'set' + studly($key) + 'Attribute');
     }
 
+    /**
+     * setMutatedAttributeValue method.
+     * @param {*} $key
+     * @param {*} $value
+     * @returns {any}
+     */
     setMutatedAttributeValue($key, $value) {
         return this['set' + studly($key) + 'Attribute']($value);
     }
 
+    /**
+     * hasCast method.
+     * @param {*} $key
+     * @returns {any}
+     */
     hasCast($key) {
         return this.$casts && this.$casts.hasOwnProperty($key);
     }
 
+    /**
+     * getCasts method.
+     * @returns {any}
+     */
     getCasts() {
         return this.$casts || {};
     }
 
+    /**
+     * castAttribute method.
+     * @param {*} $key
+     * @param {*} $value
+     * @returns {any}
+     */
     castAttribute($key, $value) {
         if ($value === null || $value === undefined) {
             return $value;
@@ -319,6 +464,12 @@ class HasAttributes {
         }
     }
 
+    /**
+     * transformModelValue method.
+     * @param {*} $key
+     * @param {*} $value
+     * @returns {any}
+     */
     transformModelValue($key, $value) {
 
         if (this.hasGetMutator($key)) {
@@ -332,14 +483,28 @@ class HasAttributes {
         return $value;
     }
 
+    /**
+     * getAttributeFromObject method.
+     * @param {*} $key
+     * @returns {any}
+     */
     getAttributeFromObject($key) {
         return this.getAttributes()[$key];
     }
 
+    /**
+     * getAttributeValue method.
+     * @param {*} $key
+     * @returns {any}
+     */
     getAttributeValue($key) {
         return this.transformModelValue($key, this.getAttributeFromObject($key));
     }
 
+    /**
+     * getMutatedAttributes method.
+     * @returns {any}
+     */
     getMutatedAttributes() {
         let $class = Object.getPrototypeOf(this).constructor;
 
@@ -349,18 +514,34 @@ class HasAttributes {
         return HasAttributes.$mutatorCache[$class.name];
     }
 
+    /**
+     * syncChanges method.
+     * @returns {any}
+     */
     syncChanges() {
         this.$changes = this.getDirty();
 
         return this;
     }
 
+    /**
+     * cacheMutatedAttributes method.
+     * @static
+     * @param {*} $class
+     * @returns {any}
+     */
     static cacheMutatedAttributes($class) {
         HasAttributes.$mutatorCache[$class.name] = collect(this.getMutatorMethods($class)).map(($match) => {
             return lowerFirst(this.$snakeAttributes ? snake($match) : $match);
         }).all();
     }
 
+    /**
+     * getMutatorMethods method.
+     * @static
+     * @param {*} $class
+     * @returns {any}
+     */
     static getMutatorMethods($class) {
         let $matches = [...(Object.getOwnPropertyNames($class.prototype).join(';')).matchAll(/(?<=^|;)get([^;]+?)Attribute(;|$)/g)];
 

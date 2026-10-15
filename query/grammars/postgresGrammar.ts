@@ -1,4 +1,7 @@
 const Grammar = require('./grammar');
+/**
+ * Class PostgresGrammar.
+ */
 class PostgresGrammar extends Grammar {
 
 }

@@ -1,7 +1,14 @@
 const Command = require('@ostro/console/command')
 
+/**
+ * Class BaseCommand.
+ */
 class BaseCommand extends Command {
 
+    /**
+     * getMigrationPaths method.
+     * @returns {any}
+     */
     getMigrationPaths() {
 
         if (this.input.hasOption('path') && this.option('path')) {
@@ -15,10 +22,18 @@ class BaseCommand extends Command {
         return this.$migrator.paths().concat([this.getMigrationPath()])
     }
 
+    /**
+     * usingRealPath method.
+     * @returns {any}
+     */
     usingRealPath() {
         return this.input.hasOption('realpath') && this.option('realpath');
     }
 
+    /**
+     * getMigrationPath method.
+     * @returns {any}
+     */
     getMigrationPath() {
         return this.$app.databasePath('migrations');
     }

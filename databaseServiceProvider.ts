@@ -3,13 +3,24 @@ const ConnectionFactory = require('@ostro/database/connectors/connectionFactory'
 const DatabaseManager = require('./databaseManager');
 const Model = require('./eloquent/model');
 
+/**
+ * Class DatabaseServiceProvider.
+ */
 class DatabaseServiceProvider extends ServiceProvider {
 
+    /**
+     * register method.
+     * @returns {any}
+     */
     register() {
         this.registerProvider()
         this.bootModel()
     }
 
+    /**
+     * registerProvider method.
+     * @returns {any}
+     */
     registerProvider() {
 
         // Model.clearBootedModels();
@@ -31,10 +42,18 @@ class DatabaseServiceProvider extends ServiceProvider {
         });
     }
 
+    /**
+     * bootModel method.
+     * @returns {any}
+     */
     bootModel() {
         Model.setConnectionResolver(this.$app['db']);
     }
 
+    /**
+     * boot method.
+     * @returns {any}
+     */
     boot() {
         this.$app.db.registerCommands(__dirname + '/commands')
     }

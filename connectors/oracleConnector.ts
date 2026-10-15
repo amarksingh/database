@@ -1,7 +1,17 @@
 const Knex = require('knex');
 
+/**
+ * Class OracleConnector.
+ */
 class OracleConnector {
 
+    /**
+     * connect method.
+     * @param {*} config
+     * @param {*} database
+     * @param {*} prefix
+     * @returns {any}
+     */
     connect(config, database, prefix) {
         config.port = Number(config.port);
 

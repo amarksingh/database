@@ -1,5 +1,8 @@
 const GeneratorCommand = require('@ostro/console/generatorCommand')
 const path = require('path')
+/**
+ * Class MakeSeederCommand.
+ */
 class MakeSeederCommand extends GeneratorCommand {
 
     $signature = 'make:seeder';
@@ -12,15 +15,30 @@ class MakeSeederCommand extends GeneratorCommand {
 
     $type = 'Seeder';
 
+    /**
+     * getStub method.
+     * @returns {any}
+     */
     getStub() {
         return this.resolveStubPath('/stubs/seeder.stub');
     }
 
+    /**
+     * resolveStubPath method.
+     * @param {*} $stub
+     * @returns {any}
+     */
     resolveStubPath($stub) {
         let $customPath = this.$app.basePath(trim($stub, '/'))
         return this.$file.exists($customPath).then($exists => ($exists ? $customPath : path.join(__dirname, $stub)))
     }
 
+    /**
+     * getPath method.
+     * @async
+     * @param {*} $name
+     * @returns {any}
+     */
     async getPath($name) {
         if (await isDirectory(this.$app.databasePath('/seeds'))) {
             return this.$app.databasePath('seeds/' + this.getFileName($name).camelCase() + '.js');
@@ -29,6 +47,11 @@ class MakeSeederCommand extends GeneratorCommand {
         }
     }
 
+    /**
+     * qualifyClass method.
+     * @param {*} $name
+     * @returns {any}
+     */
     qualifyClass($name) {
         return $name;
     }
