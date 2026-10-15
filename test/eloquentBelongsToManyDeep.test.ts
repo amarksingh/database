@@ -384,7 +384,7 @@ describe('BelongsToMany & InteractsWithPivotTable 100% Coverage Suite', () => {
 
         // belongsToMany.js line 378: getResults with null parent key
         const userWithoutKey = new User();
-        userWithoutKey.id = null;
+        userWithoutKey.setAttribute('id', null);
         const resNullKey = await userWithoutKey.roles().getResults();
         expect(resNullKey.length).toBe(0);
 

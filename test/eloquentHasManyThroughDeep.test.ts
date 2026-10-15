@@ -91,7 +91,7 @@ describe('HasManyThrough Deep 100% Coverage Suite', () => {
 
         // getResults when local key is null
         const dummyCountry = new Country();
-        dummyCountry.id = null;
+        dummyCountry.setAttribute('id', null);
         const emptyResults = await dummyCountry.posts().getResults();
         expect(emptyResults.length).toBe(0);
 
