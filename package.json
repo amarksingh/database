@@ -2,7 +2,7 @@
   "name": "@ostro/database",
   "version": "1.4.6",
   "description": "Database module for OstroJS",
-  "main": "databaseManager.js",
+  "main": "databaseManager.ts",
   "scripts": {
     "test": "npx c8 npx jest --runInBand --no-coverage --forceExit"
   },

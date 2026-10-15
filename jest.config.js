@@ -22,11 +22,11 @@ module.exports = {
         "^@ostro/pagination/(.*)$": "<rootDir>/../pagination/$1",
         "^@ostro/pagination$": "<rootDir>/../pagination",
         "^@ostro/console/(.*)$": "<rootDir>/../console/$1",
-        "^@ostro/console$": "<rootDir>/../console/application.js",
+        "^@ostro/console$": "<rootDir>/../console/application",
         "^@ostro/container/(.*)$": "<rootDir>/../container/$1",
-        "^@ostro/container$": "<rootDir>/../container/application.js",
+        "^@ostro/container$": "<rootDir>/../container/application",
         "^@ostro/database/(.*)$": "<rootDir>/$1",
-        "^@ostro/database$": "<rootDir>/databaseManager.js"
+        "^@ostro/database$": "<rootDir>/databaseManager"
     },
     "collectCoverage": false,
     "coverageDirectory": "coverage",
