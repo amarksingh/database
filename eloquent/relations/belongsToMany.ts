@@ -73,9 +73,9 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $table
      * @returns {any}
      */
-    resolveTableName($table: string) {
+    resolveTableName($table: any) {
         if (typeof $table === 'function') {
-            const $model = new $table;
+            const $model = new ($table as any);
             if ($model instanceof Model || (typeof $model.getTable === 'function')) {
                 return $model.getTable();
             }
@@ -95,7 +95,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
     addConstraints() {
 
         this.performJoin();
-        if (this.constructor.$constraints) {
+        if ((this.constructor as any).$constraints) {
             this.addWhereConstraints();
         }
     }
@@ -501,7 +501,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    find($id: string, $columns: any[] = ['*']) {
+    find($id: any, $columns: any[] = ['*']) {
         if (!($id instanceof Model) && (is_array($id) || $id instanceof Array)) {
             return this.findMany($id, $columns);
         }
@@ -518,7 +518,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @returns {any}
      */
     findMany($ids: any, $columns: any[] = ['*']) {
-        $ids = $ids instanceof CollectionInterface ? $ids.toArray() : $ids;
+        $ids = ($ids && typeof ($ids as any).toArray === 'function') ? ($ids as any).toArray() : $ids;
 
         if (empty($ids)) {
             return this.getRelated().newCollection();
@@ -536,10 +536,10 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    async findOrFail($id: string, $columns: any[] = ['*']) {
+    async findOrFail($id: any, $columns: any[] = ['*']) {
         let $result = await this.find($id, $columns);
 
-        $id = $id instanceof CollectionInterface ? $id.toArray() : $id;
+        $id = ($id && typeof ($id as any).toArray === 'function') ? ($id as any).toArray() : $id;
 
         if (is_array($id)) {
             let resultCount = $result && typeof $result.count === 'function' ? $result.count() : ($result ? $result.length : 0);
@@ -550,7 +550,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
             return $result;
         }
 
-        throw (new ModelNotFoundException).setModel(get_class(this.$related), $id);
+        throw (new ModelNotFoundException).setModel(get_class(this.$related), is_array($id) ? $id : [$id]);
     }
 
     /**
@@ -561,7 +561,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $callback
      * @returns {any}
      */
-    async findOr($id: string, $columns: any[] = ['*'], $callback: any = null) {
+    async findOr($id: any, $columns: any[] = ['*'], $callback: any = null) {
         if (typeof $columns === 'function') {
             $callback = $columns;
             $columns = ['*'];
@@ -569,7 +569,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
 
         let $result = await this.find($id, $columns);
 
-        $id = $id instanceof CollectionInterface ? $id.toArray() : $id;
+        $id = ($id && typeof ($id as any).toArray === 'function') ? ($id as any).toArray() : $id;
 
         if (is_array($id)) {
             let resultCount = $result && typeof $result.count === 'function' ? $result.count() : ($result ? $result.length : 0);
@@ -984,7 +984,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $touch
      * @returns {any}
      */
-    async create($attributes: any[] = [], $joining: any[] = [], $touch: boolean = true) {
+    async create($attributes: any = {}, $joining: any[] = [], $touch: boolean = true) {
         const $instance = this.$related.newInstance($attributes);
         $instance.fill($attributes);
 

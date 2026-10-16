@@ -13,6 +13,10 @@ class Pivot {
 
     public $table: any;
 
+    public $exists: boolean = false;
+
+    [key: string | symbol]: any;
+
     /**
      * Create a new instance.
      * @param {*} attributes
@@ -35,7 +39,7 @@ class Pivot {
                 if (prop in target) {
                     return Reflect.get(target, prop, receiver);
                 }
-                return target.$attributes ? target.$attributes[prop] : undefined;
+                return target.$attributes ? target.$attributes[prop as any] : undefined;
             },
             /**
              * set method.

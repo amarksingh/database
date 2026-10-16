@@ -32,7 +32,7 @@ class Builder {
 	 * @param {*} $grammar
 	 * @param {*} $knex
 	 */
-	constructor($connection, $grammar, $knex) {
+	constructor($connection?: any, $grammar?: any, $knex?: any) {
 		this.$connection = $connection;
 		this.$grammar = $grammar;
 		this.$query = $knex
@@ -52,8 +52,8 @@ class Builder {
 	 * where method.
 	 * @returns {any}
 	 */
-	where() {
-		this.getQueryBuilder().where(...arguments)
+	where(...args: any[]) {
+		this.getQueryBuilder().where(...args)
 		return this;
 	}
 
@@ -576,8 +576,8 @@ class Builder {
 	 * orderBy method.
 	 * @returns {any}
 	 */
-	orderBy() {
-		this.getQueryBuilder().orderBy(...arguments)
+	orderBy(...args: any[]) {
+		this.getQueryBuilder().orderBy(...args)
 		return this;
 	}
 
@@ -594,8 +594,8 @@ class Builder {
 	 * offset method.
 	 * @returns {any}
 	 */
-	offset() {
-		this.getQueryBuilder().offset(...arguments)
+	offset(...args: any[]) {
+		this.getQueryBuilder().offset(...args)
 		return this;
 	}
 
@@ -603,8 +603,8 @@ class Builder {
 	 * limit method.
 	 * @returns {any}
 	 */
-	limit() {
-		this.getQueryBuilder().limit(...arguments)
+	limit(...args: any[]) {
+		this.getQueryBuilder().limit(...args)
 		return this;
 	}
 
@@ -778,16 +778,16 @@ class Builder {
 	 * skip method.
 	 * @returns {any}
 	 */
-	skip() {
-		return this.offset(...arguments)
+	skip(...args: any[]) {
+		return this.offset(...args)
 	}
 
 	/**
 	 * take method.
 	 * @returns {any}
 	 */
-	take() {
-		return this.limit(...arguments)
+	take(...args: any[]) {
+		return this.limit(...args)
 	}
 
 	/**
@@ -811,7 +811,7 @@ class Builder {
 	 * @returns {any}
 	 */
 	newQuery() {
-		return new this.constructor
+		return new (this.constructor as any)();
 	}
 
 	/**
@@ -1076,10 +1076,10 @@ class Builder {
 
 		$page = parseInt($page || (this.$request ? this.$request.input($pageName, 1) : 1));
 		if ($total === null || $total === undefined) {
-			const countQuery = new this.constructor(this.$connection, this.$grammar, this.getQueryBuilder().clone());
+			const countQuery = new (this.constructor as any)(this.$connection, this.$grammar, this.getQueryBuilder().clone());
 			$total = await countQuery.count();
 		}
-		$perPage = typeof $perPage == 'function' ? $perPage($total) : $perPage;
+		$perPage = typeof $perPage == 'function' ? ($perPage as Function)($total) : $perPage;
 		const $results = $total ? await this.forPage($page, $perPage).get() : new Collection([]);
 
 		return this.paginator($results, $total, $perPage, $page, {

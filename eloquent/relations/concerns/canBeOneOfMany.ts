@@ -4,7 +4,7 @@ import { last } from '@ostro/support/function';
  * Class CanBeOneOfMany.
  */
 class CanBeOneOfMany {
-
+    [key: string]: any;
     $isOneOfMany = false;
 
     /**

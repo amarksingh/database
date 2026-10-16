@@ -5,7 +5,7 @@ import { is_null } from '@ostro/support/function';
  * Class HasTimestamps.
  */
 class HasTimestamps {
-
+    [key: string]: any;
     $timestamps = true;
 
     /**

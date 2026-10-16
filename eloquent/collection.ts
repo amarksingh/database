@@ -11,7 +11,7 @@ class Collection extends BaseCollection {
      */
     toArray() {
         return this.map($value => {
-            return $value instanceof ModelInterface ? $value.toJson() : $value
+            return $value instanceof ModelInterface ? ($value as any).toJson() : $value
         }).all()
     }
     /**
@@ -37,11 +37,11 @@ class Collection extends BaseCollection {
         if (Array.isArray($value)) {
             for (let i in $value) {
                 if ($value[i] instanceof ModelInterface) {
-                    $value[i] = $value[i].toJson()
+                    $value[i] = ($value[i] as any).toJson()
                 }
             }
         }
-        return $value instanceof ModelInterface ? $value.toJson() : $value
+        return ($value as any) instanceof ModelInterface ? ($value as any).toJson() : $value
     }
 
     /**

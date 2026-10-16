@@ -4,6 +4,7 @@ import { intersection } from 'lodash';
  * Class GuardsAttributes.
  */
 class GuardsAttributes {
+    [key: string]: any;
     $fillable = [];
 
     $guarded = ['*'];
@@ -24,7 +25,7 @@ class GuardsAttributes {
      * @param {*} $values
      * @returns {any}
      */
-    fillableData($values: Record<string, any>) {
+    fillableData($values: any) {
         const datas = [];
         if (!Array.isArray($values)) {
             $values = [$values]
@@ -69,7 +70,7 @@ class GuardsAttributes {
      * @returns {any}
      */
     getGuarded() {
-        return this.$guarded === false ? [] :
+        return (this.$guarded as any) === false ? [] :
             this.$guarded;
     }
 
@@ -101,7 +102,7 @@ class GuardsAttributes {
      * @returns {any}
      */
     unguard($state: boolean = true) {
-        this.constructor.$unguarded = $state;
+        (this.constructor as any).$unguarded = $state;
     }
 
     /**
@@ -109,7 +110,7 @@ class GuardsAttributes {
      * @returns {any}
      */
     reguard() {
-        this.constructor.$unguarded = false;
+        (this.constructor as any).$unguarded = false;
     }
 
     /**
@@ -117,7 +118,7 @@ class GuardsAttributes {
      * @returns {any}
      */
     isUnguarded() {
-        return this.constructor.$unguarded;
+        return (this.constructor as any).$unguarded;
     }
 
     /**
@@ -126,7 +127,7 @@ class GuardsAttributes {
      * @returns {any}
      */
     unguarded($callback: Function) {
-        if (this.constructor.$unguarded) {
+        if ((this.constructor as any).$unguarded) {
             return $callback();
         }
 
@@ -145,7 +146,7 @@ class GuardsAttributes {
      * @returns {any}
      */
     isFillable($key: string) {
-        if (this.constructor.$unguarded) {
+        if ((this.constructor as any).$unguarded) {
             return true;
         }
 
@@ -186,12 +187,12 @@ class GuardsAttributes {
      */
     async isGuardableColumn($key: string) {
         const className = get_class_name(this);
-        if (!isset(this.constructor.$guardableColumns[className])) {
-            this.constructor.$guardableColumns[className] = await this.getConnection()
+        if (!isset((this.constructor as any).$guardableColumns[className])) {
+            (this.constructor as any).$guardableColumns[className] = await this.getConnection()
                 .getColumnListing(this.getTable());
         }
 
-        return this.constructor.$guardableColumns[className].indexOf($key) > -1;
+        return (this.constructor as any).$guardableColumns[className].indexOf($key) > -1;
     }
 
     /**
@@ -208,7 +209,7 @@ class GuardsAttributes {
      * @returns {any}
      */
     fillableFromArray($attributes: Record<string, any>) {
-        if (count(this.getFillable()) > 0 && !this.constructor.$unguarded) {
+        if (count(this.getFillable()) > 0 && !(this.constructor as any).$unguarded) {
             return intersection(this.getFillable(), Object.keys($attributes));
         }
 

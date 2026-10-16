@@ -59,7 +59,7 @@ class HasOneOrMany extends Relation {
      */
     addConstraints() {
 
-        if (this.constructor.$constraints) {
+        if ((this.constructor as any).$constraints) {
             let $query = this.getRelationQuery();
 
             $query.where(this.getQualifiedForeignKeyName(), '=', this.getParentKey());

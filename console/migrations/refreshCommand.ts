@@ -4,12 +4,18 @@ import Command from '@ostro/console/command';
  * Class RefreshCommand.
  */
 class RefreshCommand extends Command {
+    [key: string]: any;
 
-    $signature = 'migrate:refresh';
+    get $signature(): string {
+        return 'migrate:refresh';
+    }
 
-    $description = 'Reset and re-run all migrations';
+    get $description(): string {
+        return 'Reset and re-run all migrations';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--database [database]', 'The database connection to use'),
         this.createOption('--force', 'Force the operation to run when in production'),
         this.createOption('--path', 'The path(s) to the migrations files to be executed'),
@@ -18,6 +24,7 @@ class RefreshCommand extends Command {
         this.createOption('--seeder', 'The class name of the root seeder'),
         this.createOption('--step', 'Force the migrations to be run so they can be rolled back individually'),
     ];
+    }
 
     /**
      * handle method.
@@ -41,7 +48,7 @@ class RefreshCommand extends Command {
             await this.runReset($database, $path);
         }
 
-        await this.callCommand('migrate', Object.filter({
+        await this.callCommand('migrate', (Object as any).filter({
             '--database': $database,
             '--path': $path,
             '--realpath': this.input.getOption('realpath'),
@@ -63,7 +70,7 @@ class RefreshCommand extends Command {
      * @returns {any}
      */
     runRollback($database: any, $path: string, $step: any) {
-        return this.callCommand('migrate:rollback', Object.filter({
+        return this.callCommand('migrate:rollback', (Object as any).filter({
             '--database': $database,
             '--path': $path,
             '--realpath': this.input.getOption('realpath'),
@@ -79,7 +86,7 @@ class RefreshCommand extends Command {
      * @returns {any}
      */
     runReset($database: any, $path: string) {
-        return this.callCommand('migrate:reset', Object.filter({
+        return this.callCommand('migrate:reset', (Object as any).filter({
             '--database': $database,
             '--path': $path,
             '--realpath': this.input.getOption('realpath'),
@@ -101,7 +108,7 @@ class RefreshCommand extends Command {
      * @returns {any}
      */
     runSeeder($database: any) {
-        return this.callCommand('db:seed', Object.filter({
+        return this.callCommand('db:seed', (Object as any).filter({
             '--database': $database,
             '--class': this.option('seeder') || 'database/seeders/databaseSeeder',
             '--force': true,

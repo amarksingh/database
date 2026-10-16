@@ -1,19 +1,29 @@
+declare var database_path: any, config: any, is_dir: any, app_path: any, isDirectory: any;
+const { dirname } = require("path");
+const { tap } = require("@ostro/support/helpers");
 import Command from '@ostro/console/command';
 
 /**
  * Class DumpCommand.
  */
 class DumpCommand extends Command {
+    [key: string]: any;
 
-    $signature = 'schema:dump';
+    get $signature(): string {
+        return 'schema:dump';
+    }
 
-    $description = 'Dump the given database schema';
+    get $description(): string {
+        return 'Dump the given database schema';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--database [database]', 'The database connection to use'),
         this.createOption('--path', 'The path where the schema dump file should be stored'),
         this.createOption('--prune [prune]', 'Delete all existing migration files'),
     ];
+    }
 
     /**
      * Create a new instance.

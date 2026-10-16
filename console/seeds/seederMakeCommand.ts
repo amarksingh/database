@@ -1,17 +1,26 @@
+const { trim } = require("@ostro/support/helpers");
+declare var isDirectory: any;
 import GeneratorCommand from '@ostro/console/generatorCommand';
 import path from 'path';
 /**
  * Class MakeSeederCommand.
  */
 class MakeSeederCommand extends GeneratorCommand {
+    [key: string]: any;
 
-    $signature = 'make:seeder';
+    get $signature(): string {
+        return 'make:seeder';
+    }
 
-    $description = 'Create a new seeder class';
+    get $description(): string {
+        return 'Create a new seeder class';
+    }
 
-    $arguments = [
+    get $arguments(): any[] {
+        return [
         this.createArgument('<name>', 'Class name for seed').required()
     ];
+    }
 
     $type = 'Seeder';
 
@@ -41,9 +50,9 @@ class MakeSeederCommand extends GeneratorCommand {
      */
     async getPath($name: string) {
         if (await isDirectory(this.$app.databasePath('/seeds'))) {
-            return this.$app.databasePath('seeds/' + this.getFileName($name).camelCase() + '.js');
+            return this.$app.databasePath('seeds/' + (this.getFileName($name) as any).camelCase() + '.js');
         } else {
-            return this.$app.databasePath('seeders/' + this.getFileName($name).camelCase() + '.js');
+            return this.$app.databasePath('seeders/' + (this.getFileName($name) as any).camelCase() + '.js');
         }
     }
 

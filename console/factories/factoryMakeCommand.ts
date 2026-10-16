@@ -1,18 +1,28 @@
+const path = require("path");
+const { trim, class_basename } = require("@ostro/support/helpers");
+declare var is_dir: any, app_path: any;
 import GeneratorCommand from '@ostro/console/generatorCommand';
 
 /**
  * Class FactoryMakeCommand.
  */
 class FactoryMakeCommand extends GeneratorCommand {
+    [key: string]: any;
 
-    $signature = 'make:factory';
+    get $signature(): string {
+        return 'make:factory';
+    }
 
-    $description = 'Create a new model factory';
+    get $description(): string {
+        return 'Create a new model factory';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('-m, --model [model]', 'The name of the model'),
         this.createOption('--force', 'Force the operation to run when in production'),
     ];
+    }
 
     $type = 'Factory';
 
@@ -54,11 +64,11 @@ class FactoryMakeCommand extends GeneratorCommand {
             'NamespacedDummyModel': $namespaceModel,
             '{{ namespacedModel }}': $namespaceModel,
             '{{namespacedModel}}': $namespaceModel,
-            'DummyModel': $model.pascal(),
-            '{{ model }}': $model.pascal(),
-            '{{model}}': $model.pascal(),
-            '{{ factory }}': $factory.pascal(),
-            '{{factory}}': $factory.pascal(),
+            'DummyModel': ($model as any).pascal(),
+            '{{ model }}': ($model as any).pascal(),
+            '{{model}}': ($model as any).pascal(),
+            '{{ factory }}': ($factory as any).pascal(),
+            '{{factory}}': ($factory as any).pascal(),
         }
 
         return super.buildClass($name).then(content => content.replaceAllArray(Object.keys($replace), Object.values($replace)))
@@ -71,9 +81,9 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @returns {any}
      */
     async getPath($name: string) {
-        $name = $name.finish('Factory').toString();
+        $name = ($name as any).finish('Factory').toString();
 
-        return this.$app.databasePath('factories/' + this.getFileName($name).camelCase() + '.js');
+        return this.$app.databasePath('factories/' + (this.getFileName($name) as any).camelCase() + '.js');
 
     }
 
@@ -84,7 +94,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @returns {any}
      */
     async guessModelName($name: string) {
-        if (String.endsWith($name, 'Factory')) {
+        if ((String as any).endsWith($name, 'Factory')) {
             $name = $name.substr(0, -7);
         }
         let $modelName = await this.qualifyModel($name);

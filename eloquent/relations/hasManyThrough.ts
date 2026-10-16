@@ -41,7 +41,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
 
         this.performJoin();
 
-        if (this.constructor.$constraints) {
+        if ((this.constructor as any).$constraints) {
             this.$query.where(this.getQualifiedFirstKeyName(), '=', localValue);
         }
     }
@@ -300,7 +300,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    async find(id: string, columns: any[] = ['*']) {
+    async find(id: any, columns: any[] = ['*']) {
         if (Array.isArray(id) || (id && typeof id.toArray === 'function')) {
             return this.findMany(id, columns);
         }
@@ -336,7 +336,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    async findOrFail(id: string, columns: any[] = ['*']) {
+    async findOrFail(id: any, columns: any[] = ['*']) {
         const result = await this.find(id, columns);
 
         id = (id && typeof id.toArray === 'function') ? id.toArray() : id;
@@ -361,7 +361,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} callback
      * @returns {any}
      */
-    async findOr(id: string, columns: any[] = ['*'], callback: any = null) {
+    async findOr(id: any, columns: any[] = ['*'], callback: any = null) {
         if (typeof columns === 'function') {
             callback = columns;
             columns = ['*'];

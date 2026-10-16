@@ -8,9 +8,14 @@ import path from 'path';
  */
 class Migrator {
 
-    $paths = [];
+    public $paths = [];
 
-    $output = null;
+    public $output = null;
+
+    public $repository: any;
+    public $resolver: any;
+    public $file: any;
+    public connection: any;
 
     /**
      * Create a new instance.
@@ -319,7 +324,7 @@ class Migrator {
     resolve($file: any) {
         let $class = this.getMigrationClass($file);
 
-        return typeof $class === 'function' ? new $class : $class;
+        return typeof $class === 'function' ? new ($class as any)() : $class;
     }
 
     /**
@@ -358,7 +363,7 @@ class Migrator {
             return $path.endsWith('.js') ? [$path] : this.$file.glob($path + path.sep + '*_*.js')
         }).all()
         return Promise.all(datas).then(files => {
-            return Collection.make(files).filter().values().flatten().sortBy(($file, $key) => {
+            return Collection.make(files).filter(Boolean).values().flatten().sortBy(($file, $key) => {
                 return $key;
             }).all()
         })

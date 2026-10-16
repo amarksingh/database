@@ -111,7 +111,7 @@ class DatabaseManager extends Macroable {
      * @param {*} type
      * @returns {any}
      */
-    configure(connection: any, type: string) {
+    configure(connection: any, type?: string) {
         if (connection && typeof connection.setReconnector === 'function') {
             connection.setReconnector(this.$reconnector);
         }

@@ -3,6 +3,7 @@ import Command from '@ostro/console/command';
  * Class DatabaseQuery.
  */
 class DatabaseQuery extends Command {
+    [key: string]: any;
 
     /**
      * Create a new instance.
@@ -13,13 +14,19 @@ class DatabaseQuery extends Command {
         this.$resolver = resolver;
     }
 
-    $signature = 'db:query';
+    get $signature(): string {
+        return 'db:query';
+    }
 
-    $arguments = [
+    get $arguments(): any[] {
+        return [
         this.createArgument('<query>', 'database query string').required()
     ];
+    }
 
-    $description = 'database query';
+    get $description(): string {
+        return 'database query';
+    }
 
     /**
      * handle method.

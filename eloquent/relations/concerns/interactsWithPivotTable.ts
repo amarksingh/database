@@ -9,6 +9,7 @@ import { intersection, difference } from 'lodash';
  * Class InteractsWithPivotTable.
  */
 class InteractsWithPivotTable {
+    [key: string]: any;
     /**
      * toggle method.
      * @async
@@ -227,7 +228,7 @@ class InteractsWithPivotTable {
      * @param {*} $touch
      * @returns {any}
      */
-    attach($id: any[] = [], $attributes: Record<string, any> = {}, $touch: boolean = true) {
+    attach($id: any = [], $attributes: Record<string, any> = {}, $touch: boolean = true) {
         const fn = async () => {
             if (this.$using) {
                 await this.attachUsingCustomClass($id, $attributes);
@@ -253,7 +254,7 @@ class InteractsWithPivotTable {
      * @param {*} $attributes
      * @returns {any}
      */
-    attachUsingCustomClass($id: string, $attributes: Record<string, any>) {
+    attachUsingCustomClass($id: any, $attributes: Record<string, any>) {
         let $records = this.formatAttachRecords(
             this.parseIds($id), $attributes
         );
@@ -441,7 +442,7 @@ class InteractsWithPivotTable {
      * @param {*} $exists
      * @returns {any}
      */
-    newPivot($attributes: any[] = [], $exists: boolean = false) {
+    newPivot($attributes: any = [], $exists: boolean = false) {
         const $pivot = this.$related.newPivot(
             this.$parent, $attributes, this.$table, $exists, this.$using
         );

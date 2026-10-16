@@ -9,6 +9,7 @@ class Seeder {
     public $command: any = null;
     public $resolver: any;
     public $app: any = null;
+    public declare run?: any;
 
     /**
      * Create a new instance.
@@ -40,7 +41,7 @@ class Seeder {
             let $startTime = Date.now();
             await $seeder.__invoke($parameters);
 
-            let $runTime = Number((Date.now() - $startTime) * 1000, 2);
+            let $runTime = Number(((Date.now() - $startTime) * 1000).toFixed(2));
 
             if ($silent === false && this.$command) {
                 this.$command.getOutput().writeln(`<info>Seeded:</info>  ${$name} (${$runTime}ms)`);

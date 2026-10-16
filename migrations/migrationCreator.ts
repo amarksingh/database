@@ -8,14 +8,18 @@ import { pascal } from '@ostro/support/string';
  */
 class MigrationCreator {
 
-    $postCreate = [];
+    public $postCreate = [];
+    public $files: any;
+    public $customStubPath: any;
 
     /**
      * Create a new instance.
      * @param {*} $files
+     * @param {*} $customStubPath
      */
-    constructor($files: any) {
+    constructor($files: any, $customStubPath: any = null) {
         this.$files = $files;
+        this.$customStubPath = $customStubPath;
     }
 
     /**
@@ -84,12 +88,12 @@ class MigrationCreator {
                 this.stub('/migration.stub');
         } else if ($create) {
             let $customPath = path.join(__dirname, '/migration.create.stub')
-            $stub = await this.$files.exists() ?
+            $stub = await this.$files.exists($customPath) ?
                 $customPath :
                 this.stub('/migration.create.stub');
         } else {
             let $customPath = path.join(__dirname, '/migration.update.stub')
-            $stub = await this.$files.exists() ?
+            $stub = await this.$files.exists($customPath) ?
                 $customPath :
                 this.stub('/migration.update.stub');
         }

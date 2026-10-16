@@ -4,12 +4,18 @@ import BaseCommand from './baseCommand';
  * Class RollbackCommand.
  */
 class RollbackCommand extends BaseCommand {
+    [key: string]: any;
 
-    $signature = 'migrate:rollback';
+    get $signature(): string {
+        return 'migrate:rollback';
+    }
 
-    $description = 'Rollback all database migrations';
+    get $description(): string {
+        return 'Rollback all database migrations';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--database [database]', 'The database connection to use'),
         this.createOption('--force', 'Force the operation to run when in production'),
         this.createOption('--path [path]', 'The path(s) to the migrations files to be executed'),
@@ -17,6 +23,7 @@ class RollbackCommand extends BaseCommand {
         this.createOption('--pretend', 'Dump the SQL queries that would be run'),
         this.createOption('--step [step]', 'The number of migrations to be reverted'),
     ];
+    }
 
     /**
      * Create a new instance.

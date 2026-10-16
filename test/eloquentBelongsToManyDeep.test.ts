@@ -342,7 +342,8 @@ describe('BelongsToMany & InteractsWithPivotTable 100% Coverage Suite', () => {
         expect(pq).toBeDefined();
 
         // parseIds with BaseCollection
-        const BaseCollect = require('@ostro/contracts/collection/collect');
+        const BaseCollectModule = require('@ostro/contracts/collection/collect');
+        const BaseCollect = BaseCollectModule.default || BaseCollectModule;
         class MockBaseCollection extends BaseCollect {
             toArray() { return [role1.id, role2.id]; }
         }
@@ -523,7 +524,8 @@ describe('BelongsToMany & InteractsWithPivotTable 100% Coverage Suite', () => {
         expect(resNullArray).toBe('null_fallback');
 
         // belongsToMany.js line 341: findOr with $id having toArray() via CollectionInterface
-        const CollectionInterface = require('@ostro/contracts/collection/collect');
+        const CollectionInterfaceModule = require('@ostro/contracts/collection/collect');
+        const CollectionInterface = CollectionInterfaceModule.default || CollectionInterfaceModule;
         class MockCollectionContract extends CollectionInterface {
             toArray() { return [role1.id]; }
         }

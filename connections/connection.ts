@@ -304,8 +304,8 @@ class Connection extends Macroable {
      * @param {*} $value
      * @returns {any}
      */
-    raw($value: any) {
-        return this.$connection.raw($value);
+    raw($value: any, ...args: any[]) {
+        return this.$connection.raw($value, ...args);
     }
 
     /**
@@ -333,7 +333,7 @@ class Connection extends Macroable {
      * @param {*} $default
      * @returns {any}
      */
-    getConfig($key: string, $default: any) {
+    getConfig($key: string, $default: any = null) {
         return ObjectGet(this.$config, $key, $default);
     }
 

@@ -1,4 +1,4 @@
-import { Macroable, Micros } from '@ostro/support/macro';
+import { Macroable } from '@ostro/support/macro';
 import { is_null, get_class_name } from '@ostro/support/function';
 import InteractsWithDictionary from './concerns/interactsWithDictionary';
 import ModelNotFoundException from '../modelNotFoundException';
@@ -9,19 +9,19 @@ import MultipleRecordsFoundException from '../multipleRecordsFoundException';
  */
 class Relation extends Macroable.implement(InteractsWithDictionary) {
 
-    $query = null;
+    public $query: any = null;
 
-    $parent = null;
+    public $parent: any = null;
 
-    $related = null;
+    public $related: any = null;
 
-    static $selfJoinCount = 0;
+    public static $selfJoinCount: number = 0;
 
-    static $constraints = true;
+    public static $constraints: boolean = true;
 
-    static $morphMap = [];
+    public static $morphMap: any = [];
 
-    $performQueries = [];
+    public $performQueries: any[] = [];
 
     /**
      * Create a new instance.
@@ -141,12 +141,12 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @returns {any}
      */
     touch() {
-        $model = this.getRelated();
+        let $model = this.getRelated();
 
         if (!$model.isIgnoringTouch()) {
             this.rawUpdate({
                 [$model.getUpdatedAtColumn()]: $model.freshTimestampString(),
-            });
+            } as any);
         }
     }
 
@@ -155,7 +155,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $attributes
      * @returns {any}
      */
-    rawUpdate($attributes: any[] = []) {
+    rawUpdate($attributes: any = []) {
         return this.$query.withoutGlobalScopes().update($attributes);
     }
 
@@ -191,7 +191,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      */
     getRelationCountHash($incrementJoinCount: boolean = true) {
 
-        return 'ostro_reserved_' + ($incrementJoinCount ? this.constructor.$selfJoinCount++ : this.constructor.$selfJoinCount);
+        return 'ostro_reserved_' + ($incrementJoinCount ? (this.constructor as any).$selfJoinCount++ : (this.constructor as any).$selfJoinCount);
     }
 
     /**
@@ -341,7 +341,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
                 this.$morphMap.concat($map) : $map;
         } else if (typeof $map === 'object' && $map !== null) {
             this.$morphMap = $merge && typeof this.$morphMap === 'object' && !Array.isArray(this.$morphMap) ?
-                { ...this.$morphMap, ...$map } : $map;
+                { ...(this.$morphMap as object), ...$map } : $map;
         }
 
         return this.$morphMap;

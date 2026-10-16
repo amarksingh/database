@@ -174,8 +174,8 @@ class Builder {
      * @param tableName - Table name to drop.
      * @returns Knex schema builder promise.
      */
-    dropIfExists(tableName: any): any {
-        return this.dropTableIfExists(tableName);
+    dropIfExists(tableName: any, cascade?: any): any {
+        return this.dropTableIfExists(tableName, cascade);
     }
 
     /**
@@ -254,8 +254,8 @@ class Builder {
      * @param tableName - Table name to drop.
      * @returns Knex schema builder promise.
      */
-    dropTableIfExists(tableName: any): any {
-        return this.$schema.dropTableIfExists(tableName);
+    dropTableIfExists(tableName: any, cascade?: any): any {
+        return this.$schema.dropTableIfExists(tableName, cascade);
     }
 
     /**
@@ -300,7 +300,7 @@ class Builder {
      *
      * @throws LogicException
      */
-    getAllTables(): never {
+    getAllTables(): any {
         throw new LogicException('This database driver does not support getting all tables.');
     }
 
@@ -309,7 +309,7 @@ class Builder {
      *
      * @throws LogicException
      */
-    dropAllTables(): never {
+    dropAllTables(): any {
         throw new LogicException('This database driver does not support dropping all tables.');
     }
 
@@ -318,7 +318,7 @@ class Builder {
      *
      * @throws LogicException
      */
-    dropAllViews(): never {
+    dropAllViews(): any {
         throw new LogicException('This database driver does not support dropping all views.');
     }
 
@@ -327,7 +327,7 @@ class Builder {
      *
      * @throws LogicException
      */
-    dropAllTypes(): never {
+    dropAllTypes(): any {
         throw new LogicException('This database driver does not support dropping all types.');
     }
 }

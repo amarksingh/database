@@ -1,4 +1,4 @@
-import { is_string, strpos, empty, head, count, is_null, is_array, is_numeric } from '@ostro/support/function';
+import { is_string, strpos, empty, count, is_null, is_array, is_numeric } from '@ostro/support/function';
 import { snake, lower } from '@ostro/support/string';
 import Relation from '../relations/relation';
 import RelationNotFoundException from '../relationNotFoundException';
@@ -7,6 +7,7 @@ import knex from 'knex';
  * Class QueriesRelationships.
  */
 class QueriesRelationships {
+    [key: string]: any;
 
     /**
      * has method.
@@ -17,7 +18,7 @@ class QueriesRelationships {
      * @param {*} $callback
      * @returns {any}
      */
-    has($relation: any, $operator: string = '>=', $count: number = 1, $boolean: string = 'and', $callback: Function) {
+    has($relation: any, $operator: string = '>=', $count: number = 1, $boolean: string = 'and', $callback?: Function) {
         $operator = typeof $operator != 'string' ? '>=' : $operator
         $count = typeof $count != 'number' ? 1 : $count
         $boolean = typeof $boolean != 'string' ? 'and' : $boolean
@@ -56,8 +57,8 @@ class QueriesRelationships {
      * @param {*} $boolean
      * @returns {any}
      */
-    hasNested($relations: any, $operator: string = '>=', $count: number = 1, $boolean: string = 'and') {
-        let $callback = Array.from(arguments).find(arg => typeof arg == 'function')
+    hasNested($relations: any, $operator: string = '>=', $count: number = 1, $boolean: string = 'and', $callback?: any) {
+        $callback = $callback || Array.from(arguments).find(arg => typeof arg == 'function')
 
         $relations = $relations.split('.');
 
@@ -97,8 +98,8 @@ class QueriesRelationships {
      * @param {*} $boolean
      * @returns {any}
      */
-    doesntHave($relation: any, $boolean: string = 'and') {
-        let $callback = Array.from(arguments).find(arg => typeof arg == 'function')
+    doesntHave($relation: any, $boolean: string = 'and', $callback?: any) {
+        $callback = $callback || Array.from(arguments).find(arg => typeof arg == 'function')
 
         return this.has($relation, '<', 1, $boolean, $callback);
     }
@@ -336,7 +337,7 @@ class QueriesRelationships {
      * @param {*} $boolean
      * @returns {any}
      */
-    addHasWhere($hasQuery: boolean, $relation: any, $operator: string, $count: number, $boolean: string) {
+    addHasWhere($hasQuery: any, $relation: any, $operator: string, $count: number, $boolean: string) {
         $hasQuery.mergeConstraintsFrom($relation.getQuery());
 
         return this.canUseExistsForExistenceCheck($operator, $count) ?

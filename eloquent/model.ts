@@ -34,11 +34,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 	$table = plural(snake(this.constructor.name));
 
-	get $query() {
-		return this[kQuery] = this[kQuery] || Model.getConnectionResolver().table(this.$table)
+	get $query(): any {
+		return (this as any)[kQuery] = (this as any)[kQuery] || Model.getConnectionResolver().table(this.$table)
 	}
-	set $query($value) {
-		return this[kQuery] = $value
+	set $query($value: any) {
+		(this as any)[kQuery] = $value;
 	}
 	$connection = '';
 
@@ -325,9 +325,10 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 	/**
 	 * first method.
+	 * @param {*} $columns
 	 * @returns {any}
 	 */
-	first() {
+	first($columns?: any) {
 		this.$query.limit(1)
 		// if (this.$attributes && Object.keys(this.$attributes).length) {
 		// 	this.where(this.$attributes)
@@ -346,8 +347,8 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	 * @param {*} $attributes
 	 * @returns {any}
 	 */
-	forceFill($attributes) {
-		return this.constructor.unguarded(() => {
+	forceFill($attributes: any) {
+		return (this.constructor as any).unguarded(() => {
 			return this.fill($attributes);
 		});
 	}
@@ -373,12 +374,12 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	 * @param {*} data
 	 * @returns {any}
 	 */
-	create(data = {}) {
+	create(data: any = {}) {
 		let isArray = Array.isArray(data);
 		if (isArray && !data.length) {
 			return new Collection([]);
 		}
-		let items = isArray ? data : [data];
+		let items: any[] = isArray ? data : [data];
 
 		let instances = items.map(item => {
 			if (typeof item != 'object' || item === null) {
@@ -568,9 +569,9 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	 * @param {*} newInstance
 	 * @returns {any}
 	 */
-	newInstance(attributes, $exists = false, newInstance = false) {
+	newInstance(attributes?: any, $exists = false, newInstance = false) {
 
-		let $model = new (this.constructor)(attributes, newInstance)
+		let $model = new (this.constructor as any)(attributes, newInstance)
 		$model.$exists = $exists;
 
 		$model.setConnection(
@@ -586,9 +587,11 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	 * @param {*} $attributes
 	 * @returns {any}
 	 */
-	newModelInstance($attributes) {
+	newModelInstance($attributes: any = {}) {
 		const $instance = this.newInstance();
-		$instance.fill($attributes);
+		if ($attributes && Object.keys($attributes).length) {
+			$instance.fill($attributes);
+		}
 		return $instance.setConnection(
 			this.getConnection().getName()
 		);
@@ -973,7 +976,7 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	 * @param {*} key
 	 * @returns {any}
 	 */
-	getKeyForSaveQuery(key) {
+	getKeyForSaveQuery(key?: any) {
 		return this.getOriginal(key || this.getKeyName()) || this.getKey();
 	}
 
@@ -1187,9 +1190,9 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 
 		if (is_array($id)) {
-			if (!$result || count($result) !== count($id.unique())) {
+			if (!$result || count($result) !== count(($id as any).unique())) {
 				throw (new ModelNotFoundException).setModel(
-					get_class(this.getModel()), $id.difference($result && $result.modelKeys())
+					get_class(this.getModel()), ($id as any).difference($result && $result.modelKeys())
 				);
 			}
 
@@ -1313,15 +1316,17 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 	/**
 	 * find method.
 	 * @param {*} $id
+	 * @param {*} $columns
 	 * @returns {any}
 	 */
-	find($id) {
+	find($id: any, $columns: any = ['*']) {
 		if (!this.$primaryKey) {
 			throw Error('No primary key defined on model');
 		}
-		return this.where({
+		let q = this.where({
 			[this.$primaryKey]: $id
-		}).first()
+		});
+		return q.first($columns);
 
 	}
 
@@ -1445,7 +1450,7 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		if (!this.$exists) {
 			return null;
 		}
-		return (new this.constructor).where(this.getKeyName(), this.getKey()).first($columns);
+		return (new (this.constructor as any)).where(this.getKeyName(), this.getKey()).first($columns);
 	}
 
 	/**
@@ -1457,7 +1462,7 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 		if (!this.$exists) {
 			return this;
 		}
-		const fresh = await (new this.constructor).where(this.getKeyName(), this.getKey()).first();
+		const fresh = await (new (this.constructor as any)).where(this.getKeyName(), this.getKey()).first();
 		if (fresh) {
 			this.setRawAttributes(fresh.getAttributes(), true);
 		}

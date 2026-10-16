@@ -6,6 +6,7 @@ import InvalidArgumentException from '@ostro/contracts/exception/invalidArgument
  * Class CreateSchema.
  */
 class CreateSchema extends BaseCommand {
+    [key: string]: any;
 
     /**
      * Create a new instance.
@@ -16,11 +17,16 @@ class CreateSchema extends BaseCommand {
         this.$creator = $creator;
     }
 
-    $signature = 'make:migration';
+    get $signature(): string {
+        return 'make:migration';
+    }
 
-    $description = 'Create a new migration file';
+    get $description(): string {
+        return 'Create a new migration file';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--database', 'The database connection to use'),
         this.createOption('--create [create]', 'The table to be created'),
         this.createOption('--table [table]', 'The table to migrate'),
@@ -29,6 +35,7 @@ class CreateSchema extends BaseCommand {
         this.createOption('--realpath', 'Indicate any provided migration file paths are pre-resolved absolute paths'),
         this.createOption('--fullpath', 'Output the full path of the migration'),
     ];
+    }
 
     get $arguments() {
         return [
@@ -49,7 +56,7 @@ class CreateSchema extends BaseCommand {
 
         let $create = this.input.getOption('create') || false;
 
-        if (!$table && String.isString($create)) {
+        if (!$table && (String as any).isString($create)) {
             $table = $create;
 
             $create = true;
@@ -79,7 +86,7 @@ class CreateSchema extends BaseCommand {
      */
     async writeMigration($name: string, $table: string, $create: any) {
         let $file = await this.$creator.create(
-            $name.plural().camelCase().snakeCase(), this.getMigrationPath(), $table, $create
+            ($name as any).plural().camelCase().snakeCase(), this.getMigrationPath(), $table, $create
         );
 
         if (!this.option('fullpath')) {

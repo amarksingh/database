@@ -33,7 +33,7 @@ class MysqlConnector {
             acquireConnectionTimeout: config.connection_timeout,
             useNullAsDefault: config.useNullAsDefault != undefined ? config.useNullAsDefault : true,
             asyncStackTraces: config.asyncStackTraces != undefined ? config.asyncStackTraces : true
-        });
+        } as any);
     }
 }
 

@@ -14,7 +14,7 @@ const kTouches = Symbol('touches')
  * Class HasRelationships.
  */
 class HasRelationships {
-
+    [key: string]: any;
     [kRelation] = {};
 
     [kTouches] = [];
@@ -66,7 +66,7 @@ class HasRelationships {
      * @returns {any}
      */
     newHasOne($query: any, $parent: any, $foreignKey: any, $localKey: any) {
-        return new HasOne($query, $parent, $foreignKey, $localKey);
+        return new (HasOne as any)($query, $parent, $foreignKey, $localKey);
     }
 
     /**
@@ -108,7 +108,7 @@ class HasRelationships {
      * @returns {any}
      */
     newHasOneThrough($query: any, $farParent: any, $throughParent: any, $firstKey: any, $secondKey: any, $localKey: any, $secondLocalKey: any) {
-        return new HasOneThrough($query, $farParent, $throughParent, $firstKey, $secondKey, $localKey, $secondLocalKey);
+        return new (HasOneThrough as any)($query, $farParent, $throughParent, $firstKey, $secondKey, $localKey, $secondLocalKey);
     }
 
     /**
@@ -373,7 +373,7 @@ class HasRelationships {
      * @returns {any}
      */
     relationLoaded($key: string) {
-        return Boolean(exists(this.getRelations()[$key]));
+        return Boolean(this.getRelations()?.[$key]);
     }
     /**
      * relation method.

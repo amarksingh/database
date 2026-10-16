@@ -7,7 +7,7 @@ import { omit, pick } from 'lodash';
  * Class HasAttributes.
  */
 class HasAttributes {
-
+    [key: string]: any;
     static $mutatorCache = {};
 
     $attributes = {};
@@ -72,9 +72,9 @@ class HasAttributes {
         for (let $key in jsonableRelations) {
             let $value = jsonableRelations[$key]
             if ($value instanceof CollectionInterface) {
-                $attributes[$key] = $value.toArray()
+                $attributes[$key] = ($value as any).toArray()
             } else if ($value instanceof ModelInterface) {
-                $attributes[$key] = $value.toJson()
+                $attributes[$key] = ($value as any).toJson()
             }
         }
 
@@ -127,9 +127,9 @@ class HasAttributes {
     mutateAttributeForJSON($key: string, $value: any) {
         $value = this.mutateAttribute($key, $value);
         if ($value instanceof CollectionInterface) {
-            return $value.toArray()
+            return ($value as any).toArray()
         } else if ($value instanceof ModelInterface) {
-            return $value.toJson()
+            return ($value as any).toJson()
         }
         return $value;
     }
@@ -157,11 +157,11 @@ class HasAttributes {
             let $relation;
 
             if ($value instanceof CollectionInterface) {
-                $relation = $value.toArray();
+                $relation = ($value as any).toArray();
             } else if (is_null($value)) {
                 $relation = $value;
             }
-            if (this.constructor.$snakeAttributes) {
+            if ((this.constructor as any).$snakeAttributes) {
                 $key = snake($key);
             }
 

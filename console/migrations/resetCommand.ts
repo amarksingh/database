@@ -5,18 +5,25 @@ import path from 'path';
  * Class ResetCommand.
  */
 class ResetCommand extends BaseCommand {
+    [key: string]: any;
 
-    $signature = 'migrate:reset';
+    get $signature(): string {
+        return 'migrate:reset';
+    }
 
-    $description = 'Rollback all database migrations';
+    get $description(): string {
+        return 'Rollback all database migrations';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--database [database]', 'The database connection to use'),
         this.createOption('--force', 'Force the operation to run when in production'),
         this.createOption('--path', 'The path(s) to the migrations files to be executed'),
         this.createOption('--realpath', 'Indicate any provided migration file paths are pre-resolved absolute paths'),
         this.createOption('--pretend', 'Dump the SQL queries that would be run'),
     ];
+    }
 
     /**
      * Create a new instance.

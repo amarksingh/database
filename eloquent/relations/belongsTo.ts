@@ -53,7 +53,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @returns {any}
      */
     addConstraints() {
-        if (this.constructor.$constraints) {
+        if ((this.constructor as any).$constraints) {
 
             let $table = this.$related.getTable();
 
@@ -146,7 +146,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @returns {any}
      */
     associate($model: any) {
-        let $ownerKey = $model instanceof Model ? $model.getAttribute(this.$ownerKey) : $model;
+        let $ownerKey = $model instanceof Model ? ($model as any).getAttribute(this.$ownerKey) : $model;
 
         this.$child.setAttribute(this.$foreignKey, $ownerKey);
 

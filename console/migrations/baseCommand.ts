@@ -1,9 +1,11 @@
+const collect = require("@ostro/support/collection");
 import Command from '@ostro/console/command';
 
 /**
  * Class BaseCommand.
  */
 class BaseCommand extends Command {
+    [key: string]: any;
 
     /**
      * getMigrationPaths method.

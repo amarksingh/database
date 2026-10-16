@@ -3,17 +3,24 @@ import Command from '@ostro/console/command';
  * Class WipeCommand.
  */
 class WipeCommand extends Command {
+    [key: string]: any;
 
-    $signature = 'db:wipe';
+    get $signature(): string {
+        return 'db:wipe';
+    }
 
-    $description = 'Drop all tables, views, and types';
+    get $description(): string {
+        return 'Drop all tables, views, and types';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--database', 'The database connection to use'),
         this.createOption('--drop-views', 'Drop all tables and views'),
         this.createOption('--drop-types', 'Drop all tables and types (Postgres only)'),
         this.createOption('--force', 'Force the operation to run when in production'),
     ];
+    }
 
     /**
      * handle method.

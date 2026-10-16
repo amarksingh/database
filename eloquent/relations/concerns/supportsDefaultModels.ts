@@ -4,7 +4,7 @@ const kWithDefault = Symbol('withDefault')
  * Class SupportsDefaultModels.
  */
 class SupportsDefaultModels {
-
+    [key: string]: any;
     $withDefault = null;
 
     /**

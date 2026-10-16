@@ -2,8 +2,24 @@
   "name": "@ostro/database",
   "version": "1.4.6",
   "description": "Database module for OstroJS",
-  "main": "databaseManager.ts",
+  "main": "build/databaseManager.js",
+  "types": "build/databaseManager.d.ts",
+  "files": [
+    "build"
+  ],
+  "exports": {
+    ".": {
+      "types": "./build/databaseManager.d.ts",
+      "default": "./build/databaseManager.js"
+    },
+    "./*": {
+      "types": "./build/*.d.ts",
+      "default": "./build/*.js"
+    }
+  },
   "scripts": {
+    "build": "rm -rf build && npx tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run build",
     "test": "npx c8 npx jest --runInBand --no-coverage --forceExit"
   },
   "dependencies": {

@@ -7,6 +7,7 @@ class queryException extends queryExceptionContract {
     name: string;
     code: string;
     statusCode: number;
+    declare message: string;
 
     /**
      * Create a new instance.

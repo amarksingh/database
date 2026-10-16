@@ -34,5 +34,8 @@ module.exports = {
         "text",
         "lcov",
         "clover"
+    ],
+    "modulePathIgnorePatterns": [
+        "<rootDir>/build/"
     ]
 };

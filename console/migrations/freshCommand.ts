@@ -4,12 +4,18 @@ import Command from '@ostro/console/command';
  * Class FreshCommand.
  */
 class FreshCommand extends Command {
+    [key: string]: any;
 
-    $signature = 'migrate:fresh';
+    get $signature(): string {
+        return 'migrate:fresh';
+    }
 
-    $description = 'Drop all tables and re-run all migrations';
+    get $description(): string {
+        return 'Drop all tables and re-run all migrations';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--database [database]', 'The database connection to use'),
         this.createOption('--drop-views', 'Drop all tables and views'),
         this.createOption('--drop-types', 'Drop all tables and types (Postgres only)'),
@@ -21,6 +27,7 @@ class FreshCommand extends Command {
         this.createOption('--seeder', 'The class name of the root seeder'),
         this.createOption('--step', 'Force the migrations to be run so they can be rolled back individually'),
     ];
+    }
 
     /**
      * handle method.
@@ -34,14 +41,14 @@ class FreshCommand extends Command {
 
         let $database = this.input.getOption('database');
 
-        await this.callCommand('db:wipe', Object.filter({
+        await this.callCommand('db:wipe', (Object as any).filter({
             '--database': $database,
             '--drop-views': this.option('drop-views'),
             '--drop-types': this.option('drop-types'),
             '--force': true,
         }));
 
-        await this.callCommand('migrate', Object.filter({
+        await this.callCommand('migrate', (Object as any).filter({
             '--database': $database,
             '--path': this.input.getOption('path'),
             '--realpath': this.input.getOption('realpath'),
@@ -71,7 +78,7 @@ class FreshCommand extends Command {
      * @returns {any}
      */
     runSeeder($database: any) {
-        return this.callCommand('db:seed', Object.filter({
+        return this.callCommand('db:seed', (Object as any).filter({
             '--database': $database,
             '--class': this.option('seeder') || 'database/seeders/databaseSeeder',
             '--force': true,

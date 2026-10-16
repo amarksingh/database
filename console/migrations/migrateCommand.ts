@@ -5,6 +5,7 @@ import path from 'path';
  * Class CreateMigration.
  */
 class CreateMigration extends BaseCommand {
+    [key: string]: any;
 
     /**
      * Create a new instance.
@@ -17,11 +18,16 @@ class CreateMigration extends BaseCommand {
         this.$file = file;
     }
 
-    $signature = 'migrate';
+    get $signature(): string {
+        return 'migrate';
+    }
 
-    $description = 'migrate to database';
+    get $description(): string {
+        return 'migrate to database';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--database=', 'The database connection to use'),
         this.createOption('--force', 'Force the operation to run when in production'),
         this.createOption('--path [path]', 'The path(s) to the migrations files to be executed'),
@@ -31,6 +37,7 @@ class CreateMigration extends BaseCommand {
         this.createOption('--seed', 'Indicates if the seed task should be re-run'),
         this.createOption('--step [step]', 'Force the migrations to be run so they can be rolled back individually')
     ];
+    }
 
     /**
      * handle method.
@@ -62,7 +69,7 @@ class CreateMigration extends BaseCommand {
     prepareDatabase() {
         return this.$migrator.repositoryExists().then(exists => {
             if (!exists) {
-                return this.callCommand('migrate:install', Object.filter({
+                return this.callCommand('migrate:install', (Object as any).filter({
                     '--database': this.input.option('database'),
                 }));
             } else {

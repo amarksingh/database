@@ -3,14 +3,21 @@ import Command from '@ostro/console/command';
  * Class InstallCommand.
  */
 class InstallCommand extends Command {
+    [key: string]: any;
 
-    $signature = 'migrate:install';
+    get $signature(): string {
+        return 'migrate:install';
+    }
 
-    $description = 'Create the migration repository';
+    get $description(): string {
+        return 'Create the migration repository';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--database [database]', 'The database connection to use'),
     ];
+    }
 
     /**
      * Create a new instance.

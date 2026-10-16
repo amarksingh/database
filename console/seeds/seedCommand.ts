@@ -6,6 +6,7 @@ import { is_file } from '@ostro/support/function';
  * Class SeedCommand.
  */
 class SeedCommand extends Command {
+    [key: string]: any;
 
     /**
      * Create a new instance.
@@ -16,19 +17,27 @@ class SeedCommand extends Command {
         this.$resolver = $resolver;
     }
 
-    $signature = 'db:seed';
+    get $signature(): string {
+        return 'db:seed';
+    }
 
-    $description = 'Seed the database with records';
+    get $description(): string {
+        return 'Seed the database with records';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--class <class>', 'Enter seeder class name').default('database/seeders/databaseSeeder'),
         this.createOption('--database <database>', 'The database connection to seed'),
         this.createOption('--force', 'Force the operation to run when in production')
     ];
+    }
 
-    $arguments = [
+    get $arguments(): any[] {
+        return [
         this.createArgument('<file>', 'Enter seeder files name')
     ];
+    }
 
     /**
      * handle method.

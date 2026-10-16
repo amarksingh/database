@@ -1,18 +1,26 @@
+const { count } = require("@ostro/support/helpers");
 import BaseCommand from './baseCommand';
 /**
  * Class StatusCommand.
  */
 class StatusCommand extends BaseCommand {
+    [key: string]: any;
 
-    $signature = 'migrate:status';
+    get $signature(): string {
+        return 'migrate:status';
+    }
 
-    $description = 'Show the status of each migration';
+    get $description(): string {
+        return 'Show the status of each migration';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--database [database]', 'The database connection to use'),
         this.createOption('--path', 'The path(s) to the migrations files to be executed'),
         this.createOption('--realpath', 'Indicate any provided migration file paths are pre-resolved absolute paths'),
     ];
+    }
 
     /**
      * Create a new instance.
