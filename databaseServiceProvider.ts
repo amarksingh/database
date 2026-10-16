@@ -1,7 +1,7 @@
-const ServiceProvider = require('@ostro/support/serviceProvider');
-const ConnectionFactory = require('@ostro/database/connectors/connectionFactory');
-const DatabaseManager = require('./databaseManager');
-const Model = require('./eloquent/model');
+import ServiceProvider from '@ostro/support/serviceProvider';
+import ConnectionFactory from './connectors/connectionFactory';
+import DatabaseManager from './databaseManager';
+import Model from './eloquent/model';
 
 /**
  * Class DatabaseServiceProvider.
@@ -59,4 +59,5 @@ class DatabaseServiceProvider extends ServiceProvider {
     }
 
 }
-module.exports = DatabaseServiceProvider
+
+export default DatabaseServiceProvider;

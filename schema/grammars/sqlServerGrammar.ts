@@ -1,14 +1,16 @@
-const Grammar = require('./grammar');
+import Grammar from './grammar';
 
 /**
  * Class SqlServerGrammar.
  */
 class SqlServerGrammar extends Grammar {
+    /* c8 ignore next */
     /**
-     * compileDropAllForeignKeys method.
-     * @returns {any}
+     * Compile the SQL to drop all foreign keys.
+     *
+     * @returns SQL query string.
      */
-    compileDropAllForeignKeys() {
+    compileDropAllForeignKeys(): string {
         return `DECLARE @sql NVARCHAR(MAX) = N'';
             SELECT @sql += 'ALTER TABLE '
                 + QUOTENAME(OBJECT_SCHEMA_NAME(parent_object_id)) + '.' + + QUOTENAME(OBJECT_NAME(parent_object_id))
@@ -19,10 +21,11 @@ class SqlServerGrammar extends Grammar {
     }
 
     /**
-     * compileDropAllTables method.
-     * @returns {any}
+     * Compile the SQL to drop all tables.
+     *
+     * @returns SQL query string.
      */
-    compileDropAllTables() {
+    compileDropAllTables(): string {
         return `DECLARE @sql NVARCHAR(MAX) = N'';
 
             SELECT @sql += N'DROP TABLE ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(name) + ';'
@@ -33,4 +36,5 @@ class SqlServerGrammar extends Grammar {
     }
 }
 
-module.exports = SqlServerGrammar;
+/* c8 ignore next */
+export default SqlServerGrammar;

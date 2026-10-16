@@ -1,5 +1,5 @@
-const { empty, is_array, value } = require('@ostro/support/function');
-const { difference, union } = require('lodash');
+import { empty, is_array, value } from '@ostro/support/function';
+import { difference, union } from 'lodash';
 /**
  * Class HidesAttributes.
  */
@@ -96,4 +96,4 @@ class HidesAttributes {
     }
 }
 
-module.exports = HidesAttributes
+export default HidesAttributes;

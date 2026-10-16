@@ -1,8 +1,8 @@
-const { is_string, strpos, empty, head, count, is_null, is_array, is_numeric } = require('@ostro/support/function');
-const { snake, lower } = require('@ostro/support/string');
-const Relation = require('../relations/relation');
-const RelationNotFoundException = require('../relationNotFoundException');
-const knex = require('knex');
+import { is_string, strpos, empty, head, count, is_null, is_array, is_numeric } from '@ostro/support/function';
+import { snake, lower } from '@ostro/support/string';
+import Relation from '../relations/relation';
+import RelationNotFoundException from '../relationNotFoundException';
+import knex from 'knex';
 /**
  * Class QueriesRelationships.
  */
@@ -397,4 +397,4 @@ class QueriesRelationships {
     }
 }
 
-module.exports = QueriesRelationships
+export default QueriesRelationships;

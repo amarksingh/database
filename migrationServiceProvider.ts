@@ -1,15 +1,15 @@
-const ServiceProvider = require('@ostro/support/serviceProvider');
-const MigrateCommand = require('./console/migrations/migrateCommand')
-const MigrateMakeCommand = require('./console/migrations/migrationMakeCommand')
-const Migrator = require('./migrations/migrator')
-const MigrationCreator = require('./migrations/migrationCreator')
-const InstallCommand = require('./console/migrations/installCommand')
-const FreshCommand = require('./console/migrations/freshCommand')
-const RefreshCommand = require('./console/migrations/refreshCommand')
-const ResetCommand = require('./console/migrations/resetCommand')
-const RollbackCommand = require('./console/migrations/rollbackCommand')
-const StatusCommand = require('./console/migrations/statusCommand')
-const DatabaseMigrationRepository = require('./migrations/databaseMigrationRepository')
+import ServiceProvider from '@ostro/support/serviceProvider';
+import MigrateCommand from './console/migrations/migrateCommand';
+import MigrateMakeCommand from './console/migrations/migrationMakeCommand';
+import Migrator from './migrations/migrator';
+import MigrationCreator from './migrations/migrationCreator';
+import InstallCommand from './console/migrations/installCommand';
+import FreshCommand from './console/migrations/freshCommand';
+import RefreshCommand from './console/migrations/refreshCommand';
+import ResetCommand from './console/migrations/resetCommand';
+import RollbackCommand from './console/migrations/rollbackCommand';
+import StatusCommand from './console/migrations/statusCommand';
+import DatabaseMigrationRepository from './migrations/databaseMigrationRepository';
 /**
  * Class MigrationServiceProvider.
  */
@@ -176,4 +176,4 @@ class MigrationServiceProvider extends ServiceProvider {
     }
 }
 
-module.exports = MigrationServiceProvider
+export default MigrationServiceProvider;

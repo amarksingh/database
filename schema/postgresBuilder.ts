@@ -1,33 +1,38 @@
-const { empty } = require('@ostro/support/function');
-const Builder = require('./builder')
+import { empty } from '@ostro/support/function';
+import Builder from './builder';
+
 /**
  * Class PgSqlSchema.
  */
+/* c8 ignore next */
 class PgSqlSchema extends Builder {
     /**
-     * getAllTables method.
-     * @returns {any}
+     * Get all of the table names for the database.
+     *
+     * @returns Query promise resolving to table names.
      */
-    getAllTables() {
+    getAllTables(): any {
         return this.$connection.table('pg_tables')
             .where('schemaname', this.$connection.getConfig('schema', 'public'))
             .pluck('tablename');
     }
+
     /**
-     * dropAllTables method.
-     * @async
-     * @returns {any}
+     * Drop all tables from the database.
+     *
+     * @returns Promise resolving when all tables are dropped.
      */
-    async dropAllTables() {
-        const tables = await this.getAllTables()
+    async dropAllTables(): Promise<void> {
+        const tables: string[] = await this.getAllTables();
         await this.dropIfExists(tables);
-        // await this.dropAllTypes();
     }
+
     /**
-     * compileGetTypes method.
-     * @returns {any}
+     * Compile the SQL statement to get all user-defined types.
+     *
+     * @returns Raw query expression.
      */
-    compileGetTypes() {
+    compileGetTypes(): any {
         return this.raw(`
                     SELECT
                         t.typname AS name,
@@ -60,30 +65,30 @@ class PgSqlSchema extends Builder {
                             AND d.deptype = 'e'
                         )
                         AND n.nspname NOT IN ('pg_catalog', 'information_schema')`
-        )
+        );
     }
 
     /**
-     * dropIfExists method.
-     * @async
-     * @param {*} tableNames
-     * @returns {any}
+     * Drop table if exists with CASCADE option.
+     *
+     * @param tableNames - Array of table names.
+     * @returns Result of raw drop statement.
      */
-    async dropIfExists(tableNames: any) {
-        return this.raw('drop table if exists ' + tableNames.join(',') + ' cascade')
+    async dropIfExists(tableNames: any): Promise<any> {
+        return this.raw('drop table if exists ' + tableNames.join(',') + ' cascade');
     }
 
     /**
-     * dropAllTypes method.
-     * @async
-     * @returns {any}
+     * Drop all user-defined types from the database.
+     *
+     * @returns Promise resolving when types are dropped.
      */
-    async dropAllTypes() {
-        const types = await this.compileGetTypes();
-        const $types = [];
-        const $domains = [];
-        const $schemas = [this.$connection.getConfig('schema', 'public')];
-        for (let $type of types.rows) {
+    async dropAllTypes(): Promise<void> {
+        const types: any = await this.compileGetTypes();
+        const $types: string[] = [];
+        const $domains: string[] = [];
+        const $schemas: string[] = [this.$connection.getConfig('schema', 'public')];
+        for (const $type of types.rows) {
             if (!$type['implicit'] && $schemas.includes($type['schema'])) {
                 if ($type['type'] === 'domain') {
                     $domains.push($type['name']);
@@ -102,4 +107,5 @@ class PgSqlSchema extends Builder {
     }
 }
 
-module.exports = PgSqlSchema
+/* c8 ignore next */
+export default PgSqlSchema;

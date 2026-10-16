@@ -1,8 +1,11 @@
-const Grammar = require('./grammar');
+import Grammar from './grammar';
+
 /**
  * Class PostgresGrammar.
  */
 class PostgresGrammar extends Grammar {
 
 }
-module.exports = PostgresGrammar;
+
+/* c8 ignore next */
+export default PostgresGrammar;

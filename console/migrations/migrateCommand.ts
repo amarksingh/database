@@ -115,4 +115,4 @@ class CreateMigration extends BaseCommand {
     }
 }
 
-module.exports = CreateMigration
+export default CreateMigration;

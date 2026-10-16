@@ -1,4 +1,4 @@
-const { is_object } = require('@ostro/support/function');
+import { is_object } from '@ostro/support/function';
 /**
  * Class InteractsWithDictionary.
  */
@@ -21,4 +21,4 @@ class InteractsWithDictionary {
     }
 }
 
-module.exports = InteractsWithDictionary
+export default InteractsWithDictionary;

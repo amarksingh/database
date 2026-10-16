@@ -1,9 +1,9 @@
-const { is_null } = require('@ostro/support/function');
-const Connection = require('./connection');
-const SchemaGrammar = require('../schema/grammars/sqlServerGrammar');
-const QueryGrammar = require('../query/grammars/sqlServerGrammar');
-const QueryProcessor = require('../query/processors/mysqlProcessor');
-const SchemaBuilder = require('../schema/sqlServerBuilder');
+import { is_null } from '@ostro/support/function';
+import Connection from './connection';
+import SchemaGrammar from '../schema/grammars/sqlServerGrammar';
+import QueryGrammar from '../query/grammars/sqlServerGrammar';
+import QueryProcessor from '../query/processors/mysqlProcessor';
+import SchemaBuilder from '../schema/sqlServerBuilder';
 
 /**
  * Class SqlServerConnection.
@@ -64,4 +64,4 @@ class SqlServerConnection extends Connection {
 
 }
 
-module.exports = SqlServerConnection
+export default SqlServerConnection;

@@ -34,4 +34,4 @@ class DatabaseQuery extends Command {
 
 }
 
-module.exports = DatabaseQuery
+export default DatabaseQuery;

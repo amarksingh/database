@@ -1,25 +1,29 @@
-const Collection = require('@ostro/support/collection');
-const { trim, last } = require('@ostro/support/function');
-const Paginator = require('@ostro/pagination/paginator');
-const LengthAwarePaginator = require('@ostro/pagination/lengthAwarePaginator');
-const kPaginator = Symbol('paginator');
-const kSimplePaginator = Symbol('simplePaginator');
-const kQuery = Symbol('query');
+import Collection from '@ostro/support/collection';
+import { trim, last } from '@ostro/support/function';
+import Paginator from '@ostro/pagination/paginator';
+import LengthAwarePaginator from '@ostro/pagination/lengthAwarePaginator';
+
 /**
  * Class Builder.
  */
 class Builder {
 
-	$connection;
+	public $connection: any;
 
-	$grammar;
+	public $grammar: any;
 
-	get $query() {
-		return this[kQuery];
+	public $processor: any;
+
+	public $request: any = null;
+
+	protected _query: any;
+
+	get $query(): any {
+		return this._query;
 	}
 
-	set $query($value) {
-		return this[kQuery] = $value
+	set $query($value: any) {
+		this._query = $value;
 	}
 
 	/**
@@ -39,8 +43,8 @@ class Builder {
 	 * from method.
 	 * @returns {any}
 	 */
-	from() {
-		this[kQuery] = this.getQuery().from(...arguments)
+	from(...args: any[]) {
+		this.$query = this.getQuery().from(...args);
 		return this;
 	}
 
@@ -1078,7 +1082,7 @@ class Builder {
 		$perPage = typeof $perPage == 'function' ? $perPage($total) : $perPage;
 		const $results = $total ? await this.forPage($page, $perPage).get() : new Collection([]);
 
-		return this[kPaginator]($results, $total, $perPage, $page, {
+		return this.paginator($results, $total, $perPage, $page, {
 			"$path": this.$request ? this.$request.path() : '/',
 			'$pageName': $pageName,
 		});
@@ -1092,23 +1096,25 @@ class Builder {
 	 * @param {*} $pageName
 	 * @returns {any}
 	 */
-	async simplePaginate($perPage = 15, $page = 1, $pageName = 'page') {
+	async simplePaginate($perPage: any = 15, $page: any = 1, $pageName: string = 'page') {
 
 		$page = parseInt($page || (this.$request ? this.$request.input($pageName, 1) : 1));
 		this.offset(($page - 1) * $perPage).limit($perPage + 1);
-		return this[kSimplePaginator](await this.get(), $perPage, $page, {
+		return this.simplePaginator(await this.get(), $perPage, $page, {
 			"$path": this.$request ? this.$request.path() : '/',
 			'$pageName': $pageName,
 		});
 	}
 
-	[kPaginator]($items, $total, $perPage, $currentPage, $option) {
-		return new LengthAwarePaginator($items, $total, $perPage, $currentPage, $option, this.$request)
+	protected paginator($items: any, $total: any, $perPage: any, $currentPage: any, $option: any) {
+		return new LengthAwarePaginator($items, $total, $perPage, $currentPage, $option, this.$request);
 	}
 
-	[kSimplePaginator]($items, $perPage, $currentPage, $option) {
-		return new Paginator($items, $perPage, $currentPage, $option, this.$request)
+	protected simplePaginator($items: any, $perPage: any, $currentPage: any, $option: any) {
+		return new Paginator($items, $perPage, $currentPage, $option, this.$request);
 	}
 
 }
-module.exports = Builder
+
+export default Builder;
+

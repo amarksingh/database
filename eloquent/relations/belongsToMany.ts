@@ -1,12 +1,12 @@
-const { implement, isset, is_array, is_null, collect, count, empty, get_class, tap } = require('@ostro/support/function');
-const { contains } = require('@ostro/support/string');
-const Relation = require('./relation')
-const CollectionInterface = require('@ostro/contracts/collection/collect')
-const InteractsWithPivotTable = require('./concerns/interactsWithPivotTable')
-const Pivot = require('./pivot');
-const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException');
-const ModelNotFoundException = require('../modelNotFoundException');
-const Model = require('@ostro/contracts/database/eloquent/model');
+import { implement, isset, is_array, is_null, collect, count, empty, get_class, tap } from '@ostro/support/function';
+import { contains } from '@ostro/support/string';
+import Relation from './relation';
+import CollectionInterface from '@ostro/contracts/collection/collect';
+import InteractsWithPivotTable from './concerns/interactsWithPivotTable';
+import Pivot from './pivot';
+import InvalidArgumentException from '@ostro/support/exceptions/invalidArgumentException';
+import ModelNotFoundException from '../modelNotFoundException';
+import Model from '@ostro/contracts/database/eloquent/model';
 /**
  * Class BelongsToMany.
  */
@@ -1200,4 +1200,4 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
     }
 }
 
-module.exports = BelongsToMany
+export default BelongsToMany;

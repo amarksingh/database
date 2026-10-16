@@ -1,4 +1,4 @@
-const Processor = require('./processor');
+import Processor from './processor';
 
 /**
  * Class SqlServerProcessor.
@@ -7,4 +7,5 @@ class SqlServerProcessor extends Processor {
 
 }
 
-module.exports = SqlServerProcessor;
+/* c8 ignore next */
+export default SqlServerProcessor;

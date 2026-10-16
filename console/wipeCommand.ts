@@ -81,4 +81,4 @@ class WipeCommand extends Command {
 
 }
 
-module.exports = WipeCommand
+export default WipeCommand;

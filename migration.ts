@@ -2,13 +2,13 @@
  * Class Migration.
  */
 class Migration {
-    $connection = null;
+    public $connection: string | null = null;
 
     /**
      * getConnection method.
      * @returns {any}
      */
-    getConnection() {
+    public getConnection(): string | null {
         return this.$connection;
     }
 
@@ -16,16 +16,17 @@ class Migration {
      * up method.
      * @returns {any}
      */
-    up() {
+    public up(): any {
 
     }
+
     /**
      * down method.
      * @returns {any}
      */
-    down() {
+    public down(): any {
 
     }
 }
 
-module.exports = Migration
+export default Migration;

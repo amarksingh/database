@@ -39,4 +39,4 @@ class BaseCommand extends Command {
     }
 }
 
-module.exports = BaseCommand
+export default BaseCommand;

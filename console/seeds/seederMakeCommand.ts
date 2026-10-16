@@ -57,4 +57,4 @@ class MakeSeederCommand extends GeneratorCommand {
     }
 }
 
-module.exports = MakeSeederCommand
+export default MakeSeederCommand;

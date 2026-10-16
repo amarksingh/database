@@ -1,8 +1,8 @@
-const { Macroable, Micros } = require('@ostro/support/macro')
-const { is_null, get_class_name } = require('@ostro/support/function')
-const InteractsWithDictionary = require('./concerns/interactsWithDictionary')
-const ModelNotFoundException = require('../modelNotFoundException')
-const MultipleRecordsFoundException = require('../multipleRecordsFoundException')
+import { Macroable, Micros } from '@ostro/support/macro';
+import { is_null, get_class_name } from '@ostro/support/function';
+import InteractsWithDictionary from './concerns/interactsWithDictionary';
+import ModelNotFoundException from '../modelNotFoundException';
+import MultipleRecordsFoundException from '../multipleRecordsFoundException';
 
 /**
  * Class Relation.
@@ -397,4 +397,4 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
 
 }
 
-module.exports = Relation
+export default Relation;

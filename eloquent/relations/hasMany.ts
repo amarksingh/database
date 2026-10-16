@@ -1,5 +1,5 @@
-const HasOneOrMany = require('./hasOneOrMany')
-const { is_null } = require('@ostro/support/function')
+import HasOneOrMany from './hasOneOrMany';
+import { is_null } from '@ostro/support/function';
 
 /**
  * Class HasMany.
@@ -42,4 +42,4 @@ class HasMany extends HasOneOrMany {
     }
 }
 
-module.exports = HasMany
+export default HasMany;

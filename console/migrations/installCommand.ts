@@ -37,4 +37,4 @@ class InstallCommand extends Command {
 
 }
 
-module.exports = InstallCommand
+export default InstallCommand;

@@ -1,7 +1,17 @@
-const { random, shuffle, wrap } = require('lodash');
-const Connection = require('@ostro/database/connections/connection');
-const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException');
-const { empty } = require('@ostro/support/function');
+import { random, shuffle, wrap } from 'lodash';
+import Connection from '../connections/connection';
+import InvalidArgumentException from '@ostro/support/exceptions/invalidArgumentException';
+import { empty } from '@ostro/support/function';
+import MysqlConnector from './mysqlConnector';
+import PostgresConnector from './postgresConnector';
+import SqliteConnector from './sqliteConnector';
+import OracleConnector from './oracleConnector';
+import SqlServerConnector from './sqlServerConnector';
+import MysqlConnection from '../connections/mysqlConnection';
+import PostgresConnection from '../connections/postgresConnection';
+import SqliteConnection from '../connections/sqliteConnection';
+import OracleConnection from '../connections/oracleConnection';
+import SqlServerConnection from '../connections/sqlServerConnection';
 /**
  * Class ConnectionFactory.
  */
@@ -178,15 +188,15 @@ class ConnectionFactory {
 
         switch (config.driver) {
             case 'mysql':
-                return new (require('./mysqlConnector'))();
+                return new MysqlConnector();
             case 'pgsql':
-                return new (require('./postgresConnector'))();
+                return new PostgresConnector();
             case 'sqlite':
-                return new (require('./sqliteConnector'))();
+                return new SqliteConnector();
             case 'oracle':
-                return new (require('./oracleConnector'))();
+                return new OracleConnector();
             case 'sqlsrv':
-                return new (require('./sqlServerConnector'))();
+                return new SqlServerConnector();
             default:
                 throw new Error(`Unsupported driver [${config.driver}].`);
         }
@@ -210,19 +220,19 @@ class ConnectionFactory {
 
         switch (driver) {
             case 'mysql':
-                return new (require('../connections/mysqlConnection'))(connection, database, prefix, config);
+                return new MysqlConnection(connection, database, prefix, config);
             case 'pgsql':
-                return new (require('../connections/postgresConnection'))(connection, database, prefix, config);
+                return new PostgresConnection(connection, database, prefix, config);
             case 'sqlite':
-                return new (require('../connections/sqliteConnection'))(connection, database, prefix, config);
+                return new SqliteConnection(connection, database, prefix, config);
             case 'oracle':
-                return new (require('../connections/oracleConnection'))(connection, database, prefix, config);
+                return new OracleConnection(connection, database, prefix, config);
             case 'sqlsrv':
-                return new (require('../connections/sqlServerConnection'))(connection, database, prefix, config);
+                return new SqlServerConnection(connection, database, prefix, config);
             default:
                 throw new Error(`Unsupported driver [${driver}].`);
         }
     }
 }
 
-module.exports = ConnectionFactory;
+export default ConnectionFactory;

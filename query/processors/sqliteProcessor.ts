@@ -1,4 +1,4 @@
-const Processor = require('./processor');
+import Processor from './processor';
 
 /**
  * Class SQLiteProcessor.
@@ -7,4 +7,5 @@ class SQLiteProcessor extends Processor {
 
 }
 
-module.exports = SQLiteProcessor;
+/* c8 ignore next */
+export default SQLiteProcessor;

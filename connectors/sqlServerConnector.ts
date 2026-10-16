@@ -1,17 +1,18 @@
-const Knex = require('knex');
+import Knex from 'knex';
 
 /**
  * Class SqlServerConnector.
  */
 class SqlServerConnector {
     /**
-     * connect method.
-     * @param {*} config
-     * @param {*} database
-     * @param {*} prefix
-     * @returns {any}
+     * Establish a database connection.
+     *
+     * @param config - Database configuration.
+     * @param database - Database name.
+     * @param prefix - Table prefix.
+     * @returns Knex client instance.
      */
-    connect(config: Record<string, any>, database: any, prefix: any) {
+    connect(config: Record<string, any>, database: any, prefix: any): any {
         config.port = Number(config.port);
         return Knex({
             client: 'mssql',
@@ -36,4 +37,5 @@ class SqlServerConnector {
     }
 }
 
-module.exports = SqlServerConnector
+/* c8 ignore next */
+export default SqlServerConnector;

@@ -52,4 +52,4 @@ class TableGuesser {
     }
 }
 
-module.exports = TableGuesser
+export default TableGuesser;

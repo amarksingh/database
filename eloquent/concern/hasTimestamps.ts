@@ -1,5 +1,5 @@
-const DateTime = require('@ostro/support/dateTime')
-const { is_null } = require('@ostro/support/function')
+import DateTime from '@ostro/support/dateTime';
+import { is_null } from '@ostro/support/function';
 
 /**
  * Class HasTimestamps.
@@ -136,4 +136,4 @@ class HasTimestamps {
     }
 }
 
-module.exports = HasTimestamps
+export default HasTimestamps;

@@ -1,7 +1,7 @@
-const { implement, is_null } = require('@ostro/support/function')
-const HasOneOrMany = require('./hasOneOrMany')
-const SupportsDefaultModels = require('./concerns/supportsDefaultModels')
-const CanBeOneOfMany = require('./concerns/canBeOneOfMany')
+import { implement, is_null } from '@ostro/support/function';
+import HasOneOrMany from './hasOneOrMany';
+import SupportsDefaultModels from './concerns/supportsDefaultModels';
+import CanBeOneOfMany from './concerns/canBeOneOfMany';
 /**
  * Class HasOne.
  */
@@ -106,4 +106,4 @@ class HasOne extends implement(HasOneOrMany, SupportsDefaultModels, CanBeOneOfMa
     }
 }
 
-module.exports = HasOne
+export default HasOne;

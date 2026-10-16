@@ -1,5 +1,5 @@
-const { get_class_name, isset, empty, count } = require('@ostro/support/function')
-const { intersection } = require('lodash')
+import { get_class_name, isset, empty, count } from '@ostro/support/function';
+import { intersection } from 'lodash';
 /**
  * Class GuardsAttributes.
  */
@@ -215,4 +215,5 @@ class GuardsAttributes {
         return Object.keys($attributes);
     }
 }
-module.exports = GuardsAttributes
+
+export default GuardsAttributes;

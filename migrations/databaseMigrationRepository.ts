@@ -171,4 +171,4 @@ class DatabaseMigrationRepository {
     }
 }
 
-module.exports = DatabaseMigrationRepository
+export default DatabaseMigrationRepository;

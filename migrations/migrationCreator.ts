@@ -180,4 +180,4 @@ class MigrationCreator {
     }
 }
 
-module.exports = MigrationCreator
+export default MigrationCreator;

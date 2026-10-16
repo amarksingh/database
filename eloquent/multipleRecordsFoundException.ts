@@ -2,11 +2,15 @@
  * Class MultipleRecordsFoundException.
  */
 class MultipleRecordsFoundException extends Error {
+    code: string;
+    statusCode: number;
+
     /**
      * Create a new instance.
-     * @param {*} count
+     *
+     * @param count - Optional count of records found.
      */
-    constructor(count: any = null) {
+    constructor(count: number | null = null) {
         let message = count 
             ? `${count} records were found.`
             : 'Multiple records were found.';
@@ -18,4 +22,4 @@ class MultipleRecordsFoundException extends Error {
     }
 }
 
-module.exports = MultipleRecordsFoundException;
+export default MultipleRecordsFoundException;

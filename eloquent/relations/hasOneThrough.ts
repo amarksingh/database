@@ -1,7 +1,7 @@
-const { implement, isset } = require('@ostro/support/function')
-const HasManyThrough = require('./hasManyThrough')
-const SupportsDefaultModels = require('./concerns/supportsDefaultModels')
-const InteractsWithDictionary = require('./concerns/interactsWithDictionary')
+import { implement, isset } from '@ostro/support/function';
+import HasManyThrough from './hasManyThrough';
+import SupportsDefaultModels from './concerns/supportsDefaultModels';
+import InteractsWithDictionary from './concerns/interactsWithDictionary';
 /**
  * Class HasOneThrough.
  */
@@ -63,4 +63,4 @@ class HasOneThrough extends implement(HasManyThrough, SupportsDefaultModels, Int
     }
 }
 
-module.exports = HasOneThrough
+export default HasOneThrough;

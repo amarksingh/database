@@ -1,4 +1,4 @@
-const Processor = require('./processor');
+import Processor from './processor';
 
 /**
  * Class MySqlProcessor.
@@ -7,4 +7,5 @@ class MySqlProcessor extends Processor {
 
 }
 
-module.exports = MySqlProcessor;
+/* c8 ignore next */
+export default MySqlProcessor;

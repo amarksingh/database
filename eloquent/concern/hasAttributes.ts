@@ -1,8 +1,8 @@
-const { isset, is_null, count, empty, method_exists, collect } = require('@ostro/support/function')
-const { studly, snake, lowerFirst } = require('@ostro/support/string')
-const CollectionInterface = require('@ostro/contracts/collection/collect')
-const ModelInterface = require('@ostro/contracts/database/eloquent/model')
-const { omit, pick } = require('lodash')
+import { isset, is_null, count, empty, method_exists, collect } from '@ostro/support/function';
+import { studly, snake, lowerFirst } from '@ostro/support/string';
+import CollectionInterface from '@ostro/contracts/collection/collect';
+import ModelInterface from '@ostro/contracts/database/eloquent/model';
+import { omit, pick } from 'lodash';
 /**
  * Class HasAttributes.
  */
@@ -550,4 +550,4 @@ class HasAttributes {
 
 }
 
-module.exports = HasAttributes
+export default HasAttributes;

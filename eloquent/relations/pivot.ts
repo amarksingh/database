@@ -1,21 +1,27 @@
+import Model from '../model';
+
 /**
  * Class Pivot.
  */
 class Pivot {
 
-    $foreignKey;
+    public $foreignKey: any;
 
-    $relatedKey;
+    public $relatedKey: any;
 
-    $attributes = {};
+    public $attributes: Record<string, any>;
 
-    $table;
+    public $table: any;
 
     /**
      * Create a new instance.
      * @param {*} attributes
      */
     constructor(attributes: Record<string, any> = {}) {
+        this.$foreignKey = null;
+        this.$relatedKey = null;
+        this.$attributes = {};
+        this.$table = null;
         this.setRawAttributes(attributes);
         return new Proxy(this, {
             /**
@@ -112,7 +118,6 @@ class Pivot {
      * @returns {any}
      */
     async save() {
-        const Model = require('../model');
         const db = Model.getConnectionResolver();
         if (db && this.$table) {
             if (this.$exists) {
@@ -131,7 +136,6 @@ class Pivot {
      * @returns {any}
      */
     async delete() {
-        const Model = require('../model');
         const db = Model.getConnectionResolver();
         if (db && this.$table) {
             await db.table(this.$table).where(this.$attributes).delete();
@@ -197,4 +201,4 @@ class Pivot {
     }
 }
 
-module.exports = Pivot;
+export default Pivot;

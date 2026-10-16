@@ -435,7 +435,8 @@ describe('Query Builder – extended coverage', () => {
         });
 
         test('Connection.resolverFor() and getResolver() store and retrieve resolver', () => {
-            const Connection = require('../connections/connection');
+            const _Connection = require('../connections/connection');
+            const Connection = _Connection.default || _Connection;
             const fn = () => 'resolved';
             Connection.resolverFor('test_driver', fn);
             expect(Connection.getResolver('test_driver')).toBe(fn);
@@ -554,13 +555,15 @@ describe('Query Builder – extended coverage', () => {
     // ──────────────────────────────────────────────
     describe('Grammar & MysqlProcessor', () => {
         test('MySQLProcessor processInsertGetId returns sequence id', () => {
-            const MySQLProcessor = require('../query/processors/mysqlProcessor');
+            const _MySQLProcessor = require('../query/processors/mysqlProcessor');
+            const MySQLProcessor = _MySQLProcessor.default || _MySQLProcessor;
             const proc = new MySQLProcessor();
             expect(proc.processInsertGetId(null, '', {}, 5)).toBe(5);
         });
 
         test('Query Grammar methods (getDateFormat, setTablePrefix, getTablePrefix, setConnection)', () => {
-            const Grammar = require('../query/grammars/grammar');
+            const _Grammar = require('../query/grammars/grammar');
+            const Grammar = _Grammar.default || _Grammar;
             const g = new Grammar();
             expect(g.getDateFormat()).toBe('Y-m-d H:i:s');
             g.setTablePrefix('pre_');
@@ -570,7 +573,8 @@ describe('Query Builder – extended coverage', () => {
         });
 
         test('SQLite Grammar inherits BaseGrammar', () => {
-            const SQLiteGrammar = require('../query/grammars/sqliteGrammar');
+            const _SQLiteGrammar = require('../query/grammars/sqliteGrammar');
+            const SQLiteGrammar = _SQLiteGrammar.default || _SQLiteGrammar;
             const g = new SQLiteGrammar();
             expect(g.getDateFormat()).toBe('Y-m-d H:i:s');
             g.setTablePrefix('sqlite_');

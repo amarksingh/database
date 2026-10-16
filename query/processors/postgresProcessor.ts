@@ -1,4 +1,4 @@
-const Processor = require('./processor');
+import Processor from './processor';
 
 /**
  * Class PostgresProcessor.
@@ -7,4 +7,5 @@ class PostgresProcessor extends Processor {
 
 }
 
-module.exports = PostgresProcessor;
+/* c8 ignore next */
+export default PostgresProcessor;

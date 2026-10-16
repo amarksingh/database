@@ -55,4 +55,4 @@ class RollbackCommand extends BaseCommand {
 
 }
 
-module.exports = RollbackCommand
+export default RollbackCommand;

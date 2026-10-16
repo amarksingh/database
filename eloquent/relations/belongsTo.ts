@@ -1,8 +1,7 @@
-const { implement, isset, is_null } = require('@ostro/support/function')
-const Model = require('@ostro/contracts/database/eloquent/model')
-
-const Relation = require('./relation')
-const SupportsDefaultModels = require('./concerns/supportsDefaultModels')
+import { implement, isset, is_null } from '@ostro/support/function';
+import Model from '@ostro/contracts/database/eloquent/model';
+import Relation from './relation';
+import SupportsDefaultModels from './concerns/supportsDefaultModels';
 
 /**
  * Class BelongsTo.
@@ -298,4 +297,4 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
     }
 }
 
-module.exports = BelongsTo
+export default BelongsTo;

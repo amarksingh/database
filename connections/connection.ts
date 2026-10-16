@@ -1,10 +1,10 @@
-const { Macroable } = require('@ostro/support/macro');
-const ObjectGet = require('lodash.get');
-const QueryBuilder = require('../query/builder');
-const QueryGrammar = require('../query/grammars/grammar');
-const Processor = require('../query/processors/processor');
-const SchemaBuilder = require('../schema/builder');
-const { debounce, is_callable, is_null } = require('@ostro/support/function');
+import { Macroable } from '@ostro/support/macro';
+import ObjectGet from 'lodash.get';
+import QueryBuilder from '../query/builder';
+import QueryGrammar from '../query/grammars/grammar';
+import Processor from '../query/processors/processor';
+import SchemaBuilder from '../schema/builder';
+import { debounce, is_callable, is_null } from '@ostro/support/function';
 
 /**
  * Class LostConnectionException.
@@ -565,4 +565,4 @@ class Connection extends Macroable {
     }
 }
 
-module.exports = Connection
+export default Connection;

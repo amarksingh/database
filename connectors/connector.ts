@@ -1,78 +1,76 @@
+import DetectsLostConnections from '../detectsLostConnections';
 
-const DetectsLostConnections = require('@ostro/database/detectsLostConnections')
 /**
  * Class Connector.
  */
 class Connector extends DetectsLostConnections {
 
-    $options = {};
+    $options: Record<string, any> = {};
 
     /**
-     * createConnection method.
-     * @param {*} $dsn
-     * @param {*} $config
-     * @param {*} $options
-     * @returns {any}
+     * Create a new connection instance.
+     *
+     * @param dsn - DSN string.
+     * @param configOrUser - Configuration object or username.
+     * @param optionsOrPass - Options object or password.
+     * @param options - Connection options.
+     * @returns Connection instance.
      */
-    createConnection($dsn: any, $config: Record<string, any>, $options: Record<string, any>) {
-        const $username = $config['username'] || null;
-        const $password = $config['password'] || null;
+    createConnection(dsn: any, configOrUser: any, optionsOrPass?: any, options: Record<string, any> = {}): any {
+        if (arguments.length === 4) {
+            return new (global as any).PDO(dsn, configOrUser, optionsOrPass, options);
+        }
+        const config = configOrUser || {};
+        const username = config['username'] || null;
+        const password = config['password'] || null;
 
         try {
             return this.createConnection(
-                $dsn, $username, $password, $options
+                dsn, username, password, optionsOrPass || {}
             );
-        } catch ($e) {
+        } catch (e) {
             return this.tryAgainIfCausedByLostConnection(
-                $e, $dsn, $username, $password, $options
+                e, dsn, username, password, optionsOrPass || {}
             );
         }
     }
 
     /**
-     * createConnection method.
-     * @param {*} $dsn
-     * @param {*} $username
-     * @param {*} $password
-     * @param {*} $options
-     * @returns {any}
+     * Handle a connection lost exception by retrying.
+     *
+     * @param e - Error thrown.
+     * @param dsn - DSN string.
+     * @param username - Username string.
+     * @param password - Password string.
+     * @param options - Options dictionary.
+     * @returns Connection instance.
      */
-    createConnection($dsn: any, $username: any, $password: string, $options: Record<string, any>) {
-        return new PDO($dsn, $username, $password, $options);
-    }
-
-    /**
-     * tryAgainIfCausedByLostConnection method.
-     * @param {*} $e
-     * @param {*} $dsn
-     * @param {*} $username
-     * @param {*} $password
-     * @param {*} $options
-     * @returns {any}
-     */
-    tryAgainIfCausedByLostConnection($e: any, $dsn: any, $username: any, $password: string, $options: Record<string, any>) {
-        if (this.causedByLostConnection($e)) {
-            return this.createConnection($dsn, $username, $password, $options);
+    tryAgainIfCausedByLostConnection(e: any, dsn: any, username: any, password: string, options: Record<string, any>): any {
+        if (this.causedByLostConnection(e)) {
+            return this.createConnection(dsn, username, password, options);
         }
 
-        throw $e;
+        throw e;
     }
 
     /**
-     * getDefaultOptions method.
-     * @returns {any}
+     * Get the default PDO connection options.
+     *
+     * @returns Default options dictionary.
      */
-    getDefaultOptions() {
+    getDefaultOptions(): Record<string, any> {
         return this.$options;
     }
 
     /**
-     * setDefaultOptions method.
-     * @param {*} $options
-     * @returns {any}
+     * Set the default PDO connection options.
+     *
+     * @param options - Options dictionary.
      */
-    setDefaultOptions($options: Record<string, any>) {
-        this.$options = $options;
+    setDefaultOptions(options: Record<string, any>): void {
+        this.$options = options;
     }
 }
-module.exports = Connector
+
+/* c8 ignore next */
+export default Connector;

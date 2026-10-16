@@ -1,13 +1,16 @@
-const { get_class_name, count } = require("@ostro/support/function");
-const ModelNotFoundExceptionContracts = require("@ostro/contracts/database/eloquent/modelNotFoundException");
+import { get_class_name, count } from '@ostro/support/function';
+/* c8 ignore next */
+import ModelNotFoundExceptionContracts from '@ostro/contracts/database/eloquent/modelNotFoundException';
 
 /**
  * Class ModelNotFoundException.
  */
 class ModelNotFoundException extends ModelNotFoundExceptionContracts {
-    $model;
-
-    $ids;
+    $model: any;
+    $ids: any[] = [];
+    name: string;
+    code: string;
+    statusCode: number;
 
     /**
      * Create a new instance.
@@ -16,22 +19,21 @@ class ModelNotFoundException extends ModelNotFoundExceptionContracts {
         super();
         this.name = this.constructor.name;
         this.code = 'ERR_INVALID_ARG_VALUE';
-        this.statusCode = 500
-
+        this.statusCode = 500;
     }
 
-
     /**
-     * setModel method.
-     * @param {*} $model
-     * @param {*} $ids
-     * @returns {any}
+     * Set the affected Eloquent model and instance ids.
+     *
+     * @param model - Model instance or class name.
+     * @param ids - Missing model ids.
+     * @returns Fluent self instance.
      */
-    setModel($model: any, $ids: any[] = []) {
-        this.$model = $model;
-        this.$ids = $ids;
+    setModel(model: any, ids: any[] = []): this {
+        this.$model = model;
+        this.$ids = ids;
 
-        this.message = `No query results for model [${get_class_name($model)}]`;
+        this.message = `No query results for model [${get_class_name(model)}]`;
 
         if (count(this.$ids) > 0) {
             this.message += ' ' + this.$ids.join(', ');
@@ -43,20 +45,22 @@ class ModelNotFoundException extends ModelNotFoundExceptionContracts {
     }
 
     /**
-     * getModel method.
-     * @returns {any}
+     * Get the affected Eloquent model.
+     *
+     * @returns Model instance.
      */
-    getModel() {
+    getModel(): any {
         return this.$model;
     }
 
     /**
-     * getIds method.
-     * @returns {any}
+     * Get the affected Eloquent model IDs.
+     *
+     * @returns Array of IDs.
      */
-    getIds() {
+    getIds(): any[] {
         return this.$ids;
     }
 }
 
-module.exports = ModelNotFoundException
+export default ModelNotFoundException;

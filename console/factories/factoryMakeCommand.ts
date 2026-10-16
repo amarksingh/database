@@ -102,4 +102,4 @@ class FactoryMakeCommand extends GeneratorCommand {
 
 }
 
-module.exports = FactoryMakeCommand
+export default FactoryMakeCommand;

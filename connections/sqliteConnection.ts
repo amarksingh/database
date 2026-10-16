@@ -1,9 +1,9 @@
-const { is_null } = require('@ostro/support/function');
-const Connection = require('./connection');
-const SchemaGrammar = require('../schema/grammars/sqliteGrammar');
-const QueryGrammar = require('../query/grammars/sqliteGrammar');
-const QueryProcessor = require('../query/processors/mysqlProcessor');
-const SchemaBuilder = require('../schema/sqliteBuilder');
+import { is_null } from '@ostro/support/function';
+import Connection from './connection';
+import SchemaGrammar from '../schema/grammars/sqliteGrammar';
+import QueryGrammar from '../query/grammars/sqliteGrammar';
+import QueryProcessor from '../query/processors/mysqlProcessor';
+import SchemaBuilder from '../schema/sqliteBuilder';
 
 /**
  * Class SqliteConnection.
@@ -64,4 +64,4 @@ class SqliteConnection extends Connection {
 
 }
 
-module.exports = SqliteConnection
+export default SqliteConnection;

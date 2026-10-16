@@ -1,21 +1,24 @@
-const Grammar = require('./grammar');
+import Grammar from './grammar';
 
 /**
  * Class SqliteGrammar.
  */
 class SqliteGrammar extends Grammar {
+    /* c8 ignore next */
     /**
-     * compileDropAllTables method.
-     * @param {*} tables
-     * @returns {any}
+     * Compile the SQL to drop all tables.
+     *
+     * @param tables - Table names array.
+     * @returns SQL query string.
      */
-    compileDropAllTables(tables: any) {
-        let sql = ``;
-        for (let table of tables) {
+    compileDropAllTables(tables: string[]): string {
+        let sql: string = '';
+        for (const table of tables) {
             sql += `DROP TABLE IF EXISTS ${table};`;
         }
         return sql;
     }
 }
 
-module.exports = SqliteGrammar;
+/* c8 ignore next */
+export default SqliteGrammar;

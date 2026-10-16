@@ -72,4 +72,4 @@ class StatusCommand extends BaseCommand {
 
 }
 
-module.exports = StatusCommand
+export default StatusCommand;

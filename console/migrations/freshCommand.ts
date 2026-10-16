@@ -80,4 +80,4 @@ class FreshCommand extends Command {
 
 }
 
-module.exports = FreshCommand
+export default FreshCommand;

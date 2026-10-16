@@ -1,9 +1,9 @@
-const { is_null } = require('@ostro/support/function');
-const Connection = require('./connection');
-const SchemaGrammar = require('../schema/grammars/mysqlGrammar');
-const QueryGrammar = require('../query/grammars/mysqlGrammar');
-const QueryProcessor = require('../query/processors/mysqlProcessor');
-const SchemaBuilder = require('../schema/mysqlBuilder');
+import { is_null } from '@ostro/support/function';
+import Connection from './connection';
+import SchemaGrammar from '../schema/grammars/mysqlGrammar';
+import QueryGrammar from '../query/grammars/mysqlGrammar';
+import QueryProcessor from '../query/processors/mysqlProcessor';
+import SchemaBuilder from '../schema/mysqlBuilder';
 
 /**
  * Class MysqlConnection.
@@ -64,4 +64,4 @@ class MysqlConnection extends Connection {
 
 }
 
-module.exports = MysqlConnection
+export default MysqlConnection;

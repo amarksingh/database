@@ -1,5 +1,5 @@
-const { isset, is_null } = require('@ostro/support/function')
-const Relation = require('./relation')
+import { isset, is_null } from '@ostro/support/function';
+import Relation from './relation';
 const kForeignKey = Symbol('foreignKey')
 const kLocalKey = Symbol('localKey')
 /**
@@ -373,4 +373,4 @@ class HasOneOrMany extends Relation {
     }
 }
 
-module.exports = HasOneOrMany
+export default HasOneOrMany;

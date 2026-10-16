@@ -1,10 +1,13 @@
 'use strict';
 
 const { createDatabaseManager } = require('./setup');
-const Model = require('../eloquent/model');
-const Collection = require('../eloquent/collection');
+const _Model = require('../eloquent/model');
+const Model = _Model.default || _Model;
+const _Collection = require('../eloquent/collection');
+const Collection = _Collection.default || _Collection;
 const BaseCollection = require('@ostro/support/collection');
-const Relation = require('../eloquent/relations/relation');
+const _Relation = require('../eloquent/relations/relation');
+const Relation = _Relation.default || _Relation;
 
 class DeepUser extends Model {
     $table = 'deep_users';
@@ -217,7 +220,9 @@ describe('Eloquent Relations Deep Coverage Tests', () => {
         const throughParent = new SoftDeleteThroughUser();
         const query = DeepUser.newQueryWithoutRelationships();
 
-        const HasManyThrough = require('../eloquent/relations/hasManyThrough');
+        const _HasManyThrough = require('../eloquent/relations/hasManyThrough');
+
+        const HasManyThrough = _HasManyThrough.default || _HasManyThrough;
         const hmt = new HasManyThrough(query, parent, throughParent, 'parent_id', 'parent_id', 'id', 'id');
         expect(hmt.throughParentSoftDeletes()).toBe(true);
 
@@ -249,7 +254,8 @@ describe('Eloquent Relations Deep Coverage Tests', () => {
         const userWithDefault = new DeepUser({ id: 10 });
         const mockQuery = DeepProfile.newQueryWithoutRelationships();
         mockQuery.first = () => null;
-        const HasOneThrough = require('../eloquent/relations/hasOneThrough');
+        const _HasOneThrough = require('../eloquent/relations/hasOneThrough');
+        const HasOneThrough = _HasOneThrough.default || _HasOneThrough;
         const hot = new HasOneThrough(mockQuery, userWithDefault, user, 'parent_id', 'user_id', 'id', 'id');
         hot.withDefault({ bio: 'Default Bio Grandchild' });
         const defaultGrandchild = await hot.getResults();

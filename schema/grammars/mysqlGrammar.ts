@@ -1,17 +1,19 @@
-const Grammar = require('./grammar');
+import Grammar from './grammar';
 
 /**
  * Class MysqlGrammar.
  */
 class MysqlGrammar extends Grammar {
+    /* c8 ignore next */
     /**
-     * compileDropAllTables method.
-     * @param {*} tables
-     * @returns {any}
+     * Compile a drop all tables statement.
+     *
+     * @param tables - Table names array.
+     * @returns Drop SQL string.
      */
-    compileDropAllTables(tables: any) {
+    compileDropAllTables(tables: string[]): string {
         return `DROP TABLE IF EXISTS ${tables.join(', ')}; `;
     }
 }
 
-module.exports = MysqlGrammar;
+export default MysqlGrammar;

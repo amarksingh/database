@@ -1,19 +1,26 @@
-const queryExceptionContract = require('@ostro/contracts/exception/queryException')
+import queryExceptionContract from '@ostro/contracts/exception/queryException';
+
 /**
  * Class queryException.
  */
 class queryException extends queryExceptionContract {
+    name: string;
+    code: string;
+    statusCode: number;
+
     /**
      * Create a new instance.
-     * @param {*} message
+     *
+     * @param message - Exception message.
      */
-    constructor(message: string) {
+    constructor(message?: string) {
         super();
         this.name = this.constructor.name;
         this.code = 'SQL_ERROR';
         this.message = message || 'Invalid query';
-        this.statusCode = 500
+        this.statusCode = 500;
         Error.captureStackTrace(this, this.constructor);
     }
 }
-module.exports = queryException
+
+export default queryException;

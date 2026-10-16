@@ -1,10 +1,10 @@
-const { implement, is_null, isset, get_class } = require('@ostro/support/function')
-const HasOneOrMany = require('./hasOneOrMany')
-const SupportsDefaultModels = require('./concerns/supportsDefaultModels')
-const CanBeOneOfMany = require('./concerns/canBeOneOfMany')
-const InteractsWithDictionary = require('./concerns/interactsWithDictionary')
-const Relation = require('./relation')
-const ModelNotFoundException = require('../modelNotFoundException');
+import { implement, is_null, isset, get_class } from '@ostro/support/function';
+import HasOneOrMany from './hasOneOrMany';
+import SupportsDefaultModels from './concerns/supportsDefaultModels';
+import CanBeOneOfMany from './concerns/canBeOneOfMany';
+import InteractsWithDictionary from './concerns/interactsWithDictionary';
+import Relation from './relation';
+import ModelNotFoundException from '../modelNotFoundException';
 /**
  * Class HasManyThrough.
  */
@@ -730,4 +730,4 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
     }
 }
 
-module.exports = HasManyThrough
+export default HasManyThrough;

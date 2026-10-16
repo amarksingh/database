@@ -4,90 +4,99 @@
 class Processor {
 
     /**
-     * processSelect method.
-     * @param {*} $query
-     * @param {*} $results
-     * @returns {any}
+     * Process an "select" result.
+     *
+     * @param query - Query builder instance.
+     * @param results - Raw query results.
+     * @returns Processed query results.
      */
-    processSelect($query: any, $results: any) {
-        return $results;
+    processSelect(query: any, results: any): any {
+        return results;
     }
 
     /**
-     * processInsertGetId method.
-     * @param {*} $query
-     * @param {*} $sql
-     * @param {*} $values
-     * @param {*} $sequence
-     * @returns {any}
+     * Process an "insert get ID" statement.
+     *
+     * @param query - Query builder instance.
+     * @param sql - SQL query string.
+     * @param values - Insert values dictionary.
+     * @param sequence - Sequence column name.
+     * @returns Inserted identifier.
      */
-    processInsertGetId($query: any, $sql: any, $values: Record<string, any>, $sequence: any = null) {
-        return $sequence
+    processInsertGetId(query: any, sql: any, values: Record<string, any>, sequence: any = null): any {
+        return sequence;
     }
 
     /**
-     * processTables method.
-     * @param {*} $results
-     * @returns {any}
+     * Process the results of a tables query.
+     *
+     * @param results - Raw table list.
+     * @returns Processed table list.
      */
-    processTables($results: any) {
-        return $results;
+    processTables(results: any): any {
+        return results;
     }
 
     /**
-     * processViews method.
-     * @param {*} $results
-     * @returns {any}
+     * Process the results of a views query.
+     *
+     * @param results - Raw view list.
+     * @returns Processed view list.
      */
-    processViews($results: any) {
-        return $results;
+    processViews(results: any): any {
+        return results;
     }
 
     /**
-     * processTypes method.
-     * @param {*} $results
-     * @returns {any}
+     * Process the results of a types query.
+     *
+     * @param results - Raw type list.
+     * @returns Processed type list.
      */
-    processTypes($results: any) {
-        return $results;
+    processTypes(results: any): any {
+        return results;
     }
 
     /**
-     * processColumns method.
-     * @param {*} $results
-     * @returns {any}
+     * Process the results of a columns query.
+     *
+     * @param results - Raw column listing.
+     * @returns Processed column listing.
      */
-    processColumns($results: any) {
-        return $results;
+    processColumns(results: any): any {
+        return results;
     }
 
     /**
-     * processIndexes method.
-     * @param {*} $results
-     * @returns {any}
+     * Process the results of an indexes query.
+     *
+     * @param results - Raw index listing.
+     * @returns Processed index listing.
      */
-    processIndexes($results: any) {
-        return $results;
+    processIndexes(results: any): any {
+        return results;
     }
 
     /**
-     * processForeignKeys method.
-     * @param {*} $results
-     * @returns {any}
+     * Process the results of a foreign keys query.
+     *
+     * @param results - Raw foreign keys.
+     * @returns Processed foreign keys.
      */
-    processForeignKeys($results: any) {
-        return $results;
+    processForeignKeys(results: any): any {
+        return results;
     }
 
     /**
-     * processColumnListing method.
-     * @param {*} $results
-     * @returns {any}
+     * Process the results of a column listing query.
+     *
+     * @param results - Raw column listing.
+     * @returns Processed column listing.
      */
-    processColumnListing($results: any) {
-        return $results;
+    processColumnListing(results: any): any {
+        return results;
     }
 
 }
 
-module.exports = Processor;
+export default Processor;

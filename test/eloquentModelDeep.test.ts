@@ -1,9 +1,11 @@
 'use strict';
 
 const { createDatabaseManager } = require('./setup');
-const Model = require('../eloquent/model');
+const _Model = require('../eloquent/model');
+const Model = _Model.default || _Model;
 const MethodNotAvailable = require('@ostro/support/exceptions/methodNotAvailable');
-const ModelNotFoundException = require('../eloquent/modelNotFoundException');
+const _ModelNotFoundException = require('../eloquent/modelNotFoundException');
+const ModelNotFoundException = _ModelNotFoundException.default || _ModelNotFoundException;
 
 class DeepModelUser extends Model {
     $table = 'deep_model_users';
@@ -176,8 +178,10 @@ describe('Eloquent Model, Scopes & Concerns Deep Tests', () => {
     });
 
     test('ModelNotFoundException and RelationNotFoundException getters and properties', () => {
-        const ModelNotFoundException = require('../eloquent/modelNotFoundException');
-        const RelationNotFoundException = require('../eloquent/relationNotFoundException');
+        const _ModelNotFoundException = require('../eloquent/modelNotFoundException');
+        const ModelNotFoundException = _ModelNotFoundException.default || _ModelNotFoundException;
+        const _RelationNotFoundException = require('../eloquent/relationNotFoundException');
+        const RelationNotFoundException = _RelationNotFoundException.default || _RelationNotFoundException;
 
         const mnf = new ModelNotFoundException();
         mnf.setModel(DeepModelUser, [1, 2]);
@@ -198,7 +202,8 @@ describe('Eloquent Model, Scopes & Concerns Deep Tests', () => {
     });
 
     test('Eloquent Collection toArray, toJSON, serialize and toJson', () => {
-        const Collection = require('../eloquent/collection');
+        const _Collection = require('../eloquent/collection');
+        const Collection = _Collection.default || _Collection;
         const user1 = new DeepModelUser({ name: 'User 1' });
         const user2 = new DeepModelUser({ name: 'User 2' });
 
@@ -261,7 +266,8 @@ describe('Eloquent Model, Scopes & Concerns Deep Tests', () => {
     });
 
     test('MultipleRecordsFoundException coverage with and without count', () => {
-        const MultipleRecordsFoundException = require('../eloquent/multipleRecordsFoundException');
+        const _MultipleRecordsFoundException = require('../eloquent/multipleRecordsFoundException');
+        const MultipleRecordsFoundException = _MultipleRecordsFoundException.default || _MultipleRecordsFoundException;
         const ex1 = new MultipleRecordsFoundException();
         expect(ex1.message).toBe('Multiple records were found.');
         expect(ex1.code).toBe('ERR_MULTIPLE_RECORDS_FOUND');
@@ -529,7 +535,8 @@ describe('Eloquent Model, Scopes & Concerns Deep Tests', () => {
         u.setKeyName('id');
 
         // createSelectWithConstraint with BelongsToMany mock
-        const BelongsToMany = require('../eloquent/relations/belongsToMany');
+        const _BelongsToMany = require('../eloquent/relations/belongsToMany');
+        const BelongsToMany = _BelongsToMany.default || _BelongsToMany;
         const [relName, constraintFn] = u.createSelectWithConstraint('roles:id,name,other.custom');
         expect(relName).toBe('roles');
         const mockBelongsToMany = Object.create(BelongsToMany.prototype);

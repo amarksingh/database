@@ -332,6 +332,7 @@ class Migrator {
         delete require.cache[resolved];
 
         let $migration = require($path);
+        $migration = $migration.default || $migration;
 
         return typeof $migration == 'object' ? $migration : new $migration;
     }
@@ -498,4 +499,4 @@ class Migrator {
 
 }
 
-module.exports = Migrator
+export default Migrator;

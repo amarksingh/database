@@ -17,7 +17,8 @@
  *  - eloquent/concern/hasRelationships.js                 (83%)
  */
 const { createDatabaseManager } = require('./setup');
-const Model = require('../eloquent/model');
+const _Model = require('../eloquent/model');
+const Model = _Model.default || _Model;
 
 // ──────────────────────────────────────────────────────
 //  Model definitions
@@ -752,7 +753,8 @@ describe('Eloquent Relations – Extended Coverage', () => {
         });
 
         test('canUseExistsForExistenceCheck() logic', () => {
-            const QueriesRelationships = require('../eloquent/concern/queriesRelationships');
+            const _QueriesRelationships = require('../eloquent/concern/queriesRelationships');
+            const QueriesRelationships = _QueriesRelationships.default || _QueriesRelationships;
             const qr = new QueriesRelationships();
             expect(qr.canUseExistsForExistenceCheck('>=', 1)).toBe(true);
             expect(qr.canUseExistsForExistenceCheck('<', 1)).toBe(true);
@@ -767,7 +769,8 @@ describe('Eloquent Relations – Extended Coverage', () => {
     describe('Relation base class extras', () => {
 
         test('noConstraints() disables and re-enables relation constraints', () => {
-            const Relation = require('../eloquent/relations/relation');
+            const _Relation = require('../eloquent/relations/relation');
+            const Relation = _Relation.default || _Relation;
             let flag = false;
             Relation.noConstraints(() => { flag = true; });
             expect(flag).toBe(true);

@@ -1,13 +1,12 @@
-const HasOne = require('../relations/hasOne')
-const HasMany = require('../relations/hasMany')
-const BelongsTo = require('../relations/belongsTo')
-const HasOneThrough = require('../relations/hasOneThrough')
-const HasManyThrough = require('../relations/hasManyThrough')
-const BelongsToMany = require('../relations/belongsToMany')
-const { getCallerFunctionName, exists, get_class, is_null, get_class_name, in_array, clone, tap } = require('@ostro/support/function')
-const { snake } = require('@ostro/support/string')
-
-const Collect = require('@ostro/support/collection')
+import HasOne from '../relations/hasOne';
+import HasMany from '../relations/hasMany';
+import BelongsTo from '../relations/belongsTo';
+import HasOneThrough from '../relations/hasOneThrough';
+import HasManyThrough from '../relations/hasManyThrough';
+import BelongsToMany from '../relations/belongsToMany';
+import { getCallerFunctionName, exists, get_class, is_null, get_class_name, in_array, clone, tap } from '@ostro/support/function';
+import { snake } from '@ostro/support/string';
+import Collect from '@ostro/support/collection';
 const kRelation = Symbol('relation')
 const kTouches = Symbol('touches')
 
@@ -479,4 +478,4 @@ class HasRelationships {
     }
 }
 
-module.exports = HasRelationships
+export default HasRelationships;

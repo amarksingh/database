@@ -1,18 +1,14 @@
-const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException')
-const { get_class_name } = require('@ostro/support/function')
-const kCommand = Symbol('command')
+import InvalidArgumentException from '@ostro/support/exceptions/invalidArgumentException';
+import { get_class_name } from '@ostro/support/function';
+
 /**
  * Class Seeder.
  */
 class Seeder {
 
-    get $command() {
-        return this[kCommand] = this[kCommand] || null
-    };
-
-    set $command(value) {
-        return this[kCommand] = value
-    };
+    public $command: any = null;
+    public $resolver: any;
+    public $app: any = null;
 
     /**
      * Create a new instance.
@@ -135,4 +131,4 @@ class Seeder {
     }
 }
 
-module.exports = Seeder
+export default Seeder;

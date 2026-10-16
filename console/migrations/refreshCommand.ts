@@ -110,4 +110,4 @@ class RefreshCommand extends Command {
 
 }
 
-module.exports = RefreshCommand
+export default RefreshCommand;

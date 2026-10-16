@@ -2,49 +2,51 @@
  * Class Grammar.
  */
 class Grammar {
+    $connection: any;
 
-    $connection;
-
-    $tablePrefix = '';
+    $tablePrefix: string = '';
 
     /**
-     * getDateFormat method.
-     * @returns {any}
+     * Get the format for database stored dates.
+     *
+     * @returns Date format string.
      */
-    getDateFormat() {
+    getDateFormat(): string {
         return 'Y-m-d H:i:s';
     }
 
     /**
-     * getTablePrefix method.
-     * @returns {any}
+     * Get the grammar's table prefix.
+     *
+     * @returns Table prefix.
      */
-    getTablePrefix() {
+    getTablePrefix(): string {
         return this.$tablePrefix;
     }
 
     /**
-     * setTablePrefix method.
-     * @param {*} $prefix
-     * @returns {any}
+     * Set the grammar's table prefix.
+     *
+     * @param prefix - Table prefix.
+     * @returns Fluent self instance.
      */
-    setTablePrefix($prefix: any) {
-        this.$tablePrefix = $prefix;
+    setTablePrefix(prefix: string): this {
+        this.$tablePrefix = prefix;
 
         return this;
     }
 
     /**
-     * setConnection method.
-     * @param {*} $connection
-     * @returns {any}
+     * Set the grammar's database connection.
+     *
+     * @param connection - Connection instance.
+     * @returns Fluent self instance.
      */
-    setConnection($connection: any) {
-        this.$connection = $connection;
+    setConnection(connection: any): this {
+        this.$connection = connection;
 
         return this;
     }
-
 }
 
-module.exports = Grammar;
+export default Grammar;

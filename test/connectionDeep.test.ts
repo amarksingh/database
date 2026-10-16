@@ -1,7 +1,8 @@
 'use strict';
 
 const { createDatabaseManager, createTestContainer } = require('./setup');
-const Connection = require('../connections/connection');
+const _Connection = require('../connections/connection');
+const Connection = _Connection.default || _Connection;
 
 describe('Connection Full Branch Coverage Tests', () => {
     let db;

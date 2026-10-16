@@ -4,54 +4,58 @@
 class HasGlobalScopes {
 
     /**
-     * addGlobalScope method.
-     * @param {*} $scope
-     * @param {*} $implementation
-     * @returns {any}
+     * Register a new global scope on the model.
+     *
+     * @param scope - Scope name, closure or instance.
+     * @param implementation - Scope implementation.
+     * @returns Scope implementation.
      */
-    addGlobalScope($scope: any, $implementation: any = null) {
-        if (is_string($scope) && !is_null($implementation)) {
-            return this.constructor.$globalScopes[this.constructor.class][$scope] = $implementation;
-        } else if (typeof $scope == 'function') {
-            return this.constructor.$globalScopes[this.constructor.class][spl_object_hash($scope)] = $scope;
-        } else if ($scope instanceof Scope) {
-            return this.constructor.$globalScopes[this.constructor.class][get_class($scope)] = $scope;
+    addGlobalScope(scope: any, implementation: any = null): any {
+        const constructor = this.constructor as any;
+        if (typeof scope === 'string' && implementation !== null && implementation !== undefined) {
+            return (constructor.$globalScopes[constructor.class][scope] = implementation);
+        } else if (typeof scope === 'function') {
+            return (constructor.$globalScopes[constructor.class][scope.name || 'closure'] = scope);
+        } else if (scope && typeof scope === 'object') {
+            return (constructor.$globalScopes[constructor.class][scope.constructor?.name || 'scope'] = scope);
         }
 
-        throw new InvalidArgumentException('Global scope must be an instance of Closure or Scope.');
+        throw new Error('Global scope must be an instance of Closure or Scope.');
     }
 
     /**
-     * hasGlobalScope method.
-     * @param {*} $scope
-     * @returns {any}
+     * Determine if a model has a global scope.
+     *
+     * @param scope - Scope identifier.
+     * @returns True if global scope exists.
      */
-    hasGlobalScope($scope: any) {
-        return !is_null(this.constructor.getGlobalScope($scope));
+    hasGlobalScope(scope: any): boolean {
+        return (this.constructor as any).getGlobalScope(scope) != null;
     }
 
     /**
-     * getGlobalScope method.
-     * @param {*} $scope
-     * @returns {any}
+     * Get a global scope registered with the model.
+     *
+     * @param scope - Scope identifier.
+     * @returns Scope implementation or undefined.
      */
-    getGlobalScope($scope: any) {
-        if (is_string($scope)) {
-            return Arr.get(this.constructor.$globalScopes, this.constructor.class +
-                '.' + $scope);
+    getGlobalScope(scope: any): any {
+        const constructor = this.constructor as any;
+        if (typeof scope === 'string') {
+            return constructor.$globalScopes?.[constructor.class]?.[scope];
         }
 
-        return Arr.get(
-            this.constructor.$globalScopes, this.constructor.class +
-            '.' + get_class($scope)
-        );
+        return constructor.$globalScopes?.[constructor.class]?.[scope?.constructor?.name];
     }
 
     /**
-     * getGlobalScopes method.
-     * @returns {any}
+     * Get the global scopes for this class instance.
+     *
+     * @returns Global scopes dictionary or array.
      */
-    getGlobalScopes() {
-        return Array.filter(this.constructor.$globalScopes, this.constructor, []);
+    getGlobalScopes(): any {
+        return (this.constructor as any).$globalScopes || {};
     }
 }
+
+export default HasGlobalScopes;

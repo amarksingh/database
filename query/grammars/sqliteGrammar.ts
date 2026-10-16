@@ -1,4 +1,4 @@
-const Grammar = require('./grammar');
+import Grammar from './grammar';
 
 /**
  * Class SqliteGrammar.
@@ -7,4 +7,5 @@ class SqliteGrammar extends Grammar {
 
 }
 
-module.exports = SqliteGrammar;
+/* c8 ignore next */
+export default SqliteGrammar;

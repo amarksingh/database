@@ -75,4 +75,4 @@ class DumpCommand extends Command {
     }
 }
 
-module.exports = DumpCommand
+export default DumpCommand;

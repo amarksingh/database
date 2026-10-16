@@ -1,4 +1,4 @@
-const { last } = require('@ostro/support/function');
+import { last } from '@ostro/support/function';
 
 /**
  * Class CanBeOneOfMany.
@@ -60,4 +60,4 @@ class CanBeOneOfMany {
     }
 }
 
-module.exports = CanBeOneOfMany
+export default CanBeOneOfMany;

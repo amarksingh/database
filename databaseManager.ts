@@ -1,7 +1,7 @@
-const lodash = require('lodash')
-const ConfigurationUrlParser = require('@ostro/support/configurationUrlParser');
-const { Macroable } = require('@ostro/support/macro');
-const { isset, tap, env } = require('@ostro/support/function');
+import lodash from 'lodash';
+import ConfigurationUrlParser from '@ostro/support/configurationUrlParser';
+import { Macroable } from '@ostro/support/macro';
+import { isset, tap, env } from '@ostro/support/function';
 /**
  * Class DatabaseManager.
  */
@@ -289,4 +289,4 @@ class DatabaseManager extends Macroable {
 
 }
 
-module.exports = DatabaseManager
+export default DatabaseManager;

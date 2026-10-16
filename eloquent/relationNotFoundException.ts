@@ -1,38 +1,44 @@
-const { get_class_name } = require('@ostro/support/function');
+import { get_class_name } from '@ostro/support/function';
+
 /**
  * Class RelationNotFoundException.
  */
-class RelationNotFoundException {
+class RelationNotFoundException extends Error {
+    code: string;
+    statusCode: number;
+    $model?: string;
+    $relation?: string;
+
     /**
      * Create a new instance.
-     * @param {*} message
+     *
+     * @param message - Exception message.
      */
     constructor(message: string) {
+        super(message || 'Invalid Argument');
         this.name = this.constructor.name;
         this.code = 'ERR_INVALID_ARG_VALUE';
-        this.message = message || 'Invalid Argument';
-        this.statusCode = 500
+        this.statusCode = 500;
         Error.captureStackTrace(this, this.constructor);
     }
 
-
     /**
-     * make method.
-     * @static
-     * @param {*} $model
-     * @param {*} $relation
-     * @returns {any}
+     * Create a new exception with a standardized message.
+     *
+     * @param model - Model instance or class name.
+     * @param relation - Relation name.
+     * @returns New exception instance.
      */
-    static make($model: any, $relation: any) {
-        let $class = get_class_name($model);
+    static make(model: any, relation: string): RelationNotFoundException {
+        const className: string = get_class_name(model);
 
-        let $instance = new this(`Call to undefined relationship [${$relation}] on model [${$class}].`);
+        const instance = new this(`Call to undefined relationship [${relation}] on model [${className}].`);
 
-        $instance.$model = $class;
-        $instance.$relation = $relation;
+        instance.$model = className;
+        instance.$relation = relation;
 
-        return $instance;
+        return instance;
     }
 }
 
-module.exports = RelationNotFoundException
+export default RelationNotFoundException;

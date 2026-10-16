@@ -1,8 +1,10 @@
 'use strict';
 
 const { createDatabaseManager } = require('./setup');
-const DatabaseMigrationRepository = require('../migrations/databaseMigrationRepository');
-const Migrator = require('../migrations/migrator');
+const _DatabaseMigrationRepository = require('../migrations/databaseMigrationRepository');
+const DatabaseMigrationRepository = _DatabaseMigrationRepository.default || _DatabaseMigrationRepository;
+const _Migrator = require('../migrations/migrator');
+const Migrator = _Migrator.default || _Migrator;
 const path = require('path');
 const fs = require('fs');
 

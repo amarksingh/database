@@ -1,17 +1,17 @@
-const { Macroable } = require('@ostro/support/macro')
-const Query = require('../query/builder')
-const MethodNotAvailable = require('@ostro/support/exceptions/methodNotAvailable')
-const DateTime = require('@ostro/support/dateTime')
-const GuardsAttributes = require('./concern/guardsAttributes')
-const HasRelationships = require('./concern/hasRelationships')
-const HidesAttributes = require('./concern/hidesAttributes')
-const QueriesRelationships = require('./concern/queriesRelationships')
-const HasAttributes = require('./concern/hasAttributes')
-const HasTimestamps = require('./concern/hasTimestamps')
-const BelongsToMany = require('./relations/belongsToMany')
-const Relation = require('./relations/relation')
-const RelationNotFoundException = require('./relationNotFoundException')
-const ModelNotFoundException = require('./modelNotFoundException')
+import { Macroable } from '@ostro/support/macro';
+import Query from '../query/builder';
+import MethodNotAvailable from '@ostro/support/exceptions/methodNotAvailable';
+import DateTime from '@ostro/support/dateTime';
+import GuardsAttributes from './concern/guardsAttributes';
+import HasRelationships from './concern/hasRelationships';
+import HidesAttributes from './concern/hidesAttributes';
+import QueriesRelationships from './concern/queriesRelationships';
+import HasAttributes from './concern/hasAttributes';
+import HasTimestamps from './concern/hasTimestamps';
+import BelongsToMany from './relations/belongsToMany';
+import Relation from './relations/relation';
+import RelationNotFoundException from './relationNotFoundException';
+import ModelNotFoundException from './modelNotFoundException';
 const kResolver = Symbol('resolver')
 const kQuery = Symbol('query')
 const kEagerLoad = Symbol('eagerLoad')
@@ -21,11 +21,11 @@ const kRemovedScopes = Symbol('removeScopes')
 const kWasRecentlyCreated = Symbol('wasRecentlyCreated')
 const kPerformRelationQuery = Symbol('performRelationQuery')
 const kLazyQueries = Symbol.for('lazyQueries')
-const Collection = require('./collection')
-const ModelInterface = require('@ostro/contracts/database/eloquent/model')
-const { is_array, count, in_array, clone, isset, is_null, empty, implement, get_class, get_class_name, is_string, is_numeric } = require('@ostro/support/function')
-const { snake, plural, studly, contains, startsWith } = require('@ostro/support/string')
-const { intersection } = require('lodash')
+import Collection from './collection';
+import ModelInterface from '@ostro/contracts/database/eloquent/model';
+import { is_array, count, in_array, clone, isset, is_null, empty, implement, get_class, get_class_name, is_string, is_numeric } from '@ostro/support/function';
+import { snake, plural, studly, contains, startsWith } from '@ostro/support/string';
+import { intersection } from 'lodash';
 
 /**
  * Class Model.
@@ -1546,4 +1546,4 @@ class Model extends implement(ModelInterface, Query, GuardsAttributes, QueriesRe
 
 }
 
-module.exports = Macroable(Model)
+export default Macroable(Model);

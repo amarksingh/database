@@ -1,9 +1,9 @@
-const { is_null } = require('@ostro/support/function');
-const Connection = require('./connection');
-const SchemaGrammar = require('../schema/grammars/oracleGrammar');
-const QueryGrammar = require('../query/grammars/oracleGrammar');
-const QueryProcessor = require('../query/processors/mysqlProcessor');
-const SchemaBuilder = require('../schema/oracleBuilder');
+import { is_null } from '@ostro/support/function';
+import Connection from './connection';
+import SchemaGrammar from '../schema/grammars/oracleGrammar';
+import QueryGrammar from '../query/grammars/oracleGrammar';
+import QueryProcessor from '../query/processors/mysqlProcessor';
+import SchemaBuilder from '../schema/oracleBuilder';
 
 /**
  * Class OracleConnection.
@@ -64,4 +64,4 @@ class OracleConnection extends Connection {
 
 }
 
-module.exports = OracleConnection
+export default OracleConnection;

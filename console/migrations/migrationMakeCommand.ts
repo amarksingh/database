@@ -103,4 +103,4 @@ class CreateSchema extends BaseCommand {
     }
 }
 
-module.exports = CreateSchema
+export default CreateSchema;

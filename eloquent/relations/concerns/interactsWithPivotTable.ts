@@ -1,10 +1,10 @@
-const Model = require('@ostro/contracts/database/eloquent/model')
-const Collection = require('../../collection')
-const Pivot = require('../pivot')
-const BaseCollection = require('@ostro/contracts/collection/collect');
-const { is_object, empty, count, is_null, in_array, collect } = require('@ostro/support/function');
-const { lower } = require('@ostro/support/string');
-const { intersection, difference } = require('lodash');
+import Model from '@ostro/contracts/database/eloquent/model';
+import Collection from '../../collection';
+import Pivot from '../pivot';
+import BaseCollection from '@ostro/contracts/collection/collect';
+import { is_object, empty, count, is_null, in_array, collect } from '@ostro/support/function';
+import { lower } from '@ostro/support/string';
+import { intersection, difference } from 'lodash';
 /**
  * Class InteractsWithPivotTable.
  */
@@ -600,4 +600,5 @@ class InteractsWithPivotTable {
         }
     }
 }
-module.exports = InteractsWithPivotTable
+
+export default InteractsWithPivotTable;

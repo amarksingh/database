@@ -1,4 +1,4 @@
-const { is_callable } = require('@ostro/support/function');
+import { is_callable } from '@ostro/support/function';
 const kWithDefault = Symbol('withDefault')
 /**
  * Class SupportsDefaultModels.
@@ -42,4 +42,4 @@ class SupportsDefaultModels {
     }
 }
 
-module.exports = SupportsDefaultModels
+export default SupportsDefaultModels;

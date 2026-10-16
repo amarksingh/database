@@ -1,5 +1,5 @@
-const BaseCollection = require('@ostro/support/collection')
-const ModelInterface = require('@ostro/contracts/database/eloquent/model')
+import BaseCollection from '@ostro/support/collection';
+import ModelInterface from '@ostro/contracts/database/eloquent/model';
 /**
  * Class Collection.
  */
@@ -54,4 +54,4 @@ class Collection extends BaseCollection {
 
 }
 
-module.exports = Collection
+export default Collection;

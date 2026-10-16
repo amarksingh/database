@@ -2,7 +2,7 @@
  * Class DetectsLostConnections.
  */
 class DetectsLostConnections {
-    $errorMessages = [
+    $errorMessages: string[] = [
         'server has gone away',
         'no connection to the server',
         'Lost connection',
@@ -56,17 +56,19 @@ class DetectsLostConnections {
         'SQLSTATE[HY000] [2002] The requested address is not valid in its context',
         'SQLSTATE[HY000] [2002] A socket operation was attempted to an unreachable network',
         'SQLSTATE[HY000]: General error: 3989',
-    ]
-    /**
-     * causedByLostConnection method.
-     * @param {*} $e
-     * @returns {any}
-     */
-    causedByLostConnection($e: any) {
-        const $message = typeof $e == 'string' ? $e : $e.message;
+    ];
 
-        return this.$errorMessages.includes($message);
+    /**
+     * Determine if the given exception was caused by a lost connection.
+     *
+     * @param error - Exception or error message.
+     * @returns True if error is caused by lost connection.
+     */
+    causedByLostConnection(error: any): boolean {
+        const message: string = typeof error === 'string' ? error : error?.message;
+
+        return this.$errorMessages.includes(message);
     }
 }
 
-module.exports = DetectsLostConnections;
+export default DetectsLostConnections;

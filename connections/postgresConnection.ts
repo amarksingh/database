@@ -1,9 +1,9 @@
-const { is_null } = require('@ostro/support/function');
-const Connection = require('./connection');
-const SchemaGrammar = require('../schema/grammars/postgresGrammar');
-const QueryGrammar = require('../query/grammars/postgresGrammar');
-const QueryProcessor = require('../query/processors/mysqlProcessor');
-const SchemaBuilder = require('../schema/postgresBuilder');
+import { is_null } from '@ostro/support/function';
+import Connection from './connection';
+import SchemaGrammar from '../schema/grammars/postgresGrammar';
+import QueryGrammar from '../query/grammars/postgresGrammar';
+import QueryProcessor from '../query/processors/mysqlProcessor';
+import SchemaBuilder from '../schema/postgresBuilder';
 
 /**
  * Class PostgresConnection.
@@ -64,4 +64,4 @@ class PostgresConnection extends Connection {
 
 }
 
-module.exports = PostgresConnection
+export default PostgresConnection;

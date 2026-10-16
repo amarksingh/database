@@ -1,4 +1,4 @@
-const Grammar = require('./grammar');
+import Grammar from './grammar';
 
 /**
  * Class SqlServerGrammar.
@@ -7,4 +7,5 @@ class SqlServerGrammar extends Grammar {
 
 }
 
-module.exports = SqlServerGrammar;
+/* c8 ignore next */
+export default SqlServerGrammar;

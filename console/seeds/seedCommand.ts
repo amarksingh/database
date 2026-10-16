@@ -85,4 +85,4 @@ class SeedCommand extends Command {
 
 }
 
-module.exports = SeedCommand
+export default SeedCommand;

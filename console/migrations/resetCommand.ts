@@ -52,4 +52,4 @@ class ResetCommand extends BaseCommand {
 
 }
 
-module.exports = ResetCommand
+export default ResetCommand;

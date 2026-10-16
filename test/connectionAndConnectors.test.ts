@@ -1,14 +1,22 @@
 'use strict';
 
 const { createDatabaseManager, createTestContainer } = require('./setup');
-const ConnectionFactory = require('../connectors/connectionFactory');
-const Connection = require('../connections/connection');
-const MysqlConnection = require('../connections/mysqlConnection');
-const PostgresConnection = require('../connections/postgresConnection');
-const SqlServerConnection = require('../connections/sqlServerConnection');
-const OracleConnection = require('../connections/oracleConnection');
-const SqliteConnection = require('../connections/sqliteConnection');
-const Seeder = require('../seeder');
+const _ConnectionFactory = require('../connectors/connectionFactory');
+const ConnectionFactory = _ConnectionFactory.default || _ConnectionFactory;
+const _Connection = require('../connections/connection');
+const Connection = _Connection.default || _Connection;
+const _MysqlConnection = require('../connections/mysqlConnection');
+const MysqlConnection = _MysqlConnection.default || _MysqlConnection;
+const _PostgresConnection = require('../connections/postgresConnection');
+const PostgresConnection = _PostgresConnection.default || _PostgresConnection;
+const _SqlServerConnection = require('../connections/sqlServerConnection');
+const SqlServerConnection = _SqlServerConnection.default || _SqlServerConnection;
+const _OracleConnection = require('../connections/oracleConnection');
+const OracleConnection = _OracleConnection.default || _OracleConnection;
+const _SqliteConnection = require('../connections/sqliteConnection');
+const SqliteConnection = _SqliteConnection.default || _SqliteConnection;
+const _Seeder = require('../seeder');
+const Seeder = _Seeder.default || _Seeder;
 
 describe('Connection, Connectors & Driver Proxies Deep Tests', () => {
 
@@ -152,7 +160,8 @@ describe('Connection, Connectors & Driver Proxies Deep Tests', () => {
     });
 
     test('SqliteConnector options and foreign keys flag handling', () => {
-        const SqliteConnector = require('../connectors/sqliteConnector');
+        const _SqliteConnector = require('../connectors/sqliteConnector');
+        const SqliteConnector = _SqliteConnector.default || _SqliteConnector;
         const connector = new SqliteConnector();
 
         const connOn = connector.connect({
@@ -256,10 +265,14 @@ describe('Connection, Connectors & Driver Proxies Deep Tests', () => {
         });
 
         try {
-            const MysqlConnector = require('../connectors/mysqlConnector');
-            const PostgresConnector = require('../connectors/postgresConnector');
-            const OracleConnector = require('../connectors/oracleConnector');
-            const SqlServerConnector = require('../connectors/sqlServerConnector');
+            const _MysqlConnector = require('../connectors/mysqlConnector');
+            const MysqlConnector = _MysqlConnector.default || _MysqlConnector;
+            const _PostgresConnector = require('../connectors/postgresConnector');
+            const PostgresConnector = _PostgresConnector.default || _PostgresConnector;
+            const _OracleConnector = require('../connectors/oracleConnector');
+            const OracleConnector = _OracleConnector.default || _OracleConnector;
+            const _SqlServerConnector = require('../connectors/sqlServerConnector');
+            const SqlServerConnector = _SqlServerConnector.default || _SqlServerConnector;
 
             const mysql = new MysqlConnector();
             try {
@@ -432,11 +445,16 @@ describe('Connection, Connectors & Driver Proxies Deep Tests', () => {
         mssql.prototype.initializeDriver = function() { this.driver = {}; };
 
         try {
-            const MysqlConnector = require('../connectors/mysqlConnector');
-            const PostgresConnector = require('../connectors/postgresConnector');
-            const SqlServerConnector = require('../connectors/sqlServerConnector');
-            const OracleConnector = require('../connectors/oracleConnector');
-            const SqliteConnector = require('../connectors/sqliteConnector');
+            const _MysqlConnector = require('../connectors/mysqlConnector');
+            const MysqlConnector = _MysqlConnector.default || _MysqlConnector;
+            const _PostgresConnector = require('../connectors/postgresConnector');
+            const PostgresConnector = _PostgresConnector.default || _PostgresConnector;
+            const _SqlServerConnector = require('../connectors/sqlServerConnector');
+            const SqlServerConnector = _SqlServerConnector.default || _SqlServerConnector;
+            const _OracleConnector = require('../connectors/oracleConnector');
+            const OracleConnector = _OracleConnector.default || _OracleConnector;
+            const _SqliteConnector = require('../connectors/sqliteConnector');
+            const SqliteConnector = _SqliteConnector.default || _SqliteConnector;
 
             // MysqlConnector: test both false and default fallback
             const mysqlConn = new MysqlConnector();

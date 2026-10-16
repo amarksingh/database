@@ -1,4 +1,4 @@
-const Grammar = require('./grammar');
+import Grammar from './grammar';
 
 /**
  * Class OracleGrammar.
@@ -7,4 +7,5 @@ class OracleGrammar extends Grammar {
 
 }
 
-module.exports = OracleGrammar;
+/* c8 ignore next */
+export default OracleGrammar;
