@@ -1,5 +1,5 @@
-const BaseCommand = require('./baseCommand')
-const path = require('path')
+import BaseCommand from './baseCommand';
+import path from 'path';
 
 /**
  * Class CreateMigration.

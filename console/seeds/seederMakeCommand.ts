@@ -1,5 +1,5 @@
-const GeneratorCommand = require('@ostro/console/generatorCommand')
-const path = require('path')
+import GeneratorCommand from '@ostro/console/generatorCommand';
+import path from 'path';
 /**
  * Class MakeSeederCommand.
  */

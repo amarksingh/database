@@ -1,4 +1,4 @@
-const BaseCommand = require('./baseCommand')
+import BaseCommand from './baseCommand';
 
 /**
  * Class RollbackCommand.

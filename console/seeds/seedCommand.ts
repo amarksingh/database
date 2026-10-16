@@ -1,7 +1,7 @@
-const Command = require('@ostro/console/command')
-const path = require('path')
-const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException')
-const { is_file } = require('@ostro/support/function')
+import Command from '@ostro/console/command';
+import path from 'path';
+import InvalidArgumentException from '@ostro/support/exceptions/invalidArgumentException';
+import { is_file } from '@ostro/support/function';
 /**
  * Class SeedCommand.
  */

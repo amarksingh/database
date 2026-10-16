@@ -3,7 +3,8 @@
 const { createDatabaseManager } = require('./setup');
 const _Model = require('../eloquent/model');
 const Model = _Model.default || _Model;
-const MethodNotAvailable = require('@ostro/support/exceptions/methodNotAvailable');
+const _MethodNotAvailable = require('@ostro/support/exceptions/methodNotAvailable');
+const MethodNotAvailable = _MethodNotAvailable.default || _MethodNotAvailable;
 const _ModelNotFoundException = require('../eloquent/modelNotFoundException');
 const ModelNotFoundException = _ModelNotFoundException.default || _ModelNotFoundException;
 
@@ -374,7 +375,8 @@ describe('Eloquent Model, Scopes & Concerns Deep Tests', () => {
 
     test('Model findOrFail with array difference exception and composite/array key save', async () => {
         const u1 = await DeepModelUser.create({ name: 'Batch 1', email: 'b1@test.com' });
-        const BaseCollection = require('@ostro/support/collection');
+        const _BaseCollection = require('@ostro/support/collection');
+        const BaseCollection = _BaseCollection.default || _BaseCollection;
 
         // findOrFail single success and missing
         const singleFound = await DeepModelUser.findOrFail(u1.id);
@@ -597,7 +599,8 @@ describe('Eloquent Model, Scopes & Concerns Deep Tests', () => {
         scopeModel.withGlobalScope('freshScope', () => {});
 
         // findOrFail with array matching result count
-        const BaseCollection = require('@ostro/support/collection');
+        const _BaseCollection = require('@ostro/support/collection');
+        const BaseCollection = _BaseCollection.default || _BaseCollection;
         const user10 = new DeepModelUser({ id: 10 });
         const user20 = new DeepModelUser({ id: 20 });
         const mockFoundCol = new BaseCollection([user10, user20]);

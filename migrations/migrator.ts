@@ -1,7 +1,7 @@
-const Collection = require('@ostro/support/collection')
-const { count, collect, get_class_name } = require('@ostro/support/function')
-const fs = require('fs-extra')
-const path = require('path');
+import Collection from '@ostro/support/collection';
+import { count, collect, get_class_name } from '@ostro/support/function';
+import fs from 'fs-extra';
+import path from 'path';
 
 /**
  * Class Migrator.
@@ -331,7 +331,8 @@ class Migrator {
         const resolved = require.resolve($path);
         delete require.cache[resolved];
 
-        let $migration = require($path);
+        let $mod = require($path);
+        let $migration = $mod.default || $mod;
         $migration = $migration.default || $migration;
 
         return typeof $migration == 'object' ? $migration : new $migration;

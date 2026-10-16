@@ -388,7 +388,7 @@ describe('Eloquent Relationships Comprehensive Unit Tests', () => {
 
             // parseIds edge cases in InteractsWithPivotTable
             expect(rolesRel.parseIds(adminRole)).toEqual([adminRole.id]);
-            expect(rolesRel.parseIds(new (require('@ostro/support/collection'))([adminRole]))).toEqual([adminRole.id]);
+            expect(rolesRel.parseIds(new ((require('@ostro/support/collection').default || require('@ostro/support/collection')))([adminRole]))).toEqual([adminRole.id]);
             expect(rolesRel.parseIds({ [adminRole.id]: { level: 'custom' } })).toEqual({ [adminRole.id]: { level: 'custom' } });
             expect(rolesRel.parseIds(null)).toEqual([]);
             expect(rolesRel.parseId(adminRole)).toBe(adminRole.id);
@@ -1128,9 +1128,9 @@ describe('Eloquent Relationships Comprehensive Unit Tests', () => {
             expect(hash2).toContain('ostro_reserved_');
 
             // getKeys
-            const keysWithAttr = baseRel.getKeys(new (require('@ostro/support/collection'))([singleUser]), 'name');
+            const keysWithAttr = baseRel.getKeys(new ((require('@ostro/support/collection').default || require('@ostro/support/collection')))([singleUser]), 'name');
             expect(keysWithAttr).toEqual(['SoleUser']);
-            const keysWithId = baseRel.getKeys(new (require('@ostro/support/collection'))([singleUser]));
+            const keysWithId = baseRel.getKeys(new ((require('@ostro/support/collection').default || require('@ostro/support/collection')))([singleUser]));
             expect(keysWithId).toEqual([singleUser.id]);
 
             // getBaseQuery, getParent, getRelated, createdAt, updatedAt, relatedUpdatedAt

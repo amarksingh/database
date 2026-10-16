@@ -1,7 +1,7 @@
-const BaseCommand = require('./baseCommand')
-const TableGuesser = require('./tableGuesser')
-const path = require('path')
-const InvalidArgumentException = require('@ostro/contracts/exception/invalidArgumentException')
+import BaseCommand from './baseCommand';
+import TableGuesser from './tableGuesser';
+import path from 'path';
+import InvalidArgumentException from '@ostro/contracts/exception/invalidArgumentException';
 /**
  * Class CreateSchema.
  */

@@ -1,7 +1,7 @@
-const path = require('path')
-const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException')
-const { dirname, date } = require('@ostro/support/function')
-const { pascal } = require('@ostro/support/string')
+import path from 'path';
+import InvalidArgumentException from '@ostro/support/exceptions/invalidArgumentException';
+import { dirname, date } from '@ostro/support/function';
+import { pascal } from '@ostro/support/string';
 
 /**
  * Class MigrationCreator.

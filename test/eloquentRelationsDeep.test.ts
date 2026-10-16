@@ -5,7 +5,8 @@ const _Model = require('../eloquent/model');
 const Model = _Model.default || _Model;
 const _Collection = require('../eloquent/collection');
 const Collection = _Collection.default || _Collection;
-const BaseCollection = require('@ostro/support/collection');
+const _BaseCollection = require('@ostro/support/collection');
+const BaseCollection = _BaseCollection.default || _BaseCollection;
 const _Relation = require('../eloquent/relations/relation');
 const Relation = _Relation.default || _Relation;
 

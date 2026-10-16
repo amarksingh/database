@@ -1,4 +1,4 @@
-const Command = require('@ostro/console/command')
+import Command from '@ostro/console/command';
 
 /**
  * Class BaseCommand.

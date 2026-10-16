@@ -1,4 +1,4 @@
-const GeneratorCommand = require('@ostro/console/generatorCommand')
+import GeneratorCommand from '@ostro/console/generatorCommand';
 
 /**
  * Class FactoryMakeCommand.
