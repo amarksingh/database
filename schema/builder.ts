@@ -1,4 +1,5 @@
 import LogicException from '@ostro/support/exceptions/logicException';
+import type { Blueprint } from '@ostro/contracts/database/blueprint';
 
 /**
  * Class Builder.
@@ -39,7 +40,7 @@ class Builder {
      * @param cb - Blueprint callback.
      * @returns Promise resolving to created table or undefined.
      */
-    public create(table: string, cb: any): Promise<any> {
+    public create(table: string, cb: (table: Blueprint) => void | any): Promise<any> {
         return this.has(table).then((res: boolean) => {
             if (!res) {
                 return this.createTable(table, cb);
