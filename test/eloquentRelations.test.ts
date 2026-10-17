@@ -1,5 +1,5 @@
 const { createDatabaseManager } = require('./setup');
-const _Model = require('../eloquent/model');
+const _Model = require('../src/eloquent/model');
 const Model = _Model.default || _Model;
 
 // Define Models
@@ -839,7 +839,7 @@ describe('Eloquent Relationships Comprehensive Unit Tests', () => {
             }).toThrow();
 
             // RelationNotFoundException default constructor message
-            const _RelationNotFoundException = require('../eloquent/relationNotFoundException');
+            const _RelationNotFoundException = require('../src/eloquent/relationNotFoundException');
             const RelationNotFoundException = _RelationNotFoundException.default || _RelationNotFoundException;
             const defaultEx = new RelationNotFoundException();
             expect(defaultEx.message).toBe('Invalid Argument');
@@ -959,7 +959,7 @@ describe('Eloquent Relationships Comprehensive Unit Tests', () => {
             expect(relExistQuery).toBeDefined();
 
             // BelongsTo without constraints
-            const _BelongsToClass = require('../eloquent/relations/belongsTo');
+            const _BelongsToClass = require('../src/eloquent/relations/belongsTo');
             const BelongsToClass = _BelongsToClass.default || _BelongsToClass;
             BelongsToClass.noConstraints(() => {
                 const unconstrainedBelongsTo = user.country();
@@ -1081,11 +1081,11 @@ describe('Eloquent Relationships Comprehensive Unit Tests', () => {
             expect(selfHasManyExistence).toBeDefined();
 
             // Relation base methods coverage
-            const _Relation = require('../eloquent/relations/relation');
+            const _Relation = require('../src/eloquent/relations/relation');
             const Relation = _Relation.default || _Relation;
-            const _MultipleRecordsFoundException = require('../eloquent/multipleRecordsFoundException');
+            const _MultipleRecordsFoundException = require('../src/eloquent/multipleRecordsFoundException');
             const MultipleRecordsFoundException = _MultipleRecordsFoundException.default || _MultipleRecordsFoundException;
-            const _ModelNotFoundException = require('../eloquent/modelNotFoundException');
+            const _ModelNotFoundException = require('../src/eloquent/modelNotFoundException');
             const ModelNotFoundException = _ModelNotFoundException.default || _ModelNotFoundException;
 
             // sole() tests

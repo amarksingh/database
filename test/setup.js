@@ -1,8 +1,8 @@
-const _DatabaseManager = require('../databaseManager');
+const _DatabaseManager = require('../src/databaseManager');
 const DatabaseManager = _DatabaseManager.default || _DatabaseManager;
-const _ConnectionFactory = require('../connectors/connectionFactory');
+const _ConnectionFactory = require('../src/connectors/connectionFactory');
 const ConnectionFactory = _ConnectionFactory.default || _ConnectionFactory;
-const _Model = require('../eloquent/model');
+const _Model = require('../src/eloquent/model');
 const Model = _Model.default || _Model;
 
 function createTestContainer() {

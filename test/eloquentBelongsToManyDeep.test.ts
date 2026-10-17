@@ -1,11 +1,11 @@
 const { createDatabaseManager } = require('./setup');
-const _Model = require('../eloquent/model');
+const _Model = require('../src/eloquent/model');
 const Model = _Model.default || _Model;
-const _BelongsToMany = require('../eloquent/relations/belongsToMany');
+const _BelongsToMany = require('../src/eloquent/relations/belongsToMany');
 const BelongsToMany = _BelongsToMany.default || _BelongsToMany;
-const _Pivot = require('../eloquent/relations/pivot');
+const _Pivot = require('../src/eloquent/relations/pivot');
 const Pivot = _Pivot.default || _Pivot;
-const _ModelNotFoundException = require('../eloquent/modelNotFoundException');
+const _ModelNotFoundException = require('../src/eloquent/modelNotFoundException');
 const ModelNotFoundException = _ModelNotFoundException.default || _ModelNotFoundException;
 
 class User extends Model {

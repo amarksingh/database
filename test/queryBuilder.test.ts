@@ -315,7 +315,7 @@ describe('Query Builder Comprehensive Unit Tests', () => {
 
     describe('Processors', () => {
         test('Processor default methods pass through results properly', () => {
-            const _Processor = require('../query/processors/processor');
+            const _Processor = require('../src/query/processors/processor');
             const Processor = _Processor.default || _Processor;
             const proc = new Processor();
             const dummy = [{ a: 1 }];

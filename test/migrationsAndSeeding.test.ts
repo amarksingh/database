@@ -1,8 +1,8 @@
 import { createDatabaseManager } from './setup';
-import DatabaseMigrationRepository from '../migrations/databaseMigrationRepository';
-import Migrator from '../migrations/migrator';
-import Migration from '../migration';
-import Seeder from '../seeder';
+import DatabaseMigrationRepository from '../src/migrations/databaseMigrationRepository';
+import Migrator from '../src/migrations/migrator';
+import Migration from '../src/migration';
+import Seeder from '../src/seeder';
 import fs from 'fs-extra';
 import path from 'path';
 
@@ -106,7 +106,7 @@ describe('Database Migrations and Seeding Comprehensive Unit Tests', () => {
         test('runs pending migrations and updates database schema', async () => {
             const m1Path = path.join(testMigrationDir, '2026_01_01_000001_create_test_users.js');
             await fs.writeFile(m1Path, `
-                const _Migration = require('../migration');
+                const _Migration = require('../src/migration');
                 const Migration = _Migration.default || _Migration;
                 class CreateTestUsers extends Migration {
                     async up(schema) {
@@ -134,7 +134,7 @@ describe('Database Migrations and Seeding Comprehensive Unit Tests', () => {
         test('rollbacks last batch of migrations', async () => {
             const m1Path = path.join(testMigrationDir, '2026_01_01_000001_create_test_users.js');
             await fs.writeFile(m1Path, `
-                const _Migration = require('../migration');
+                const _Migration = require('../src/migration');
                 const Migration = _Migration.default || _Migration;
                 class CreateTestUsers extends Migration {
                     async up(schema) {
@@ -166,7 +166,7 @@ describe('Database Migrations and Seeding Comprehensive Unit Tests', () => {
             const m2Path = path.join(testMigrationDir, '2026_01_02_000002_create_test_products.js');
 
             await fs.writeFile(m1Path, `
-                const _Migration = require('../migration');
+                const _Migration = require('../src/migration');
                 const Migration = _Migration.default || _Migration;
                 class CreateTestUsers extends Migration {
                     async up(schema) {
@@ -182,7 +182,7 @@ describe('Database Migrations and Seeding Comprehensive Unit Tests', () => {
             `);
 
             await fs.writeFile(m2Path, `
-                const _Migration = require('../migration');
+                const _Migration = require('../src/migration');
                 const Migration = _Migration.default || _Migration;
                 class CreateTestProducts extends Migration {
                     async up(schema) {

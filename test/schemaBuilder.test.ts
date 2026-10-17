@@ -128,7 +128,7 @@ describe('Schema Builder Comprehensive Unit Tests', () => {
         expect(() => schema.dropAllViews()).toThrow('does not support dropping all views');
         expect(() => schema.dropAllTypes()).toThrow('does not support dropping all types');
 
-        const _BaseSchemaBuilder = require('../schema/builder');
+        const _BaseSchemaBuilder = require('../src/schema/builder');
 
         const BaseSchemaBuilder = _BaseSchemaBuilder.default || _BaseSchemaBuilder;
         const baseBuilder = new BaseSchemaBuilder(conn);
@@ -191,14 +191,14 @@ describe('Schema Builder Comprehensive Unit Tests', () => {
     });
 
     test('SqliteGrammar compileDropAllTables outputs drop table statements', () => {
-        const _SqliteGrammar = require('../schema/grammars/sqliteGrammar');
+        const _SqliteGrammar = require('../src/schema/grammars/sqliteGrammar');
         const SqliteGrammar = _SqliteGrammar.default || _SqliteGrammar;
         const grammar = new SqliteGrammar();
         const sql = grammar.compileDropAllTables(['table1', 'table2']);
         expect(sql).toContain('DROP TABLE IF EXISTS table1;');
         expect(sql).toContain('DROP TABLE IF EXISTS table2;');
 
-        const _SqlServerGrammar = require('../schema/grammars/sqlServerGrammar');
+        const _SqlServerGrammar = require('../src/schema/grammars/sqlServerGrammar');
 
         const SqlServerGrammar = _SqlServerGrammar.default || _SqlServerGrammar;
         const ssg = new SqlServerGrammar();
@@ -231,32 +231,32 @@ describe('Schema Builder Comprehensive Unit Tests', () => {
             }
         };
 
-        const _MysqlBuilder = require('../schema/mysqlBuilder');
+        const _MysqlBuilder = require('../src/schema/mysqlBuilder');
 
         const MysqlBuilder = _MysqlBuilder.default || _MysqlBuilder;
         const mb = new MysqlBuilder(mockConn);
         mb.statement = (sql) => statements.push(sql);
-        mb.$grammar = new ((require("../schema/grammars/mysqlGrammar").default || require("../schema/grammars/mysqlGrammar")))();
+        mb.$grammar = new ((require("../src/schema/grammars/mysqlGrammar").default || require("../src/schema/grammars/mysqlGrammar")))();
         await mb.dropAllTables();
 
-        const _OracleBuilder = require('../schema/oracleBuilder');
+        const _OracleBuilder = require('../src/schema/oracleBuilder');
 
         const OracleBuilder = _OracleBuilder.default || _OracleBuilder;
         const ob = new OracleBuilder(mockConn);
         ob.statement = (sql) => statements.push(sql);
         ob.dropIfExists = (tbl) => statements.push(`drop ${tbl}`);
-        ob.$grammar = new ((require("../schema/grammars/oracleGrammar").default || require("../schema/grammars/oracleGrammar")))();
+        ob.$grammar = new ((require("../src/schema/grammars/oracleGrammar").default || require("../src/schema/grammars/oracleGrammar")))();
         await ob.dropAllTables();
 
-        const _SqlServerBuilder = require('../schema/sqlServerBuilder');
+        const _SqlServerBuilder = require('../src/schema/sqlServerBuilder');
 
         const SqlServerBuilder = _SqlServerBuilder.default || _SqlServerBuilder;
         const ssb = new SqlServerBuilder(mockConn);
         ssb.statement = (sql) => statements.push(sql);
-        ssb.$grammar = new ((require("../schema/grammars/sqlServerGrammar").default || require("../schema/grammars/sqlServerGrammar")))();
+        ssb.$grammar = new ((require("../src/schema/grammars/sqlServerGrammar").default || require("../src/schema/grammars/sqlServerGrammar")))();
         await ssb.dropAllTables();
 
-        const _PostgresBuilder = require('../schema/postgresBuilder');
+        const _PostgresBuilder = require('../src/schema/postgresBuilder');
 
         const PostgresBuilder = _PostgresBuilder.default || _PostgresBuilder;
         const pb = new PostgresBuilder(mockConn);
@@ -270,7 +270,7 @@ describe('Schema Builder Comprehensive Unit Tests', () => {
                 ]
             });
         };
-        pb.$grammar = new ((require("../schema/grammars/postgresGrammar").default || require("../schema/grammars/postgresGrammar")))();
+        pb.$grammar = new ((require("../src/schema/grammars/postgresGrammar").default || require("../src/schema/grammars/postgresGrammar")))();
         await pb.dropAllTables();
         await pb.compileGetTypes();
         await pb.dropAllTypes();
@@ -280,7 +280,7 @@ describe('Schema Builder Comprehensive Unit Tests', () => {
         await mb.dropAllTables();
 
         // Test sqliteBuilder with empty tables
-        const _SqliteBuilder = require('../schema/sqliteBuilder');
+        const _SqliteBuilder = require('../src/schema/sqliteBuilder');
         const SqliteBuilder = _SqliteBuilder.default || _SqliteBuilder;
         const sbEmpty = new SqliteBuilder(mockConn);
         sbEmpty.getAllTables = () => Promise.resolve([]);

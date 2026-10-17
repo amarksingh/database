@@ -1,7 +1,7 @@
 const { createDatabaseManager, createTestContainer } = require('./setup');
-const _Connection = require('../connections/connection');
+const _Connection = require('../src/connections/connection');
 const Connection = _Connection.default || _Connection;
-const _SqliteConnection = require('../connections/sqliteConnection');
+const _SqliteConnection = require('../src/connections/sqliteConnection');
 const SqliteConnection = _SqliteConnection.default || _SqliteConnection;
 
 describe('DatabaseManager & Connection Unit Tests', () => {
@@ -128,7 +128,7 @@ describe('DatabaseManager & Connection Unit Tests', () => {
     });
 
     test('ConnectionFactory createConnector throws on unsupported driver and resolves bound connector', () => {
-        const _ConnectionFactory = require('../connectors/connectionFactory');
+        const _ConnectionFactory = require('../src/connectors/connectionFactory');
         const ConnectionFactory = _ConnectionFactory.default || _ConnectionFactory;
         const factory = new ConnectionFactory(container);
 
@@ -141,9 +141,9 @@ describe('DatabaseManager & Connection Unit Tests', () => {
     });
 
     test('DatabaseManager getPrefix, getConfig, setReconnector, and registerCommands', () => {
-        const _ConnectionFactory = require('../connectors/connectionFactory');
+        const _ConnectionFactory = require('../src/connectors/connectionFactory');
         const ConnectionFactory = _ConnectionFactory.default || _ConnectionFactory;
-        const _DatabaseManager = require('../databaseManager');
+        const _DatabaseManager = require('../src/databaseManager');
         const DatabaseManager = _DatabaseManager.default || _DatabaseManager;
         const loadedDirs = [];
         const mockApp = {
@@ -190,7 +190,7 @@ describe('DatabaseManager & Connection Unit Tests', () => {
     });
 
     test('Connection getters, setters, resolvers, reconnector, and beforeExecuting', async () => {
-        const _Connection = require('../connections/connection');
+        const _Connection = require('../src/connections/connection');
         const Connection = _Connection.default || _Connection;
         const testConn = db.connection();
         Connection.resolverFor('custom_driver', () => 'custom_resolved');
@@ -230,7 +230,7 @@ describe('DatabaseManager & Connection Unit Tests', () => {
         expect(disconnectedConn.$connection).toBeDefined();
 
         // Test mock ConnectionFactory driver instances
-        const _ConnectionFactory = require('../connectors/connectionFactory');
+        const _ConnectionFactory = require('../src/connectors/connectionFactory');
         const ConnectionFactory = _ConnectionFactory.default || _ConnectionFactory;
         const factory = new ConnectionFactory(container);
         expect(factory.createConnection('sqlite', null, ':memory:')).toBeDefined();
@@ -241,7 +241,7 @@ describe('DatabaseManager & Connection Unit Tests', () => {
         expect(mysqlConn.getDefaultPostProcessor()).toBeDefined();
         expect(mysqlConn.getSchemaBuilder()).toBeDefined();
 
-        const _MysqlGrammar = require('../schema/grammars/mysqlGrammar');
+        const _MysqlGrammar = require('../src/schema/grammars/mysqlGrammar');
 
         const MysqlGrammar = _MysqlGrammar.default || _MysqlGrammar;
         const mg = new MysqlGrammar();

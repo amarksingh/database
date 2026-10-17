@@ -1,9 +1,9 @@
 const { createDatabaseManager, closeConnections } = require('./setup');
-const _Model = require('../eloquent/model');
+const _Model = require('../src/eloquent/model');
 const Model = _Model.default || _Model;
-const _HasManyThrough = require('../eloquent/relations/hasManyThrough');
+const _HasManyThrough = require('../src/eloquent/relations/hasManyThrough');
 const HasManyThrough = _HasManyThrough.default || _HasManyThrough;
-const _ModelNotFoundException = require('../eloquent/modelNotFoundException');
+const _ModelNotFoundException = require('../src/eloquent/modelNotFoundException');
 const ModelNotFoundException = _ModelNotFoundException.default || _ModelNotFoundException;
 
 describe('HasManyThrough Deep 100% Coverage Suite', () => {

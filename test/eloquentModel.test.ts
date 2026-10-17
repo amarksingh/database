@@ -1,7 +1,7 @@
 const { createDatabaseManager } = require('./setup');
-const _Model = require('../eloquent/model');
+const _Model = require('../src/eloquent/model');
 const Model = _Model.default || _Model;
-const _ModelNotFoundException = require('../eloquent/modelNotFoundException');
+const _ModelNotFoundException = require('../src/eloquent/modelNotFoundException');
 const ModelNotFoundException = _ModelNotFoundException.default || _ModelNotFoundException;
 
 class User extends Model {
@@ -158,7 +158,7 @@ describe('Eloquent Model Comprehensive Unit Tests', () => {
         test('Eloquent Collection toArray(), toJson(), and serialize()', () => {
             const user1 = new User({ name: 'User 1', email: 'u1@test.com' });
             const user2 = new User({ name: 'User 2', email: 'u2@test.com' });
-            const _Collection = require('../eloquent/collection');
+            const _Collection = require('../src/eloquent/collection');
             const Collection = _Collection.default || _Collection;
             const col = new Collection([user1, user2]);
 
@@ -331,7 +331,7 @@ describe('Eloquent Model Comprehensive Unit Tests', () => {
         });
 
         test('RelationNotFoundException and ModelNotFoundException methods and properties', () => {
-            const _RelationNotFoundException = require('../eloquent/relationNotFoundException');
+            const _RelationNotFoundException = require('../src/eloquent/relationNotFoundException');
             const RelationNotFoundException = _RelationNotFoundException.default || _RelationNotFoundException;
             const err = RelationNotFoundException.make(new User(), 'invalidRelation');
             expect(err.message).toContain('invalidRelation');

@@ -8,11 +8,11 @@
  *  - eloquent/model.js                     (71%)
  */
 const { createDatabaseManager } = require('./setup');
-const _Model = require('../eloquent/model');
+const _Model = require('../src/eloquent/model');
 const Model = _Model.default || _Model;
-const _GuardsAttributes = require('../eloquent/concern/guardsAttributes');
+const _GuardsAttributes = require('../src/eloquent/concern/guardsAttributes');
 const GuardsAttributes = _GuardsAttributes.default || _GuardsAttributes;
-const _HidesAttributes = require('../eloquent/concern/hidesAttributes');
+const _HidesAttributes = require('../src/eloquent/concern/hidesAttributes');
 const HidesAttributes = _HidesAttributes.default || _HidesAttributes;
 const { collect } = require('@ostro/support/function');
 
@@ -376,7 +376,7 @@ describe('Model – Attributes, Guards, Hides & Timestamps', () => {
 
         test('boolean cast: 0→false, 1→true', () => {
             // Use getAttribute() directly: 'active' property conflicts with scopeActive
-            const _HA = require('../eloquent/concern/hasAttributes');
+            const _HA = require('../src/eloquent/concern/hasAttributes');
             const HA = _HA.default || _HA;
             const h = new HA();
             h.$casts = { active: 'boolean', flag: 'boolean' };
@@ -637,7 +637,7 @@ describe('Model – Attributes, Guards, Hides & Timestamps', () => {
         });
 
         test('findOrFail() throws ModelNotFoundException', async () => {
-            const _ModelNotFoundException = require('../eloquent/modelNotFoundException');
+            const _ModelNotFoundException = require('../src/eloquent/modelNotFoundException');
             const ModelNotFoundException = _ModelNotFoundException.default || _ModelNotFoundException;
             await expect(Product.findOrFail(999999)).rejects.toThrow(ModelNotFoundException);
         });

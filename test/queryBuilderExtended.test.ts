@@ -435,7 +435,7 @@ describe('Query Builder – extended coverage', () => {
         });
 
         test('Connection.resolverFor() and getResolver() store and retrieve resolver', () => {
-            const _Connection = require('../connections/connection');
+            const _Connection = require('../src/connections/connection');
             const Connection = _Connection.default || _Connection;
             const fn = () => 'resolved';
             Connection.resolverFor('test_driver', fn);
@@ -555,14 +555,14 @@ describe('Query Builder – extended coverage', () => {
     // ──────────────────────────────────────────────
     describe('Grammar & MysqlProcessor', () => {
         test('MySQLProcessor processInsertGetId returns sequence id', () => {
-            const _MySQLProcessor = require('../query/processors/mysqlProcessor');
+            const _MySQLProcessor = require('../src/query/processors/mysqlProcessor');
             const MySQLProcessor = _MySQLProcessor.default || _MySQLProcessor;
             const proc = new MySQLProcessor();
             expect(proc.processInsertGetId(null, '', {}, 5)).toBe(5);
         });
 
         test('Query Grammar methods (getDateFormat, setTablePrefix, getTablePrefix, setConnection)', () => {
-            const _Grammar = require('../query/grammars/grammar');
+            const _Grammar = require('../src/query/grammars/grammar');
             const Grammar = _Grammar.default || _Grammar;
             const g = new Grammar();
             expect(g.getDateFormat()).toBe('Y-m-d H:i:s');
@@ -573,7 +573,7 @@ describe('Query Builder – extended coverage', () => {
         });
 
         test('SQLite Grammar inherits BaseGrammar', () => {
-            const _SQLiteGrammar = require('../query/grammars/sqliteGrammar');
+            const _SQLiteGrammar = require('../src/query/grammars/sqliteGrammar');
             const SQLiteGrammar = _SQLiteGrammar.default || _SQLiteGrammar;
             const g = new SQLiteGrammar();
             expect(g.getDateFormat()).toBe('Y-m-d H:i:s');
