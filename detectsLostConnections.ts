@@ -2,7 +2,7 @@
  * Class DetectsLostConnections.
  */
 class DetectsLostConnections {
-    $errorMessages: string[] = [
+    public $errorMessages: string[] = [
         'server has gone away',
         'no connection to the server',
         'Lost connection',
@@ -64,7 +64,7 @@ class DetectsLostConnections {
      * @param error - Exception or error message.
      * @returns True if error is caused by lost connection.
      */
-    causedByLostConnection(error: any): boolean {
+    public causedByLostConnection(error: any): boolean {
         const message: string = typeof error === 'string' ? error : error?.message;
 
         return this.$errorMessages.includes(message);

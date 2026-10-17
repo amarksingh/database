@@ -6,11 +6,11 @@ import ModelNotFoundExceptionContracts from '@ostro/contracts/database/eloquent/
  * Class ModelNotFoundException.
  */
 class ModelNotFoundException extends ModelNotFoundExceptionContracts {
-    $model: any;
-    $ids: any[] = [];
-    name: string;
-    code: string;
-    statusCode: number;
+    public $model: any;
+    public $ids: any[] = [];
+    public name: string;
+    public code: string;
+    public statusCode: number;
 
     /**
      * Create a new instance.
@@ -29,7 +29,7 @@ class ModelNotFoundException extends ModelNotFoundExceptionContracts {
      * @param ids - Missing model ids.
      * @returns Fluent self instance.
      */
-    setModel(model: any, ids: any[] = []): this {
+    public setModel(model: any, ids: any[] = []): this {
         this.$model = model;
         this.$ids = ids;
 
@@ -49,7 +49,7 @@ class ModelNotFoundException extends ModelNotFoundExceptionContracts {
      *
      * @returns Model instance.
      */
-    getModel(): any {
+    public getModel(): any {
         return this.$model;
     }
 
@@ -58,7 +58,7 @@ class ModelNotFoundException extends ModelNotFoundExceptionContracts {
      *
      * @returns Array of IDs.
      */
-    getIds(): any[] {
+    public getIds(): any[] {
         return this.$ids;
     }
 }

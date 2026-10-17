@@ -13,7 +13,7 @@ class PostgresConnection extends Connection {
      * getDefaultSchemaGrammar method.
      * @returns {any}
      */
-    getDefaultSchemaGrammar() {
+    public getDefaultSchemaGrammar() {
         const $grammar = new SchemaGrammar
         $grammar.setConnection(this);
 
@@ -24,7 +24,7 @@ class PostgresConnection extends Connection {
      * getDefaultQueryGrammar method.
      * @returns {any}
      */
-    getDefaultQueryGrammar() {
+    public getDefaultQueryGrammar() {
         const $grammar = new QueryGrammar()
         $grammar.setConnection(this);
 
@@ -35,7 +35,7 @@ class PostgresConnection extends Connection {
      * getSchemaBuilder method.
      * @returns {any}
      */
-    getSchemaBuilder() {
+    public getSchemaBuilder() {
         if (is_null(this.$schemaGrammar)) {
             this.useDefaultSchemaGrammar();
         }
@@ -47,7 +47,7 @@ class PostgresConnection extends Connection {
      * getDefaultPostProcessor method.
      * @returns {any}
      */
-    getDefaultPostProcessor() {
+    public getDefaultPostProcessor() {
         return new QueryProcessor;
     }
 
@@ -58,7 +58,7 @@ class PostgresConnection extends Connection {
      * @param {*} parameters
      * @returns {any}
      */
-    __call(target: Record<string, any>, method: string, parameters: any[]) {
+    public __call(target: Record<string, any>, method: string, parameters: any[]) {
         return target.$connection[method](...parameters)
     }
 

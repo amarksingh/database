@@ -12,7 +12,7 @@ class SqliteConnector {
      * @param prefix - Table prefix.
      * @returns Knex client instance.
      */
-    connect(config: Record<string, any>, database: any, prefix: any): any {
+    public connect(config: Record<string, any>, database: any, prefix: any): any {
         return Knex({
             client: config.version || 'sqlite3',
             connection: {

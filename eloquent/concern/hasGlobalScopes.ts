@@ -10,7 +10,7 @@ class HasGlobalScopes {
      * @param implementation - Scope implementation.
      * @returns Scope implementation.
      */
-    addGlobalScope(scope: any, implementation: any = null): any {
+    public addGlobalScope(scope: any, implementation: any = null): any {
         const constructor = this.constructor as any;
         if (typeof scope === 'string' && implementation !== null && implementation !== undefined) {
             return (constructor.$globalScopes[constructor.class][scope] = implementation);
@@ -29,7 +29,7 @@ class HasGlobalScopes {
      * @param scope - Scope identifier.
      * @returns True if global scope exists.
      */
-    hasGlobalScope(scope: any): boolean {
+    public hasGlobalScope(scope: any): boolean {
         return (this.constructor as any).getGlobalScope(scope) != null;
     }
 
@@ -39,7 +39,7 @@ class HasGlobalScopes {
      * @param scope - Scope identifier.
      * @returns Scope implementation or undefined.
      */
-    getGlobalScope(scope: any): any {
+    public getGlobalScope(scope: any): any {
         const constructor = this.constructor as any;
         if (typeof scope === 'string') {
             return constructor.$globalScopes?.[constructor.class]?.[scope];
@@ -53,7 +53,7 @@ class HasGlobalScopes {
      *
      * @returns Global scopes dictionary or array.
      */
-    getGlobalScopes(): any {
+    public getGlobalScopes(): any {
         return (this.constructor as any).$globalScopes || {};
     }
 }

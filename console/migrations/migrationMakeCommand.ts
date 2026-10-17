@@ -17,15 +17,15 @@ class CreateSchema extends BaseCommand {
         this.$creator = $creator;
     }
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'make:migration';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Create a new migration file';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--database', 'The database connection to use'),
         this.createOption('--create [create]', 'The table to be created'),
@@ -37,7 +37,7 @@ class CreateSchema extends BaseCommand {
     ];
     }
 
-    get $arguments() {
+    public get $arguments() {
         return [
             this.createArgument('name', 'The name of the migration').required()
         ]
@@ -48,7 +48,7 @@ class CreateSchema extends BaseCommand {
      * @async
      * @returns {any}
      */
-    async handle() {
+    public async handle() {
 
         let $name = this.input.getArgument('name');
         let $path = this.input.getOption('path')
@@ -84,7 +84,7 @@ class CreateSchema extends BaseCommand {
      * @param {*} $create
      * @returns {any}
      */
-    async writeMigration($name: string, $table: string, $create: any) {
+    public async writeMigration($name: string, $table: string, $create: any) {
         let $file = await this.$creator.create(
             ($name as any).plural().camelCase().snakeCase(), this.getMigrationPath(), $table, $create
         );
@@ -100,7 +100,7 @@ class CreateSchema extends BaseCommand {
      * getMigrationPath method.
      * @returns {any}
      */
-    getMigrationPath() {
+    public getMigrationPath() {
         let $targetPath = this.input.getOption('path')
         if ($targetPath != null) {
             return !this.usingRealPath() ? this.$app.basePath($targetPath) : $targetPath;

@@ -11,7 +11,7 @@ class BaseCommand extends Command {
      * getMigrationPaths method.
      * @returns {any}
      */
-    getMigrationPaths() {
+    public getMigrationPaths() {
 
         if (this.input.hasOption('path') && this.option('path')) {
             return collect(this.option('path').split(',')).map(($path) => {
@@ -28,7 +28,7 @@ class BaseCommand extends Command {
      * usingRealPath method.
      * @returns {any}
      */
-    usingRealPath() {
+    public usingRealPath() {
         return this.input.hasOption('realpath') && this.option('realpath');
     }
 
@@ -36,7 +36,7 @@ class BaseCommand extends Command {
      * getMigrationPath method.
      * @returns {any}
      */
-    getMigrationPath() {
+    public getMigrationPath() {
         return this.$app.databasePath('migrations');
     }
 }

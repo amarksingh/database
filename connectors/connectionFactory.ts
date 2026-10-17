@@ -33,7 +33,7 @@ class ConnectionFactory {
      * @param {*} name
      * @returns {any}
      */
-    make(config: Record<string, any>, name: any = null) {
+    public make(config: Record<string, any>, name: any = null) {
         config = this.parseConfig(config, name);
 
         if (config.read) {
@@ -49,7 +49,7 @@ class ConnectionFactory {
      * @param {*} name
      * @returns {any}
      */
-    parseConfig(config: Record<string, any>, name: string) {
+    public parseConfig(config: Record<string, any>, name: string) {
         return { prefix: '', ...config, name };
     }
 
@@ -58,7 +58,7 @@ class ConnectionFactory {
      * @param {*} config
      * @returns {any}
      */
-    createSingleConnection(config: Record<string, any>) {
+    public createSingleConnection(config: Record<string, any>) {
         const connection = this.createConnectionResolver(config);
 
         return this.createConnection(config.driver, connection, config.database, config.prefix, config);
@@ -69,7 +69,7 @@ class ConnectionFactory {
      * @param {*} config
      * @returns {any}
      */
-    createReadWriteConnection(config: Record<string, any>) {
+    public createReadWriteConnection(config: Record<string, any>) {
         const connection = this.createSingleConnection(this.getWriteConfig(config));
 
         return connection.setReadConnection(this.createReadConnection(config));
@@ -80,7 +80,7 @@ class ConnectionFactory {
      * @param {*} config
      * @returns {any}
      */
-    createReadConnection(config: Record<string, any>) {
+    public createReadConnection(config: Record<string, any>) {
         return this.createConnectionResolver(this.getReadConfig(config));
     }
 
@@ -89,7 +89,7 @@ class ConnectionFactory {
      * @param {*} config
      * @returns {any}
      */
-    getReadConfig(config: Record<string, any>) {
+    public getReadConfig(config: Record<string, any>) {
         return this.mergeReadWriteConfig(config, this.getReadWriteConfig(config, 'read'));
     }
 
@@ -98,7 +98,7 @@ class ConnectionFactory {
      * @param {*} config
      * @returns {any}
      */
-    getWriteConfig(config: Record<string, any>) {
+    public getWriteConfig(config: Record<string, any>) {
         return this.mergeReadWriteConfig(config, this.getReadWriteConfig(config, 'write'));
     }
 
@@ -108,7 +108,7 @@ class ConnectionFactory {
      * @param {*} type
      * @returns {any}
      */
-    getReadWriteConfig(config: Record<string, any>, type: string) {
+    public getReadWriteConfig(config: Record<string, any>, type: string) {
         return config[type] && config[type][0] ? random(config[type]) : config[type];
     }
 
@@ -118,7 +118,7 @@ class ConnectionFactory {
      * @param {*} merge
      * @returns {any}
      */
-    mergeReadWriteConfig(config: Record<string, any>, merge: any) {
+    public mergeReadWriteConfig(config: Record<string, any>, merge: any) {
         const { read, write, ...mergedConfig } = { ...config, ...merge };
         return mergedConfig;
     }
@@ -128,7 +128,7 @@ class ConnectionFactory {
      * @param {*} config
      * @returns {any}
      */
-    createConnectionResolver(config: Record<string, any>) {
+    public createConnectionResolver(config: Record<string, any>) {
         return config.host ? this.createConnectionResolverWithHosts(config) : this.createConnectionResolverWithoutHosts(config);
     }
 
@@ -137,7 +137,7 @@ class ConnectionFactory {
      * @param {*} config
      * @returns {any}
      */
-    createConnectionResolverWithHosts(config: Record<string, any>) {
+    public createConnectionResolverWithHosts(config: Record<string, any>) {
         return (database, prefix) => {
             config = { ...config, host: this.parseHost(config) }
             return this.createConnector(config).connect(config, database, prefix);
@@ -149,7 +149,7 @@ class ConnectionFactory {
      * @param {*} $config
      * @returns {any}
      */
-    parseHost($config: Record<string, any>) {
+    public parseHost($config: Record<string, any>) {
         const hosts = Array.isArray($config['host']) ? $config['host'] : [$config['host']];
         if (empty(hosts)) {
             throw new InvalidArgumentException('Database hosts array is empty.');
@@ -164,7 +164,7 @@ class ConnectionFactory {
      * @param {*} config
      * @returns {any}
      */
-    createConnectionResolverWithoutHosts(config: Record<string, any>) {
+    public createConnectionResolverWithoutHosts(config: Record<string, any>) {
         return (database, prefix) => {
             return this.createConnector(config).connect(config, database, prefix);
         }
@@ -175,7 +175,7 @@ class ConnectionFactory {
      * @param {*} config
      * @returns {any}
      */
-    createConnector(config: Record<string, any>) {
+    public createConnector(config: Record<string, any>) {
         if (!config.driver) {
             throw new Error('A driver must be specified.');
         }
@@ -211,7 +211,7 @@ class ConnectionFactory {
      * @param {*} config
      * @returns {any}
      */
-    createConnection(driver: any, connection: any, database: any, prefix: string = '', config: Record<string, any> = {}) {
+    public createConnection(driver: any, connection: any, database: any, prefix: string = '', config: Record<string, any> = {}) {
         const resolver = Connection.getResolver(driver);
 
         if (resolver) {

@@ -57,7 +57,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * addConstraints method.
      * @returns {any}
      */
-    addConstraints() {
+    public addConstraints() {
 
     }
 
@@ -66,7 +66,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $models
      * @returns {any}
      */
-    addEagerConstraints($models: any) {
+    public addEagerConstraints($models: any) {
 
     }
 
@@ -76,7 +76,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $relation
      * @returns {any}
      */
-    initRelation($models: any, $relation: any) {
+    public initRelation($models: any, $relation: any) {
 
     }
 
@@ -87,7 +87,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $relation
      * @returns {any}
      */
-    match($models: any, $results: any, $relation: any) {
+    public match($models: any, $results: any, $relation: any) {
 
     }
 
@@ -95,7 +95,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * getResults method.
      * @returns {any}
      */
-    getResults() {
+    public getResults() {
 
     }
 
@@ -103,7 +103,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * getEager method.
      * @returns {any}
      */
-    getEager() {
+    public getEager() {
         return this.get();
     }
 
@@ -113,7 +113,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $columns
      * @returns {any}
      */
-    async sole($columns: any[] = ['*']) {
+    public async sole($columns: any[] = ['*']) {
         const $result = await this.take(2).get($columns);
 
         if ($result.count() === 0) {
@@ -140,7 +140,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * touch method.
      * @returns {any}
      */
-    touch() {
+    public touch() {
         let $model = this.getRelated();
 
         if (!$model.isIgnoringTouch()) {
@@ -155,7 +155,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $attributes
      * @returns {any}
      */
-    rawUpdate($attributes: any = []) {
+    public rawUpdate($attributes: any = []) {
         return this.$query.withoutGlobalScopes().update($attributes);
     }
 
@@ -165,7 +165,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $parentQuery
      * @returns {any}
      */
-    getRelationExistenceCountQuery($query: any, $parentQuery: any) {
+    public getRelationExistenceCountQuery($query: any, $parentQuery: any) {
         return this.getRelationExistenceQuery(
             $query, $parentQuery, $query.raw('count(*)')
         );
@@ -178,7 +178,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $columns
      * @returns {any}
      */
-    getRelationExistenceQuery($query: any, $parentQuery: any, $columns: any[] = ['*']) {
+    public getRelationExistenceQuery($query: any, $parentQuery: any, $columns: any[] = ['*']) {
         return $query.select($columns).whereRaw(
             this.getQualifiedParentKeyName() + '=' + this.getExistenceCompareKey()
         );
@@ -189,7 +189,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $incrementJoinCount
      * @returns {any}
      */
-    getRelationCountHash($incrementJoinCount: boolean = true) {
+    public getRelationCountHash($incrementJoinCount: boolean = true) {
 
         return 'ostro_reserved_' + ($incrementJoinCount ? (this.constructor as any).$selfJoinCount++ : (this.constructor as any).$selfJoinCount);
     }
@@ -200,7 +200,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $key
      * @returns {any}
      */
-    getKeys($models: any, $key: any = null) {
+    public getKeys($models: any, $key: any = null) {
         return $models.map(function ($value) {
             return $key ? $value.getAttribute($key) : $value.getKey();
         }).values().unique(null, true).sortBy().all();
@@ -210,7 +210,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * getRelationQuery method.
      * @returns {any}
      */
-    getRelationQuery() {
+    public getRelationQuery() {
         return this.$query;
     }
 
@@ -218,7 +218,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * getQuery method.
      * @returns {any}
      */
-    getQuery() {
+    public getQuery() {
         return this.$query;
     }
 
@@ -226,7 +226,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * getBaseQuery method.
      * @returns {any}
      */
-    getBaseQuery() {
+    public getBaseQuery() {
         return this.$query.getQuery();
     }
 
@@ -234,7 +234,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * getParent method.
      * @returns {any}
      */
-    getParent() {
+    public getParent() {
         return this.$parent;
     }
 
@@ -242,7 +242,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * getQualifiedParentKeyName method.
      * @returns {any}
      */
-    getQualifiedParentKeyName() {
+    public getQualifiedParentKeyName() {
         return this.$parent.getQualifiedKeyName();
     }
 
@@ -250,7 +250,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * getRelated method.
      * @returns {any}
      */
-    getRelated() {
+    public getRelated() {
         return this.$related;
     }
 
@@ -258,7 +258,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * createdAt method.
      * @returns {any}
      */
-    createdAt() {
+    public createdAt() {
         return this.$parent.getCreatedAtColumn();
     }
 
@@ -266,7 +266,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * updatedAt method.
      * @returns {any}
      */
-    updatedAt() {
+    public updatedAt() {
         return this.$parent.getUpdatedAtColumn();
     }
 
@@ -274,7 +274,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * relatedUpdatedAt method.
      * @returns {any}
      */
-    relatedUpdatedAt() {
+    public relatedUpdatedAt() {
         return this.$related.getUpdatedAtColumn();
     }
 
@@ -286,7 +286,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $query
      * @returns {any}
      */
-    whereInEager($whereIn: any, $key: string, $modelKeys: any, $query: any = null) {
+    public whereInEager($whereIn: any, $key: string, $modelKeys: any, $query: any = null) {
         ($query ?? this.$query)[$whereIn]($key, $modelKeys);
 
         if ($modelKeys.length === 0) {
@@ -300,7 +300,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $key
      * @returns {any}
      */
-    whereInMethod($model: any, $key: string) {
+    public whereInMethod($model: any, $key: string) {
         if ($model.getKeyName() === $key.split('.').pop() &&
             ['int', 'integer'].includes($model.getKeyType())) {
             return 'whereIntegerInRaw';
@@ -313,7 +313,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} fn
      * @returns {any}
      */
-    setPerformQuery(fn: Function) {
+    public setPerformQuery(fn: Function) {
         if (Array.isArray(fn)) {
             return this.$performQueries = this.$performQueries.concat(fn)
         }
@@ -323,7 +323,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * getPerformQueries method.
      * @returns {any}
      */
-    getPerformQueries() {
+    public getPerformQueries() {
         return this.$performQueries
     }
     /**
@@ -380,7 +380,7 @@ class Relation extends Macroable.implement(InteractsWithDictionary) {
      * @param {*} $parameters
      * @returns {any}
      */
-    __call($target: Record<string, any>, $method: string, $parameters: any[]) {
+    public __call($target: Record<string, any>, $method: string, $parameters: any[]) {
 
         let $fn = this.$query[$method];
         if (typeof $fn != 'function') {

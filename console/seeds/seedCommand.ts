@@ -17,15 +17,15 @@ class SeedCommand extends Command {
         this.$resolver = $resolver;
     }
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'db:seed';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Seed the database with records';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--class <class>', 'Enter seeder class name').default('database/seeders/databaseSeeder'),
         this.createOption('--database <database>', 'The database connection to seed'),
@@ -33,7 +33,7 @@ class SeedCommand extends Command {
     ];
     }
 
-    get $arguments(): any[] {
+    public get $arguments(): any[] {
         return [
         this.createArgument('<file>', 'Enter seeder files name')
     ];
@@ -44,7 +44,7 @@ class SeedCommand extends Command {
      * @async
      * @returns {any}
      */
-    async handle() {
+    public async handle() {
         if (!this.input.getOption('force') && !await this.confirmToProceed()) {
             return 1;
         }
@@ -66,7 +66,7 @@ class SeedCommand extends Command {
      * @param {*} $connection
      * @returns {any}
      */
-    async getSeeder($connection: any) {
+    public async getSeeder($connection: any) {
         let $class = this.input.getArgument('file') || this.input.getOption('class');
 
         if ($class.includes('/') === false) {
@@ -86,7 +86,7 @@ class SeedCommand extends Command {
      * getDatabase method.
      * @returns {any}
      */
-    getDatabase() {
+    public getDatabase() {
         let $database = this.input.getOption('database');
 
         return $database || this.$app['config']['database.default'];

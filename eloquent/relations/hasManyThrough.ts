@@ -36,7 +36,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * addConstraints method.
      * @returns {any}
      */
-    addConstraints() {
+    public addConstraints() {
         const localValue = this.$farParent[this.$localKey];
 
         this.performJoin();
@@ -51,7 +51,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} query
      * @returns {any}
      */
-    performJoin(query: any = null) {
+    public performJoin(query: any = null) {
         query = query || this.$query;
 
         const farKey = this.getQualifiedFarKeyName();
@@ -69,7 +69,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * getQualifiedParentKeyName method.
      * @returns {any}
      */
-    getQualifiedParentKeyName() {
+    public getQualifiedParentKeyName() {
         return this.$parent.qualifyColumn(this.$secondLocalKey);
     }
 
@@ -77,7 +77,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * throughParentSoftDeletes method.
      * @returns {any}
      */
-    throughParentSoftDeletes() {
+    public throughParentSoftDeletes() {
         return this.$throughParent.constructor.name.includes('SoftDeletes') || 
                typeof this.$throughParent.getQualifiedDeletedAtColumn === 'function';
     }
@@ -86,7 +86,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * withTrashedParents method.
      * @returns {any}
      */
-    withTrashedParents() {
+    public withTrashedParents() {
         this.$query.withoutGlobalScope('SoftDeletableHasManyThrough');
 
         return this;
@@ -97,7 +97,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} models
      * @returns {any}
      */
-    addEagerConstraints(models: any) {
+    public addEagerConstraints(models: any) {
         const whereIn = this.whereInMethod(this.$farParent, this.$localKey);
 
         this.whereInEager(
@@ -113,7 +113,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} relation
      * @returns {any}
      */
-    initRelation(models: any, relation: any) {
+    public initRelation(models: any, relation: any) {
         models.forEach(model => {
             model.setRelation(relation, this.$related.newCollection());
         });
@@ -128,7 +128,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} relation
      * @returns {any}
      */
-    match(models: any, results: any, relation: any) {
+    public match(models: any, results: any, relation: any) {
         const dictionary = this.buildDictionary(results);
 
         models.forEach(model => {
@@ -148,7 +148,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} results
      * @returns {any}
      */
-    buildDictionary(results: any) {
+    public buildDictionary(results: any) {
         const dictionary = {};
 
         results.forEach(result => {
@@ -168,7 +168,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} values
      * @returns {any}
      */
-    async firstOrNew(attributes: Record<string, any> = {}, values: Record<string, any> = {}) {
+    public async firstOrNew(attributes: Record<string, any> = {}, values: Record<string, any> = {}) {
         const instance = await this.where(attributes).first();
         if (instance !== null) {
             return instance;
@@ -186,7 +186,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} values
      * @returns {any}
      */
-    async firstOrCreate(attributes: Record<string, any> = {}, values: Record<string, any> = {}) {
+    public async firstOrCreate(attributes: Record<string, any> = {}, values: Record<string, any> = {}) {
         const instance = await this.where(attributes).first();
         if (instance !== null) {
             return instance;
@@ -202,7 +202,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} values
      * @returns {any}
      */
-    async createOrFirst(attributes: Record<string, any> = {}, values: Record<string, any> = {}) {
+    public async createOrFirst(attributes: Record<string, any> = {}, values: Record<string, any> = {}) {
         try {
             return await this.getQuery().withSavepointIfNeeded(() => {
                 return this.create({...attributes, ...values});
@@ -223,7 +223,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} values
      * @returns {any}
      */
-    async updateOrCreate(attributes: Record<string, any>, values: Record<string, any> = {}) {
+    public async updateOrCreate(attributes: Record<string, any>, values: Record<string, any> = {}) {
         const instance = await this.firstOrCreate(attributes, values);
 
         if (!instance.wasRecentlyCreated) {
@@ -241,7 +241,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} boolean
      * @returns {any}
      */
-    firstWhere(column: string, operator: any = null, value: any = null, boolean: string = 'and') {
+    public firstWhere(column: string, operator: any = null, value: any = null, boolean: string = 'and') {
         return this.where(column, operator, value, boolean).first();
     }
 
@@ -251,7 +251,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    async first(columns: any[] = ['*']) {
+    public async first(columns: any[] = ['*']) {
         const results = await this.take(1).get(columns);
 
         return results.length > 0 ? results.first() : null;
@@ -263,7 +263,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    async firstOrFail(columns: any[] = ['*']) {
+    public async firstOrFail(columns: any[] = ['*']) {
         const model = await this.first(columns);
         if (model !== null) {
             return model;
@@ -279,7 +279,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} callback
      * @returns {any}
      */
-    async firstOr(columns: any[] = ['*'], callback: any = null) {
+    public async firstOr(columns: any[] = ['*'], callback: any = null) {
         if (typeof columns === 'function') {
             callback = columns;
             columns = ['*'];
@@ -300,7 +300,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    async find(id: any, columns: any[] = ['*']) {
+    public async find(id: any, columns: any[] = ['*']) {
         if (Array.isArray(id) || (id && typeof id.toArray === 'function')) {
             return this.findMany(id, columns);
         }
@@ -317,7 +317,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    async findMany(ids: any, columns: any[] = ['*']) {
+    public async findMany(ids: any, columns: any[] = ['*']) {
         ids = (ids && typeof ids.toArray === 'function') ? ids.toArray() : ids;
 
         if (!ids || ids.length === 0) {
@@ -336,7 +336,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    async findOrFail(id: any, columns: any[] = ['*']) {
+    public async findOrFail(id: any, columns: any[] = ['*']) {
         const result = await this.find(id, columns);
 
         id = (id && typeof id.toArray === 'function') ? id.toArray() : id;
@@ -361,7 +361,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} callback
      * @returns {any}
      */
-    async findOr(id: any, columns: any[] = ['*'], callback: any = null) {
+    public async findOr(id: any, columns: any[] = ['*'], callback: any = null) {
         if (typeof columns === 'function') {
             callback = columns;
             columns = ['*'];
@@ -387,7 +387,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * getResults method.
      * @returns {any}
      */
-    getResults() {
+    public getResults() {
         return this.$farParent[this.$localKey] !== null
                 ? this.get()
                 : this.$related.newCollection();
@@ -399,7 +399,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    async get(columns: any[] = ['*']) {
+    public async get(columns: any[] = ['*']) {
         const builder = this.prepareQueryBuilder(columns);
 
         let models = await builder.getModels();
@@ -419,7 +419,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} page
      * @returns {any}
      */
-    paginate(perPage: any = null, columns: any[] = ['*'], pageName: string = 'page', page: any = null) {
+    public paginate(perPage: any = null, columns: any[] = ['*'], pageName: string = 'page', page: any = null) {
         this.$query.addSelect(this.shouldSelect(columns));
 
         return this.$query.paginate(perPage, columns, pageName, page);
@@ -433,7 +433,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} page
      * @returns {any}
      */
-    simplePaginate(perPage: any = null, columns: any[] = ['*'], pageName: string = 'page', page: any = null) {
+    public simplePaginate(perPage: any = null, columns: any[] = ['*'], pageName: string = 'page', page: any = null) {
         this.$query.addSelect(this.shouldSelect(columns));
 
         return this.$query.simplePaginate(perPage, columns, pageName, page);
@@ -447,7 +447,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} cursor
      * @returns {any}
      */
-    cursorPaginate(perPage: any = null, columns: any[] = ['*'], cursorName: string = 'cursor', cursor: any = null) {
+    public cursorPaginate(perPage: any = null, columns: any[] = ['*'], cursorName: string = 'cursor', cursor: any = null) {
         this.$query.addSelect(this.shouldSelect(columns));
 
         return this.$query.cursorPaginate(perPage, columns, cursorName, cursor);
@@ -458,7 +458,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    shouldSelect(columns: any[] = ['*']) {
+    public shouldSelect(columns: any[] = ['*']) {
         if (columns.includes('*') && columns.length == 1) {
             columns = [this.$related.getTable()+'.*'];
         }
@@ -472,7 +472,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} callback
      * @returns {any}
      */
-    chunk(count: number, callback: Function) {
+    public chunk(count: number, callback: Function) {
         return this.prepareQueryBuilder().chunk(count, callback);
     }
 
@@ -484,7 +484,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} alias
      * @returns {any}
      */
-    chunkById(count: number, callback: Function, column: any = null, alias: any = null) {
+    public chunkById(count: number, callback: Function, column: any = null, alias: any = null) {
         column ??= this.getRelated().getQualifiedKeyName();
 
         alias ??= this.getRelated().getKeyName();
@@ -500,7 +500,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} alias
      * @returns {any}
      */
-    chunkByIdDesc(count: number, callback: Function, column: any = null, alias: any = null) {
+    public chunkByIdDesc(count: number, callback: Function, column: any = null, alias: any = null) {
         column ??= this.getRelated().getQualifiedKeyName();
 
         alias ??= this.getRelated().getKeyName();
@@ -516,7 +516,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} alias
      * @returns {any}
      */
-    eachById(callback: Function, count: number = 1000, column: any = null, alias: any = null) {
+    public eachById(callback: Function, count: number = 1000, column: any = null, alias: any = null) {
         column = column ?? this.getRelated().getQualifiedKeyName();
 
         alias = alias ?? this.getRelated().getKeyName();
@@ -528,7 +528,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * cursor method.
      * @returns {any}
      */
-    cursor() {
+    public cursor() {
         return this.prepareQueryBuilder().cursor();
     }
 
@@ -538,7 +538,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} count
      * @returns {any}
      */
-    each(callback: Function, count: number = 1000) {
+    public each(callback: Function, count: number = 1000) {
         return this.chunk(count, (results) => {
             for (const [key, value] of results.entries()) {
                 if (callback(value, key) === false) {
@@ -553,7 +553,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} chunkSize
      * @returns {any}
      */
-    lazy(chunkSize: number = 1000) {
+    public lazy(chunkSize: number = 1000) {
         return this.prepareQueryBuilder().lazy(chunkSize);
     }
 
@@ -564,7 +564,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} alias
      * @returns {any}
      */
-    lazyById(chunkSize: number = 1000, column: any = null, alias: any = null) {
+    public lazyById(chunkSize: number = 1000, column: any = null, alias: any = null) {
         column ??= this.getRelated().getQualifiedKeyName();
 
         alias ??= this.getRelated().getKeyName();
@@ -579,7 +579,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} alias
      * @returns {any}
      */
-    lazyByIdDesc(chunkSize: number = 1000, column: any = null, alias: any = null) {
+    public lazyByIdDesc(chunkSize: number = 1000, column: any = null, alias: any = null) {
         column ??= this.getRelated().getQualifiedKeyName();
 
         alias ??= this.getRelated().getKeyName();
@@ -592,7 +592,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    prepareQueryBuilder(columns: any[] = ['*']) {
+    public prepareQueryBuilder(columns: any[] = ['*']) {
         return this.$query.select(this.shouldSelect(columns));
     }
 
@@ -603,7 +603,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    getRelationExistenceQuery(query: any, parentQuery: any, columns: any[] = ['*']) {
+    public getRelationExistenceQuery(query: any, parentQuery: any, columns: any[] = ['*']) {
         if (parentQuery.getTable() === query.getTable()) {
             return this.getRelationExistenceQueryForSelfRelation(query, parentQuery, columns);
         }
@@ -626,7 +626,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    getRelationExistenceQueryForSelfRelation(query: any, parentQuery: any, columns: any[] = ['*']) {
+    public getRelationExistenceQueryForSelfRelation(query: any, parentQuery: any, columns: any[] = ['*']) {
         const hash = this.getRelationCountHash();
         query.from(`${query.getModel().getTable()} as ${hash}`);
 
@@ -650,7 +650,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * @param {*} columns
      * @returns {any}
      */
-    getRelationExistenceQueryForThroughSelfRelation(query: any, parentQuery: any, columns: any[] = ['*']) {
+    public getRelationExistenceQueryForThroughSelfRelation(query: any, parentQuery: any, columns: any[] = ['*']) {
         const hash = this.getRelationCountHash();
         const table = `${this.$throughParent.getTable()} as ${hash}`;
 
@@ -669,7 +669,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * getQualifiedFarKeyName method.
      * @returns {any}
      */
-    getQualifiedFarKeyName() {
+    public getQualifiedFarKeyName() {
         return this.getQualifiedForeignKeyName();
     }
 
@@ -677,7 +677,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * getFirstKeyName method.
      * @returns {any}
      */
-    getFirstKeyName() {
+    public getFirstKeyName() {
         return this.$firstKey;
     }
 
@@ -685,7 +685,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * getQualifiedFirstKeyName method.
      * @returns {any}
      */
-    getQualifiedFirstKeyName() {
+    public getQualifiedFirstKeyName() {
         return this.$throughParent.qualifyColumn(this.$firstKey);
     }
 
@@ -693,7 +693,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * getForeignKeyName method.
      * @returns {any}
      */
-    getForeignKeyName() {
+    public getForeignKeyName() {
         return this.$secondKey;
     }
 
@@ -701,7 +701,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * getQualifiedForeignKeyName method.
      * @returns {any}
      */
-    getQualifiedForeignKeyName() {
+    public getQualifiedForeignKeyName() {
         return this.$related.qualifyColumn(this.$secondKey);
     }
 
@@ -709,7 +709,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * getLocalKeyName method.
      * @returns {any}
      */
-    getLocalKeyName() {
+    public getLocalKeyName() {
         return this.$localKey;
     }
 
@@ -717,7 +717,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * getQualifiedLocalKeyName method.
      * @returns {any}
      */
-    getQualifiedLocalKeyName() {
+    public getQualifiedLocalKeyName() {
         return this.$farParent.qualifyColumn(this.$localKey);
     }
 
@@ -725,7 +725,7 @@ class HasManyThrough extends implement(Relation,SupportsDefaultModels, CanBeOneO
      * getSecondLocalKeyName method.
      * @returns {any}
      */
-    getSecondLocalKeyName() {
+    public getSecondLocalKeyName() {
         return this.$secondLocalKey;
     }
 }

@@ -8,15 +8,15 @@ import path from 'path';
 class MakeSeederCommand extends GeneratorCommand {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'make:seeder';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Create a new seeder class';
     }
 
-    get $arguments(): any[] {
+    public get $arguments(): any[] {
         return [
         this.createArgument('<name>', 'Class name for seed').required()
     ];
@@ -28,7 +28,7 @@ class MakeSeederCommand extends GeneratorCommand {
      * getStub method.
      * @returns {any}
      */
-    getStub() {
+    public getStub() {
         return this.resolveStubPath('/stubs/seeder.stub');
     }
 
@@ -37,7 +37,7 @@ class MakeSeederCommand extends GeneratorCommand {
      * @param {*} $stub
      * @returns {any}
      */
-    resolveStubPath($stub: any) {
+    public resolveStubPath($stub: any) {
         let $customPath = this.$app.basePath(trim($stub, '/'))
         return this.$file.exists($customPath).then($exists => ($exists ? $customPath : path.join(__dirname, $stub)))
     }
@@ -48,7 +48,7 @@ class MakeSeederCommand extends GeneratorCommand {
      * @param {*} $name
      * @returns {any}
      */
-    async getPath($name: string) {
+    public async getPath($name: string) {
         if (await isDirectory(this.$app.databasePath('/seeds'))) {
             return this.$app.databasePath('seeds/' + (this.getFileName($name) as any).camelCase() + '.js');
         } else {
@@ -61,7 +61,7 @@ class MakeSeederCommand extends GeneratorCommand {
      * @param {*} $name
      * @returns {any}
      */
-    qualifyClass($name: string) {
+    public qualifyClass($name: string) {
         return $name;
     }
 }

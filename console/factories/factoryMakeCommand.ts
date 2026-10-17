@@ -9,15 +9,15 @@ import GeneratorCommand from '@ostro/console/generatorCommand';
 class FactoryMakeCommand extends GeneratorCommand {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'make:factory';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Create a new model factory';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('-m, --model [model]', 'The name of the model'),
         this.createOption('--force', 'Force the operation to run when in production'),
@@ -30,7 +30,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * getStub method.
      * @returns {any}
      */
-    getStub() {
+    public getStub() {
         return this.resolveStubPath('/stubs/factory.stub');
     }
 
@@ -39,7 +39,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @param {*} $stub
      * @returns {any}
      */
-    resolveStubPath($stub: any) {
+    public resolveStubPath($stub: any) {
         let $customPath = this.$app.basePath(trim($stub, '/'))
         return this.$file.exists($customPath).then($exists => ($exists ? $customPath : path.join(__dirname, $stub)))
     }
@@ -50,7 +50,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @param {*} $name
      * @returns {any}
      */
-    async buildClass($name: string) {
+    public async buildClass($name: string) {
         let $factory = $name.replace('Factory', '');
         $factory = this.getFileName($factory)
         let $namespaceModel = this.option('model') ?
@@ -80,7 +80,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @param {*} $name
      * @returns {any}
      */
-    async getPath($name: string) {
+    public async getPath($name: string) {
         $name = ($name as any).finish('Factory').toString();
 
         return this.$app.databasePath('factories/' + (this.getFileName($name) as any).camelCase() + '.js');
@@ -93,7 +93,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @param {*} $name
      * @returns {any}
      */
-    async guessModelName($name: string) {
+    public async guessModelName($name: string) {
         if ((String as any).endsWith($name, 'Factory')) {
             $name = $name.substr(0, -7);
         }

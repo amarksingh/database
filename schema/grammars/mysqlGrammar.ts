@@ -11,7 +11,7 @@ class MysqlGrammar extends Grammar {
      * @param tables - Table names array.
      * @returns Drop SQL string.
      */
-    compileDropAllTables(tables: string[]): string {
+    public compileDropAllTables(tables: string[]): string {
         return `DROP TABLE IF EXISTS ${tables.join(', ')}; `;
     }
 }

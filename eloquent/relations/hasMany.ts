@@ -10,7 +10,7 @@ class HasMany extends HasOneOrMany {
      * getResults method.
      * @returns {any}
      */
-    getResults() {
+    public getResults() {
         return !is_null(this.getParentKey()) ?
             this.$query.get() :
             this.$related.newCollection();
@@ -22,7 +22,7 @@ class HasMany extends HasOneOrMany {
      * @param {*} $relation
      * @returns {any}
      */
-    initRelation($models: any, $relation: any) {
+    public initRelation($models: any, $relation: any) {
         for (let $model of $models) {
             $model.setRelation($relation, this.$related.newCollection());
         }
@@ -37,7 +37,7 @@ class HasMany extends HasOneOrMany {
      * @param {*} $relation
      * @returns {any}
      */
-    match($models: any, $results: any, $relation: any) {
+    public match($models: any, $results: any, $relation: any) {
         return this.matchMany($models, $results, $relation);
     }
 }

@@ -12,7 +12,7 @@ class SqlServerConnector {
      * @param prefix - Table prefix.
      * @returns Knex client instance.
      */
-    connect(config: Record<string, any>, database: any, prefix: any): any {
+    public connect(config: Record<string, any>, database: any, prefix: any): any {
         config.port = Number(config.port);
         return Knex({
             client: 'mssql',

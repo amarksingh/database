@@ -73,7 +73,7 @@ class Connection extends Macroable {
      * useDefaultQueryGrammar method.
      * @returns {any}
      */
-    useDefaultQueryGrammar() {
+    public useDefaultQueryGrammar() {
         this.$queryGrammar = this.getDefaultQueryGrammar();
     }
 
@@ -81,7 +81,7 @@ class Connection extends Macroable {
      * getDefaultQueryGrammar method.
      * @returns {any}
      */
-    getDefaultQueryGrammar() {
+    public getDefaultQueryGrammar() {
         let $grammar = new QueryGrammar();
         $grammar.setConnection(this);
         return $grammar;
@@ -91,7 +91,7 @@ class Connection extends Macroable {
      * useDefaultSchemaGrammar method.
      * @returns {any}
      */
-    useDefaultSchemaGrammar() {
+    public useDefaultSchemaGrammar() {
         this.$schemaGrammar = this.getDefaultSchemaGrammar();
     }
 
@@ -99,7 +99,7 @@ class Connection extends Macroable {
      * getDefaultSchemaGrammar method.
      * @returns {any}
      */
-    getDefaultSchemaGrammar() {
+    public getDefaultSchemaGrammar() {
         //
     }
 
@@ -107,7 +107,7 @@ class Connection extends Macroable {
      * useDefaultPostProcessor method.
      * @returns {any}
      */
-    useDefaultPostProcessor() {
+    public useDefaultPostProcessor() {
         this.$postProcessor = this.getDefaultPostProcessor();
     }
 
@@ -115,7 +115,7 @@ class Connection extends Macroable {
      * getDefaultPostProcessor method.
      * @returns {any}
      */
-    getDefaultPostProcessor() {
+    public getDefaultPostProcessor() {
         return new Processor;
     }
 
@@ -123,7 +123,7 @@ class Connection extends Macroable {
      * getSchemaBuilder method.
      * @returns {any}
      */
-    getSchemaBuilder() {
+    public getSchemaBuilder() {
         if (is_null(this.$schemaGrammar)) {
             this.useDefaultSchemaGrammar();
         }
@@ -137,7 +137,7 @@ class Connection extends Macroable {
      * @param {*} $as
      * @returns {any}
      */
-    table($table: string, $as: any) {
+    public table($table: string, $as: any) {
         return this.query().from($table, $as);
     }
 
@@ -145,7 +145,7 @@ class Connection extends Macroable {
      * query method.
      * @returns {any}
      */
-    query() {
+    public query() {
         return new QueryBuilder(
             this, this.getQueryGrammar(), this.$connection
         );
@@ -156,7 +156,7 @@ class Connection extends Macroable {
      * @param {*} callback
      * @returns {any}
      */
-    transaction(callback: Function) {
+    public transaction(callback: Function) {
         return this.$connection.transaction(callback);
     }
 
@@ -168,7 +168,7 @@ class Connection extends Macroable {
      * @param {*} $useReadPdo
      * @returns {any}
      */
-    async select($query: any, $bindings: any[] = [], $useReadPdo: boolean = true) {
+    public async select($query: any, $bindings: any[] = [], $useReadPdo: boolean = true) {
         return this.run($query, $bindings);
     }
 
@@ -180,7 +180,7 @@ class Connection extends Macroable {
      * @param {*} $useReadPdo
      * @returns {any}
      */
-    async selectOne($query: any, $bindings: any[] = [], $useReadPdo: boolean = true) {
+    public async selectOne($query: any, $bindings: any[] = [], $useReadPdo: boolean = true) {
         const $records = await this.select($query, $bindings, $useReadPdo);
 
         return Array.isArray($records) ? $records[0] : $records;
@@ -192,7 +192,7 @@ class Connection extends Macroable {
      * @param {*} $bindings
      * @returns {any}
      */
-    insert($query: any, $bindings: any[] = []) {
+    public insert($query: any, $bindings: any[] = []) {
         return this.statement($query, $bindings);
     }
 
@@ -203,7 +203,7 @@ class Connection extends Macroable {
      * @param {*} $bindings
      * @returns {any}
      */
-    update($query: any, $bindings: any[] = []) {
+    public update($query: any, $bindings: any[] = []) {
         return this.affectingStatement($query, $bindings);
     }
 
@@ -214,7 +214,7 @@ class Connection extends Macroable {
      * @param {*} $bindings
      * @returns {any}
      */
-    delete($query: any, $bindings: any[] = []) {
+    public delete($query: any, $bindings: any[] = []) {
         return this.affectingStatement($query, $bindings);
     }
 
@@ -225,7 +225,7 @@ class Connection extends Macroable {
      * @param {*} $bindings
      * @returns {any}
      */
-    statement($query: any, $bindings: any[] = []) {
+    public statement($query: any, $bindings: any[] = []) {
         return this.run($query, $bindings);
     }
 
@@ -235,7 +235,7 @@ class Connection extends Macroable {
      * @param {*} $bindings
      * @returns {any}
      */
-    affectingStatement($query: any, $bindings: any[] = []) {
+    public affectingStatement($query: any, $bindings: any[] = []) {
         return this.run($query, $bindings).then(res => {
             return res
         });
@@ -249,7 +249,7 @@ class Connection extends Macroable {
      * @param {*} $callback
      * @returns {any}
      */
-    async run($query: any, $bindings: any[], $callback: any = null) {
+    public async run($query: any, $bindings: any[], $callback: any = null) {
         for (let $beforeExecutingCallback of this.$beforeExecutingCallbacks) {
             $beforeExecutingCallback($query, $bindings, this);
         }
@@ -271,7 +271,7 @@ class Connection extends Macroable {
      * reconnect method.
      * @returns {any}
      */
-    reconnect() {
+    public reconnect() {
         if (is_callable(this.$reconnector)) {
             return this.$reconnector(this);
         }
@@ -283,7 +283,7 @@ class Connection extends Macroable {
      * reconnectIfMissingConnection method.
      * @returns {any}
      */
-    reconnectIfMissingConnection() {
+    public reconnectIfMissingConnection() {
         if (is_null(this.$connection)) {
             this.reconnect();
         }
@@ -294,7 +294,7 @@ class Connection extends Macroable {
      * @param {*} $callback
      * @returns {any}
      */
-    beforeExecuting($callback: Function) {
+    public beforeExecuting($callback: Function) {
         this.$beforeExecutingCallbacks.push($callback);
         return this;
     }
@@ -304,7 +304,7 @@ class Connection extends Macroable {
      * @param {*} $value
      * @returns {any}
      */
-    raw($value: any, ...args: any[]) {
+    public raw($value: any, ...args: any[]) {
         return this.$connection.raw($value, ...args);
     }
 
@@ -313,7 +313,7 @@ class Connection extends Macroable {
      * @param {*} $reconnector
      * @returns {any}
      */
-    setReconnector($reconnector: any) {
+    public setReconnector($reconnector: any) {
         this.$reconnector = $reconnector;
 
         return this;
@@ -323,7 +323,7 @@ class Connection extends Macroable {
      * getName method.
      * @returns {any}
      */
-    getName() {
+    public getName() {
         return this.getConfig('name');
     }
 
@@ -333,7 +333,7 @@ class Connection extends Macroable {
      * @param {*} $default
      * @returns {any}
      */
-    getConfig($key: string, $default: any = null) {
+    public getConfig($key: string, $default: any = null) {
         return ObjectGet(this.$config, $key, $default);
     }
 
@@ -341,7 +341,7 @@ class Connection extends Macroable {
      * getDriverName method.
      * @returns {any}
      */
-    getDriverName() {
+    public getDriverName() {
         return this.getConfig('driver');
     }
 
@@ -349,7 +349,7 @@ class Connection extends Macroable {
      * getQueryGrammar method.
      * @returns {any}
      */
-    getQueryGrammar() {
+    public getQueryGrammar() {
         return this.$queryGrammar;
     }
 
@@ -358,7 +358,7 @@ class Connection extends Macroable {
      * @param {*} $grammar
      * @returns {any}
      */
-    setQueryGrammar($grammar: any) {
+    public setQueryGrammar($grammar: any) {
         this.$queryGrammar = $grammar;
 
         return this;
@@ -368,7 +368,7 @@ class Connection extends Macroable {
      * getSchemaGrammar method.
      * @returns {any}
      */
-    getSchemaGrammar() {
+    public getSchemaGrammar() {
         return this.$schemaGrammar;
     }
 
@@ -377,7 +377,7 @@ class Connection extends Macroable {
      * @param {*} $grammar
      * @returns {any}
      */
-    setSchemaGrammar($grammar: any) {
+    public setSchemaGrammar($grammar: any) {
         this.$schemaGrammar = $grammar;
 
         return this;
@@ -388,7 +388,7 @@ class Connection extends Macroable {
      * @param {*} $processor
      * @returns {any}
      */
-    setPostProcessor($processor: any) {
+    public setPostProcessor($processor: any) {
         this.$postProcessor = $processor;
         return this;
     }
@@ -397,7 +397,7 @@ class Connection extends Macroable {
      * getPostProcessor method.
      * @returns {any}
      */
-    getPostProcessor() {
+    public getPostProcessor() {
         return this.$postProcessor;
     }
 
@@ -405,7 +405,7 @@ class Connection extends Macroable {
      * getDatabaseName method.
      * @returns {any}
      */
-    getDatabaseName() {
+    public getDatabaseName() {
         return this.$database;
     }
 
@@ -414,7 +414,7 @@ class Connection extends Macroable {
      * @param {*} $readConnection
      * @returns {any}
      */
-    setReadConnection($readConnection: any) {
+    public setReadConnection($readConnection: any) {
         this.$readConnection = $readConnection;
         return this;
     }
@@ -423,7 +423,7 @@ class Connection extends Macroable {
      * getReadConnection method.
      * @returns {any}
      */
-    getReadConnection() {
+    public getReadConnection() {
         if (this.$readConnection) {
             return typeof this.$readConnection === 'function' ? this.$readConnection(this.$database, this.$tablePrefix) : this.$readConnection;
         }
@@ -435,7 +435,7 @@ class Connection extends Macroable {
      * @param {*} $database
      * @returns {any}
      */
-    setDatabaseName($database: any) {
+    public setDatabaseName($database: any) {
         this.$database = $database;
 
         return this;
@@ -445,7 +445,7 @@ class Connection extends Macroable {
      * getTablePrefix method.
      * @returns {any}
      */
-    getTablePrefix() {
+    public getTablePrefix() {
         return this.$tablePrefix;
     }
 
@@ -454,7 +454,7 @@ class Connection extends Macroable {
      * @param {*} $prefix
      * @returns {any}
      */
-    setTablePrefix($prefix: any) {
+    public setTablePrefix($prefix: any) {
         this.$tablePrefix = $prefix;
 
         this.getQueryGrammar().setTablePrefix($prefix);
@@ -467,7 +467,7 @@ class Connection extends Macroable {
      * @param {*} $grammar
      * @returns {any}
      */
-    withTablePrefix($grammar: any) {
+    public withTablePrefix($grammar: any) {
         $grammar.setTablePrefix(this.$tablePrefix);
 
         return $grammar;
@@ -478,7 +478,7 @@ class Connection extends Macroable {
      * @param {*} $table
      * @returns {any}
      */
-    getColumnListing($table: string) {
+    public getColumnListing($table: string) {
         return this.getSchemaBuilder().getColumnListing($table);
     }
 
@@ -487,7 +487,7 @@ class Connection extends Macroable {
      * disconnect method.
      * @returns {any}
      */
-    disconnect() {
+    public disconnect() {
         if (this.$disconnectTimer) {
             this.$disconnectTimer.clear();
         }
@@ -501,7 +501,7 @@ class Connection extends Macroable {
      * initiateAutoCloseConnection method.
      * @returns {any}
      */
-    initiateAutoCloseConnection() {
+    public initiateAutoCloseConnection() {
         let connectionCount = 0;
         let closeTime = this.$config['connectionCloseTime'] || 5000;
         let destroy = this.$config['destroy'] || true;

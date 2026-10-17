@@ -9,7 +9,7 @@ class InteractsWithDictionary {
      * @param {*} $attribute
      * @returns {any}
      */
-    getDictionaryKey($attribute: string) {
+    public getDictionaryKey($attribute: string) {
         if ($attribute != null && is_object($attribute)) {
             if (typeof $attribute.toString === 'function' && $attribute.toString !== Object.prototype.toString) {
                 return $attribute.toString();

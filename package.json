@@ -51,5 +51,9 @@
   "bugs": {
     "url": "https://github.com/ostrojs/database/issues"
   },
-  "homepage": "https://github.com/ostrojs/database#readme"
+  "homepage": "https://github.com/ostrojs/database#readme",
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "@types/node": "^22.0.0"
+  }
 }

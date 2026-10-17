@@ -18,15 +18,15 @@ class CreateMigration extends BaseCommand {
         this.$file = file;
     }
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'migrate';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'migrate to database';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--database=', 'The database connection to use'),
         this.createOption('--force', 'Force the operation to run when in production'),
@@ -43,7 +43,7 @@ class CreateMigration extends BaseCommand {
      * handle method.
      * @returns {any}
      */
-    handle() {
+    public handle() {
         return this.$migrator.usingConnection(this.input.option('database')).then(($connection) => {
             return this.prepareDatabase().then(success => {
                 return this.$migrator.setOutput(this.output)
@@ -66,7 +66,7 @@ class CreateMigration extends BaseCommand {
      * prepareDatabase method.
      * @returns {any}
      */
-    prepareDatabase() {
+    public prepareDatabase() {
         return this.$migrator.repositoryExists().then(exists => {
             if (!exists) {
                 return this.callCommand('migrate:install', (Object as any).filter({
@@ -86,7 +86,7 @@ class CreateMigration extends BaseCommand {
      * loadSchemaState method.
      * @returns {any}
      */
-    loadSchemaState() {
+    public loadSchemaState() {
         let $connection = this.$migrator.resolveConnection(this.input.option('database'));
 
         return this.schemaPath($connection).then($path => {
@@ -106,7 +106,7 @@ class CreateMigration extends BaseCommand {
      * @param {*} $connection
      * @returns {any}
      */
-    schemaPath($connection: any) {
+    public schemaPath($connection: any) {
         if (this.input.option('schema-path')) {
             return this.input.option('schema-path');
         }

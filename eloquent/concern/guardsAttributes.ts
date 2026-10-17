@@ -16,7 +16,7 @@ class GuardsAttributes {
      * getFillable method.
      * @returns {any}
      */
-    getFillable() {
+    public getFillable() {
         return this.$fillable;
     }
 
@@ -25,7 +25,7 @@ class GuardsAttributes {
      * @param {*} $values
      * @returns {any}
      */
-    fillableData($values: any) {
+    public fillableData($values: any) {
         const datas = [];
         if (!Array.isArray($values)) {
             $values = [$values]
@@ -48,7 +48,7 @@ class GuardsAttributes {
      * @param {*} $fillable
      * @returns {any}
      */
-    fillable($fillable: any) {
+    public fillable($fillable: any) {
         this.$fillable = $fillable;
 
         return this;
@@ -59,7 +59,7 @@ class GuardsAttributes {
      * @param {*} $fillable
      * @returns {any}
      */
-    mergeFillable($fillable: any) {
+    public mergeFillable($fillable: any) {
         this.$fillable = this.$fillable.concat($fillable);
 
         return this;
@@ -69,7 +69,7 @@ class GuardsAttributes {
      * getGuarded method.
      * @returns {any}
      */
-    getGuarded() {
+    public getGuarded() {
         return (this.$guarded as any) === false ? [] :
             this.$guarded;
     }
@@ -79,7 +79,7 @@ class GuardsAttributes {
      * @param {*} $guarded
      * @returns {any}
      */
-    guard($guarded: any) {
+    public guard($guarded: any) {
         this.$guarded = $guarded;
 
         return this;
@@ -90,7 +90,7 @@ class GuardsAttributes {
      * @param {*} $guarded
      * @returns {any}
      */
-    mergeGuarded($guarded: any) {
+    public mergeGuarded($guarded: any) {
         this.$guarded = this.$guarded.concat($guarded);
 
         return this;
@@ -101,7 +101,7 @@ class GuardsAttributes {
      * @param {*} $state
      * @returns {any}
      */
-    unguard($state: boolean = true) {
+    public unguard($state: boolean = true) {
         (this.constructor as any).$unguarded = $state;
     }
 
@@ -109,7 +109,7 @@ class GuardsAttributes {
      * reguard method.
      * @returns {any}
      */
-    reguard() {
+    public reguard() {
         (this.constructor as any).$unguarded = false;
     }
 
@@ -117,7 +117,7 @@ class GuardsAttributes {
      * isUnguarded method.
      * @returns {any}
      */
-    isUnguarded() {
+    public isUnguarded() {
         return (this.constructor as any).$unguarded;
     }
 
@@ -126,7 +126,7 @@ class GuardsAttributes {
      * @param {*} $callback
      * @returns {any}
      */
-    unguarded($callback: Function) {
+    public unguarded($callback: Function) {
         if ((this.constructor as any).$unguarded) {
             return $callback();
         }
@@ -145,7 +145,7 @@ class GuardsAttributes {
      * @param {*} $key
      * @returns {any}
      */
-    isFillable($key: string) {
+    public isFillable($key: string) {
         if ((this.constructor as any).$unguarded) {
             return true;
         }
@@ -168,7 +168,7 @@ class GuardsAttributes {
      * @param {*} $key
      * @returns {any}
      */
-    isGuarded($key: string) {
+    public isGuarded($key: string) {
         if (empty(this.getGuarded())) {
             return false;
         }
@@ -185,7 +185,7 @@ class GuardsAttributes {
      * @param {*} $key
      * @returns {any}
      */
-    async isGuardableColumn($key: string) {
+    public async isGuardableColumn($key: string) {
         const className = get_class_name(this);
         if (!isset((this.constructor as any).$guardableColumns[className])) {
             (this.constructor as any).$guardableColumns[className] = await this.getConnection()
@@ -199,7 +199,7 @@ class GuardsAttributes {
      * totallyGuarded method.
      * @returns {any}
      */
-    totallyGuarded() {
+    public totallyGuarded() {
         return count(this.getFillable()) === 0 && this.getGuarded().toString() === ['*'].toString();
     }
 
@@ -208,7 +208,7 @@ class GuardsAttributes {
      * @param {*} $attributes
      * @returns {any}
      */
-    fillableFromArray($attributes: Record<string, any>) {
+    public fillableFromArray($attributes: Record<string, any>) {
         if (count(this.getFillable()) > 0 && !(this.constructor as any).$unguarded) {
             return intersection(this.getFillable(), Object.keys($attributes));
         }

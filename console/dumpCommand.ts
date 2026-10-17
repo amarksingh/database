@@ -9,15 +9,15 @@ import Command from '@ostro/console/command';
 class DumpCommand extends Command {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'schema:dump';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Dump the given database schema';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--database [database]', 'The database connection to use'),
         this.createOption('--path', 'The path where the schema dump file should be stored'),
@@ -41,7 +41,7 @@ class DumpCommand extends Command {
      * @async
      * @returns {any}
      */
-    async handle() {
+    public async handle() {
         let $database = this.input.getOption('database')
         let $connection = this.$connection.connection($database);
         let $path = this.path($connection)
@@ -65,7 +65,7 @@ class DumpCommand extends Command {
      * @param {*} $connection
      * @returns {any}
      */
-    schemaState($connection: any) {
+    public schemaState($connection: any) {
         return $connection.getSchemaState()
             .withMigrationTable($connection.getTablePrefix() + config.get('database.migrations', 'migrations'))
             .handleOutputUsing(function ($type, $buffer) {
@@ -78,7 +78,7 @@ class DumpCommand extends Command {
      * @param {*} $connection
      * @returns {any}
      */
-    path($connection: any) {
+    public path($connection: any) {
         return tap(this.option('path') || database_path('schema/' + $connection.getName() + '-schema.dump'), async ($path) => {
             await this.$file.ensureDirectoryExists(dirname($path));
         });

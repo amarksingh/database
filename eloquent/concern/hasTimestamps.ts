@@ -12,7 +12,7 @@ class HasTimestamps {
      * touch method.
      * @returns {any}
      */
-    touch() {
+    public touch() {
         if (!this.usesTimestamps()) {
             return false;
         }
@@ -26,7 +26,7 @@ class HasTimestamps {
      * updateTimestamps method.
      * @returns {any}
      */
-    updateTimestamps() {
+    public updateTimestamps() {
         let $time = this.freshTimestampString();
 
         let $updatedAtColumn = this.getUpdatedAtColumn();
@@ -47,7 +47,7 @@ class HasTimestamps {
      * @param {*} $value
      * @returns {any}
      */
-    setCreatedAt($value: any) {
+    public setCreatedAt($value: any) {
         this.setAttribute(this.getCreatedAtColumn(), $value)
         return this;
     }
@@ -57,7 +57,7 @@ class HasTimestamps {
      * @param {*} $value
      * @returns {any}
      */
-    setUpdatedAt($value: any) {
+    public setUpdatedAt($value: any) {
         this.setAttribute(this.getUpdatedAtColumn(), $value)
         return this;
     }
@@ -66,7 +66,7 @@ class HasTimestamps {
      * freshTimestamp method.
      * @returns {any}
      */
-    freshTimestamp() {
+    public freshTimestamp() {
         return DateTime.now();
     }
 
@@ -74,7 +74,7 @@ class HasTimestamps {
      * freshTimestampString method.
      * @returns {any}
      */
-    freshTimestampString() {
+    public freshTimestampString() {
         return this.fromDateTime(this.freshTimestamp());
     }
 
@@ -83,7 +83,7 @@ class HasTimestamps {
      * @param {*} time
      * @returns {any}
      */
-    fromDateTime(time: any) {
+    public fromDateTime(time: any) {
         return time.format(this.$dateFormat);
     }
 
@@ -91,7 +91,7 @@ class HasTimestamps {
      * usesTimestamps method.
      * @returns {any}
      */
-    usesTimestamps() {
+    public usesTimestamps() {
         return this.$timestamps;
     }
 
@@ -99,7 +99,7 @@ class HasTimestamps {
      * getCreatedAtColumn method.
      * @returns {any}
      */
-    getCreatedAtColumn() {
+    public getCreatedAtColumn() {
         return this.CREATED_AT;
     }
 
@@ -107,7 +107,7 @@ class HasTimestamps {
      * getUpdatedAtColumn method.
      * @returns {any}
      */
-    getUpdatedAtColumn() {
+    public getUpdatedAtColumn() {
         return this.UPDATED_AT;
     }
 
@@ -115,7 +115,7 @@ class HasTimestamps {
      * getQualifiedCreatedAtColumn method.
      * @returns {any}
      */
-    getQualifiedCreatedAtColumn() {
+    public getQualifiedCreatedAtColumn() {
         return this.qualifyColumn(this.getCreatedAtColumn());
     }
 
@@ -123,7 +123,7 @@ class HasTimestamps {
      * getQualifiedUpdatedAtColumn method.
      * @returns {any}
      */
-    getQualifiedUpdatedAtColumn() {
+    public getQualifiedUpdatedAtColumn() {
         return this.qualifyColumn(this.getUpdatedAtColumn());
     }
 
@@ -131,7 +131,7 @@ class HasTimestamps {
      * isIgnoringTouch method.
      * @returns {any}
      */
-    isIgnoringTouch() {
+    public isIgnoringTouch() {
         return false;
     }
 }

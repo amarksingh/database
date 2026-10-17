@@ -14,17 +14,17 @@ class DatabaseQuery extends Command {
         this.$resolver = resolver;
     }
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'db:query';
     }
 
-    get $arguments(): any[] {
+    public get $arguments(): any[] {
         return [
         this.createArgument('<query>', 'database query string').required()
     ];
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'database query';
     }
 
@@ -32,7 +32,7 @@ class DatabaseQuery extends Command {
      * handle method.
      * @returns {any}
      */
-    handle() {
+    public handle() {
         return this.$resolver.connection().raw(this.input.argument('query')).then(res => {
             console.log(res)
         })

@@ -12,7 +12,7 @@ class SupportsDefaultModels {
      * @param {*} $callback
      * @returns {any}
      */
-    withDefault($callback: boolean = true) {
+    public withDefault($callback: boolean = true) {
         this.$withDefault = $callback;
 
         return this;
@@ -23,7 +23,7 @@ class SupportsDefaultModels {
      * @param {*} $parent
      * @returns {any}
      */
-    getDefaultFor($parent: any) {
+    public getDefaultFor($parent: any) {
         if (!this.$withDefault) {
             return;
         }

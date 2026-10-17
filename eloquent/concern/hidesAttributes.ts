@@ -13,7 +13,7 @@ class HidesAttributes {
      * getHidden method.
      * @returns {any}
      */
-    getHidden() {
+    public getHidden() {
         return this.$hidden;
     }
 
@@ -22,7 +22,7 @@ class HidesAttributes {
      * @param {*} $hidden
      * @returns {any}
      */
-    setHidden($hidden: any) {
+    public setHidden($hidden: any) {
         this.$hidden = $hidden;
 
         return this;
@@ -32,7 +32,7 @@ class HidesAttributes {
      * getVisible method.
      * @returns {any}
      */
-    getVisible() {
+    public getVisible() {
         return this.$visible;
     }
 
@@ -41,7 +41,7 @@ class HidesAttributes {
      * @param {*} $visible
      * @returns {any}
      */
-    setVisible($visible: any) {
+    public setVisible($visible: any) {
         this.$visible = $visible;
         return this;
     }
@@ -51,7 +51,7 @@ class HidesAttributes {
      * @param {*} $attributes
      * @returns {any}
      */
-    makeVisible($attributes: Record<string, any>) {
+    public makeVisible($attributes: Record<string, any>) {
         $attributes = Array.isArray($attributes) ? $attributes : Array.from(arguments);
 
         this.$hidden = difference(this.$hidden, $attributes);
@@ -69,7 +69,7 @@ class HidesAttributes {
      * @param {*} $attributes
      * @returns {any}
      */
-    makeVisibleIf($condition: any, $attributes: Record<string, any>) {
+    public makeVisibleIf($condition: any, $attributes: Record<string, any>) {
         return value($condition, this) ? this.makeVisible($attributes) : this;
     }
 
@@ -78,7 +78,7 @@ class HidesAttributes {
      * @param {*} $attributes
      * @returns {any}
      */
-    makeHidden($attributes: Record<string, any>) {
+    public makeHidden($attributes: Record<string, any>) {
         $attributes = Array.isArray($attributes) ? $attributes : Array.from(arguments);
         this.$hidden = union(this.$hidden, $attributes);
 
@@ -91,7 +91,7 @@ class HidesAttributes {
      * @param {*} $attributes
      * @returns {any}
      */
-    makeHiddenIf($condition: any, $attributes: Record<string, any>) {
+    public makeHiddenIf($condition: any, $attributes: Record<string, any>) {
         return value($condition, this) ? this.makeHidden($attributes) : this;
     }
 }

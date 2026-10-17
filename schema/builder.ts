@@ -6,17 +6,17 @@ import LogicException from '@ostro/support/exceptions/logicException';
 class Builder {
 
     /* c8 ignore next */
-    $connection: any;
+    public $connection: any;
 
-    $grammar: any;
+    public $grammar: any;
 
-    $resolver: any;
+    public $resolver: any;
 
-    $defaultStringLength: number = 255;
+    public $defaultStringLength: number = 255;
 
-    $defaultMorphKeyType: string = 'int';
+    public $defaultMorphKeyType: string = 'int';
 
-    $alwaysUsesNativeSchemaOperationsIfPossible: boolean = false;
+    public $alwaysUsesNativeSchemaOperationsIfPossible: boolean = false;
 
     /**
      * Create a new schema builder instance.
@@ -28,7 +28,7 @@ class Builder {
         this.$grammar = connection.getSchemaGrammar();
     }
 
-    get $schema(): any {
+    public get $schema(): any {
         return this.$connection.$connection.schema;
     }
 
@@ -39,7 +39,7 @@ class Builder {
      * @param cb - Blueprint callback.
      * @returns Promise resolving to created table or undefined.
      */
-    create(table: string, cb: any): Promise<any> {
+    public create(table: string, cb: any): Promise<any> {
         return this.has(table).then((res: boolean) => {
             if (!res) {
                 return this.createTable(table, cb);
@@ -53,7 +53,7 @@ class Builder {
      * @param args - Arguments forwarded to knex schema createTable.
      * @returns Knex schema builder promise.
      */
-    createTable(...args: any[]): any {
+    public createTable(...args: any[]): any {
         return this.$schema.createTable(...args);
     }
 
@@ -63,7 +63,7 @@ class Builder {
      * @param args - Arguments forwarded to knex schema createTableIfNotExists.
      * @returns Knex schema builder promise.
      */
-    createTableIfNotExists(...args: any[]): any {
+    public createTableIfNotExists(...args: any[]): any {
         return this.$schema.createTableIfNotExists(...args);
     }
 
@@ -73,7 +73,7 @@ class Builder {
      * @param args - Arguments forwarded to dropTable.
      * @returns Knex schema builder promise.
      */
-    drop(...args: any[]): any {
+    public drop(...args: any[]): any {
         return this.$schema.dropTable(...args);
     }
 
@@ -83,7 +83,7 @@ class Builder {
      * @param args - Arguments forwarded to knex schema table.
      * @returns Knex schema builder promise.
      */
-    table(...args: any[]): any {
+    public table(...args: any[]): any {
         return this.$schema.table(...args);
     }
 
@@ -93,7 +93,7 @@ class Builder {
      * @param args - Table name arguments.
      * @returns Promise resolving to boolean.
      */
-    has(...args: any[]): any {
+    public has(...args: any[]): any {
         return this.hasTable(...args);
     }
 
@@ -103,7 +103,7 @@ class Builder {
      * @param args - Table name arguments.
      * @returns Promise resolving to boolean.
      */
-    hasTable(...args: any[]): any {
+    public hasTable(...args: any[]): any {
         return this.$schema.hasTable(...args);
     }
 
@@ -113,7 +113,7 @@ class Builder {
      * @param tableName - Name of table.
      * @returns Array of column names.
      */
-    async getColumnListing(tableName: string): Promise<string[]> {
+    public async getColumnListing(tableName: string): Promise<string[]> {
         const info = await this.$connection.table(tableName).columnInfo();
         return Object.keys(info);
     }
@@ -124,7 +124,7 @@ class Builder {
      * @param args - Arguments forwarded to alterTable.
      * @returns Knex schema builder promise.
      */
-    alter(...args: any[]): any {
+    public alter(...args: any[]): any {
         return this.$schema.alterTable(...args);
     }
 
@@ -134,7 +134,7 @@ class Builder {
      * @param args - Raw SQL statement arguments.
      * @returns Result of raw statement.
      */
-    raw(...args: any[]): any {
+    public raw(...args: any[]): any {
         return this.$schema.raw(...args);
     }
 
@@ -144,7 +144,7 @@ class Builder {
      * @param args - Raw schema arguments.
      * @returns Result of raw statement.
      */
-    statement(...args: any[]): any {
+    public statement(...args: any[]): any {
         return this.raw(...args);
     }
 
@@ -154,7 +154,7 @@ class Builder {
      * @param args - Arguments forwarded to dropTable.
      * @returns Knex schema builder promise.
      */
-    dropTable(...args: any[]): any {
+    public dropTable(...args: any[]): any {
         return this.$schema.dropTable(...args);
     }
 
@@ -164,7 +164,7 @@ class Builder {
      * @param args - Arguments forwarded to dropSchemaIfExists.
      * @returns Knex schema builder promise.
      */
-    dropSchemaIfExists(...args: any[]): any {
+    public dropSchemaIfExists(...args: any[]): any {
         return this.$schema.dropSchemaIfExists(...args);
     }
 
@@ -174,7 +174,7 @@ class Builder {
      * @param tableName - Table name to drop.
      * @returns Knex schema builder promise.
      */
-    dropIfExists(tableName: any, cascade?: any): any {
+    public dropIfExists(tableName: any, cascade?: any): any {
         return this.dropTableIfExists(tableName, cascade);
     }
 
@@ -184,7 +184,7 @@ class Builder {
      * @param args - Arguments forwarded to dropView.
      * @returns Knex schema builder promise.
      */
-    dropView(...args: any[]): any {
+    public dropView(...args: any[]): any {
         return this.$schema.dropView(...args);
     }
 
@@ -194,7 +194,7 @@ class Builder {
      * @param args - Arguments forwarded to dropViewIfExists.
      * @returns Knex schema builder promise.
      */
-    dropViewIfExists(...args: any[]): any {
+    public dropViewIfExists(...args: any[]): any {
         return this.$schema.dropViewIfExists(...args);
     }
 
@@ -204,7 +204,7 @@ class Builder {
      * @param args - Arguments forwarded to dropMaterializedView.
      * @returns Knex schema builder promise.
      */
-    dropMaterializedView(...args: any[]): any {
+    public dropMaterializedView(...args: any[]): any {
         return this.$schema.dropMaterializedView(...args);
     }
 
@@ -214,7 +214,7 @@ class Builder {
      * @param args - Arguments forwarded to renameView.
      * @returns Knex schema builder promise.
      */
-    renameView(...args: any[]): any {
+    public renameView(...args: any[]): any {
         return this.$schema.renameView(...args);
     }
 
@@ -224,7 +224,7 @@ class Builder {
      * @param args - Arguments forwarded to renameView.
      * @returns Knex schema builder promise.
      */
-    alterView(...args: any[]): any {
+    public alterView(...args: any[]): any {
         return this.$schema.renameView(...args);
     }
 
@@ -234,7 +234,7 @@ class Builder {
      * @param args - Arguments forwarded to renameTable.
      * @returns Knex schema builder promise.
      */
-    renameTable(...args: any[]): any {
+    public renameTable(...args: any[]): any {
         return this.$schema.renameTable(...args);
     }
 
@@ -244,7 +244,7 @@ class Builder {
      * @param args - Arguments forwarded to createView.
      * @returns Knex schema builder promise.
      */
-    createView(...args: any[]): any {
+    public createView(...args: any[]): any {
         return this.$schema.createView(...args);
     }
 
@@ -254,7 +254,7 @@ class Builder {
      * @param tableName - Table name to drop.
      * @returns Knex schema builder promise.
      */
-    dropTableIfExists(tableName: any, cascade?: any): any {
+    public dropTableIfExists(tableName: any, cascade?: any): any {
         return this.$schema.dropTableIfExists(tableName, cascade);
     }
 
@@ -264,7 +264,7 @@ class Builder {
      * @param args - Arguments forwarded to dropSchema.
      * @returns Knex schema builder promise.
      */
-    dropSchema(...args: any[]): any {
+    public dropSchema(...args: any[]): any {
         return this.$schema.dropSchema(...args);
     }
 
@@ -273,7 +273,7 @@ class Builder {
      *
      * @throws LogicException
      */
-    createDatabase(): never {
+    public createDatabase(): never {
         throw new LogicException('This database driver does not support creating databases.');
     }
 
@@ -282,7 +282,7 @@ class Builder {
      *
      * @throws LogicException
      */
-    dropDatabaseIfExists(): never {
+    public dropDatabaseIfExists(): never {
         throw new LogicException('This database driver does not support dropping databases.');
     }
 
@@ -291,7 +291,7 @@ class Builder {
      *
      * @throws LogicException
      */
-    getTypes(): never {
+    public getTypes(): never {
         throw new LogicException('This database driver does not support user-defined types.');
     }
 
@@ -300,7 +300,7 @@ class Builder {
      *
      * @throws LogicException
      */
-    getAllTables(): any {
+    public getAllTables(): any {
         throw new LogicException('This database driver does not support getting all tables.');
     }
 
@@ -309,7 +309,7 @@ class Builder {
      *
      * @throws LogicException
      */
-    dropAllTables(): any {
+    public dropAllTables(): any {
         throw new LogicException('This database driver does not support dropping all tables.');
     }
 
@@ -318,7 +318,7 @@ class Builder {
      *
      * @throws LogicException
      */
-    dropAllViews(): any {
+    public dropAllViews(): any {
         throw new LogicException('This database driver does not support dropping all views.');
     }
 
@@ -327,7 +327,7 @@ class Builder {
      *
      * @throws LogicException
      */
-    dropAllTypes(): any {
+    public dropAllTypes(): any {
         throw new LogicException('This database driver does not support dropping all types.');
     }
 }

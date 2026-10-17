@@ -11,7 +11,7 @@ class SqliteGrammar extends Grammar {
      * @param tables - Table names array.
      * @returns SQL query string.
      */
-    compileDropAllTables(tables: string[]): string {
+    public compileDropAllTables(tables: string[]): string {
         let sql: string = '';
         for (const table of tables) {
             sql += `DROP TABLE IF EXISTS ${table};`;

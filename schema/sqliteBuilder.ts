@@ -10,7 +10,7 @@ class SqliteBuilder extends Builder {
      *
      * @returns Query promise resolving to table names.
      */
-    getAllTables(): any {
+    public getAllTables(): any {
         return this.$connection.table('sqlite_master')
             .where('type', this.$connection.getConfig('schema', 'table'))
             .whereNot('name', 'like', 'sqlite_%')
@@ -22,7 +22,7 @@ class SqliteBuilder extends Builder {
      *
      * @returns Promise resolving when all tables are dropped.
      */
-    async dropAllTables(): Promise<void> {
+    public async dropAllTables(): Promise<void> {
         const tables: string[] = await this.getAllTables();
         if (tables.length) {
             let foreign_key: any = await this.statement('PRAGMA foreign_keys;');

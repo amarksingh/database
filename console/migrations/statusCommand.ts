@@ -6,15 +6,15 @@ import BaseCommand from './baseCommand';
 class StatusCommand extends BaseCommand {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'migrate:status';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Show the status of each migration';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--database [database]', 'The database connection to use'),
         this.createOption('--path', 'The path(s) to the migrations files to be executed'),
@@ -36,7 +36,7 @@ class StatusCommand extends BaseCommand {
      * handle method.
      * @returns {any}
      */
-    handle() {
+    public handle() {
         return this.$migrator.usingConnection(this.option('database')).then(async ($connection) => {
             if (!await this.$migrator.repositoryExists()) {
                 this.error('Migration table not found.');
@@ -62,7 +62,7 @@ class StatusCommand extends BaseCommand {
      * @param {*} $batches
      * @returns {any}
      */
-    async getStatusFor($ran: any, $batches: any) {
+    public async getStatusFor($ran: any, $batches: any) {
         return (await this.getAllMigrationFiles())
             .map(($migration) => {
                 let $migrationName = this.$migrator.getMigrationName($migration);
@@ -74,7 +74,7 @@ class StatusCommand extends BaseCommand {
      * getAllMigrationFiles method.
      * @returns {any}
      */
-    getAllMigrationFiles() {
+    public getAllMigrationFiles() {
         return this.$migrator.getMigrationFiles(this.getMigrationPaths());
     }
 

@@ -10,7 +10,7 @@ class SqlServerGrammar extends Grammar {
      *
      * @returns SQL query string.
      */
-    compileDropAllForeignKeys(): string {
+    public compileDropAllForeignKeys(): string {
         return `DECLARE @sql NVARCHAR(MAX) = N'';
             SELECT @sql += 'ALTER TABLE '
                 + QUOTENAME(OBJECT_SCHEMA_NAME(parent_object_id)) + '.' + + QUOTENAME(OBJECT_NAME(parent_object_id))
@@ -25,7 +25,7 @@ class SqlServerGrammar extends Grammar {
      *
      * @returns SQL query string.
      */
-    compileDropAllTables(): string {
+    public compileDropAllTables(): string {
         return `DECLARE @sql NVARCHAR(MAX) = N'';
 
             SELECT @sql += N'DROP TABLE ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(name) + ';'

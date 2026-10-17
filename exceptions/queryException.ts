@@ -4,9 +4,9 @@ import queryExceptionContract from '@ostro/contracts/exception/queryException';
  * Class queryException.
  */
 class queryException extends queryExceptionContract {
-    name: string;
-    code: string;
-    statusCode: number;
+    public name: string;
+    public code: string;
+    public statusCode: number;
     declare message: string;
 
     /**

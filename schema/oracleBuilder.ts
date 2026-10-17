@@ -10,7 +10,7 @@ class OracleSchema extends Builder {
      *
      * @returns Promise resolving when all tables are dropped.
      */
-    async dropAllTables(): Promise<any[]> {
+    public async dropAllTables(): Promise<any[]> {
         const tables: string[] = await this.getAllTables();
         const promises: Promise<any>[] = [];
         for (const name of tables) {
@@ -24,7 +24,7 @@ class OracleSchema extends Builder {
      *
      * @returns Query promise resolving to table names.
      */
-    getAllTables(): any {
+    public getAllTables(): any {
         return this.$connection.table('user_tables')
             .pluck('table_name');
     }

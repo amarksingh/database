@@ -5,7 +5,7 @@ import DetectsLostConnections from '../detectsLostConnections';
  */
 class Connector extends DetectsLostConnections {
 
-    $options: Record<string, any> = {};
+    public $options: Record<string, any> = {};
 
     /**
      * Create a new connection instance.
@@ -16,7 +16,7 @@ class Connector extends DetectsLostConnections {
      * @param options - Connection options.
      * @returns Connection instance.
      */
-    createConnection(dsn: any, configOrUser: any, optionsOrPass?: any, options: Record<string, any> = {}): any {
+    public createConnection(dsn: any, configOrUser: any, optionsOrPass?: any, options: Record<string, any> = {}): any {
         if (arguments.length === 4) {
             return new (global as any).PDO(dsn, configOrUser, optionsOrPass, options);
         }
@@ -45,7 +45,7 @@ class Connector extends DetectsLostConnections {
      * @param options - Options dictionary.
      * @returns Connection instance.
      */
-    tryAgainIfCausedByLostConnection(e: any, dsn: any, username: any, password: string, options: Record<string, any>): any {
+    public tryAgainIfCausedByLostConnection(e: any, dsn: any, username: any, password: string, options: Record<string, any>): any {
         if (this.causedByLostConnection(e)) {
             return this.createConnection(dsn, username, password, options);
         }
@@ -58,7 +58,7 @@ class Connector extends DetectsLostConnections {
      *
      * @returns Default options dictionary.
      */
-    getDefaultOptions(): Record<string, any> {
+    public getDefaultOptions(): Record<string, any> {
         return this.$options;
     }
 
@@ -67,7 +67,7 @@ class Connector extends DetectsLostConnections {
      *
      * @param options - Options dictionary.
      */
-    setDefaultOptions(options: Record<string, any>): void {
+    public setDefaultOptions(options: Record<string, any>): void {
         this.$options = options;
     }
 }

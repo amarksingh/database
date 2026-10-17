@@ -12,7 +12,7 @@ class DatabaseServiceProvider extends ServiceProvider {
      * register method.
      * @returns {any}
      */
-    register() {
+    public register() {
         this.registerProvider()
         this.bootModel()
     }
@@ -21,7 +21,7 @@ class DatabaseServiceProvider extends ServiceProvider {
      * registerProvider method.
      * @returns {any}
      */
-    registerProvider() {
+    public registerProvider() {
 
         // Model.clearBootedModels();
 
@@ -46,7 +46,7 @@ class DatabaseServiceProvider extends ServiceProvider {
      * bootModel method.
      * @returns {any}
      */
-    bootModel() {
+    public bootModel() {
         Model.setConnectionResolver(this.$app['db']);
     }
 
@@ -54,7 +54,7 @@ class DatabaseServiceProvider extends ServiceProvider {
      * boot method.
      * @returns {any}
      */
-    boot() {
+    public boot() {
         this.$app.db.registerCommands(__dirname + '/commands')
     }
 

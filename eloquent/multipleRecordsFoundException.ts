@@ -2,8 +2,8 @@
  * Class MultipleRecordsFoundException.
  */
 class MultipleRecordsFoundException extends Error {
-    code: string;
-    statusCode: number;
+    public code: string;
+    public statusCode: number;
 
     /**
      * Create a new instance.

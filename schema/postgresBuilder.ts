@@ -11,7 +11,7 @@ class PgSqlSchema extends Builder {
      *
      * @returns Query promise resolving to table names.
      */
-    getAllTables(): any {
+    public getAllTables(): any {
         return this.$connection.table('pg_tables')
             .where('schemaname', this.$connection.getConfig('schema', 'public'))
             .pluck('tablename');
@@ -22,7 +22,7 @@ class PgSqlSchema extends Builder {
      *
      * @returns Promise resolving when all tables are dropped.
      */
-    async dropAllTables(): Promise<void> {
+    public async dropAllTables(): Promise<void> {
         const tables: string[] = await this.getAllTables();
         await this.dropIfExists(tables);
     }
@@ -32,7 +32,7 @@ class PgSqlSchema extends Builder {
      *
      * @returns Raw query expression.
      */
-    compileGetTypes(): any {
+    public compileGetTypes(): any {
         return this.raw(`
                     SELECT
                         t.typname AS name,
@@ -74,7 +74,7 @@ class PgSqlSchema extends Builder {
      * @param tableNames - Array of table names.
      * @returns Result of raw drop statement.
      */
-    async dropIfExists(tableNames: any): Promise<any> {
+    public async dropIfExists(tableNames: any): Promise<any> {
         return this.raw('drop table if exists ' + tableNames.join(',') + ' cascade');
     }
 
@@ -83,7 +83,7 @@ class PgSqlSchema extends Builder {
      *
      * @returns Promise resolving when types are dropped.
      */
-    async dropAllTypes(): Promise<void> {
+    public async dropAllTypes(): Promise<void> {
         const types: any = await this.compileGetTypes();
         const $types: string[] = [];
         const $domains: string[] = [];

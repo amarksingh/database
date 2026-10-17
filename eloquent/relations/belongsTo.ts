@@ -40,7 +40,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @async
      * @returns {any}
      */
-    async getResults() {
+    public async getResults() {
         if (is_null(this.$child[this.$foreignKey])) {
             return this.getDefaultFor(this.$parent);
         }
@@ -52,7 +52,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * addConstraints method.
      * @returns {any}
      */
-    addConstraints() {
+    public addConstraints() {
         if ((this.constructor as any).$constraints) {
 
             let $table = this.$related.getTable();
@@ -66,7 +66,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @param {*} $models
      * @returns {any}
      */
-    addEagerConstraints($models: any) {
+    public addEagerConstraints($models: any) {
 
         let $key = this.$related.getTable() + '.' + this.$ownerKey;
         let $whereIn = this.whereInMethod(this.$related, this.$ownerKey);
@@ -78,7 +78,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @param {*} $models
      * @returns {any}
      */
-    getEagerModelKeys($models: any) {
+    public getEagerModelKeys($models: any) {
         let $keys = [];
 
         for (let $model of $models) {
@@ -99,7 +99,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @param {*} $relation
      * @returns {any}
      */
-    initRelation($models: any, $relation: any) {
+    public initRelation($models: any, $relation: any) {
         for (let $model of $models) {
             $model.setRelation($relation, this.getDefaultFor($model));
         }
@@ -114,7 +114,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @param {*} $relation
      * @returns {any}
      */
-    match($models: any, $results: any, $relation: any) {
+    public match($models: any, $results: any, $relation: any) {
         let $foreign = this.$foreignKey;
 
         let $owner = this.$ownerKey;
@@ -145,7 +145,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @param {*} $model
      * @returns {any}
      */
-    associate($model: any) {
+    public associate($model: any) {
         let $ownerKey = $model instanceof Model ? ($model as any).getAttribute(this.$ownerKey) : $model;
 
         this.$child.setAttribute(this.$foreignKey, $ownerKey);
@@ -163,7 +163,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * dissociate method.
      * @returns {any}
      */
-    dissociate() {
+    public dissociate() {
         this.$child.setAttribute(this.$foreignKey, null);
 
         return this.$child.setRelation(this.$relationName, null);
@@ -173,7 +173,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * disassociate method.
      * @returns {any}
      */
-    disassociate() {
+    public disassociate() {
         return this.dissociate();
     }
 
@@ -184,7 +184,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @param {*} $columns
      * @returns {any}
      */
-    getRelationExistenceQuery($query: any, $parentQuery: any, $columns: any[] = ['*']) {
+    public getRelationExistenceQuery($query: any, $parentQuery: any, $columns: any[] = ['*']) {
         if ($parentQuery.getTable() == $query.getTable()) {
             return this.getRelationExistenceQueryForSelfRelation($query, $parentQuery, $columns);
         }
@@ -201,7 +201,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @param {*} $columns
      * @returns {any}
      */
-    getRelationExistenceQueryForSelfRelation($query: any, $parentQuery: any, $columns: any[] = ['*']) {
+    public getRelationExistenceQueryForSelfRelation($query: any, $parentQuery: any, $columns: any[] = ['*']) {
         let $hash = this.getRelationCountHash()
         $query.select($columns).from(
             $query.getModel().getTable() + ' as ' + $hash
@@ -218,7 +218,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * relationHasIncrementingId method.
      * @returns {any}
      */
-    relationHasIncrementingId() {
+    public relationHasIncrementingId() {
         return this.$related.getIncrementing() && ['int', 'integer'].includes(this.$related.getKeyType());
     }
 
@@ -227,7 +227,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @param {*} $parent
      * @returns {any}
      */
-    newRelatedInstanceFor($parent: any) {
+    public newRelatedInstanceFor($parent: any) {
         return this.$related.newInstance();
     }
 
@@ -235,7 +235,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * getChild method.
      * @returns {any}
      */
-    getChild() {
+    public getChild() {
         return this.$child;
     }
 
@@ -243,7 +243,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * getForeignKeyName method.
      * @returns {any}
      */
-    getForeignKeyName() {
+    public getForeignKeyName() {
         return this.$foreignKey;
     }
 
@@ -251,7 +251,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * getQualifiedForeignKeyName method.
      * @returns {any}
      */
-    getQualifiedForeignKeyName() {
+    public getQualifiedForeignKeyName() {
         return this.$child.qualifyColumn(this.$foreignKey);
     }
 
@@ -259,7 +259,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * getParentKey method.
      * @returns {any}
      */
-    getParentKey() {
+    public getParentKey() {
         return this.$child[this.$foreignKey];
     }
 
@@ -267,7 +267,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * getOwnerKeyName method.
      * @returns {any}
      */
-    getOwnerKeyName() {
+    public getOwnerKeyName() {
         return this.$ownerKey;
     }
 
@@ -275,7 +275,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * getQualifiedOwnerKeyName method.
      * @returns {any}
      */
-    getQualifiedOwnerKeyName() {
+    public getQualifiedOwnerKeyName() {
         return this.$related.qualifyColumn(this.$ownerKey);
     }
 
@@ -284,7 +284,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * @param {*} $model
      * @returns {any}
      */
-    getRelatedKeyFrom($model: any) {
+    public getRelatedKeyFrom($model: any) {
         return $model.getAttribute ? $model.getAttribute(this.$ownerKey) : $model[this.$ownerKey];
     }
 
@@ -292,7 +292,7 @@ class BelongsTo extends implement(Relation, SupportsDefaultModels) {
      * getRelationName method.
      * @returns {any}
      */
-    getRelationName() {
+    public getRelationName() {
         return this.$relationName;
     }
 }

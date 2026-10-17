@@ -5,15 +5,15 @@ import Command from '@ostro/console/command';
 class InstallCommand extends Command {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'migrate:install';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Create the migration repository';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--database [database]', 'The database connection to use'),
     ];
@@ -33,7 +33,7 @@ class InstallCommand extends Command {
      * handle method.
      * @returns {any}
      */
-    handle() {
+    public handle() {
         this.$repository.setSource(this.input.getOption('database'));
 
         return this.$repository.createRepository().then(res => {

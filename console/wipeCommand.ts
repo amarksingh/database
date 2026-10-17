@@ -5,15 +5,15 @@ import Command from '@ostro/console/command';
 class WipeCommand extends Command {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'db:wipe';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Drop all tables, views, and types';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--database', 'The database connection to use'),
         this.createOption('--drop-views', 'Drop all tables and views'),
@@ -27,7 +27,7 @@ class WipeCommand extends Command {
      * @async
      * @returns {any}
      */
-    async handle() {
+    public async handle() {
         if (!this.input.getOption('force') && !await this.confirmToProceed()) {
             return 1;
         }
@@ -58,7 +58,7 @@ class WipeCommand extends Command {
      * @param {*} $database
      * @returns {any}
      */
-    dropAllTables($database: any) {
+    public dropAllTables($database: any) {
         return this.$app.db.connection($database)
             .getSchemaBuilder()
             .dropAllTables();
@@ -69,7 +69,7 @@ class WipeCommand extends Command {
      * @param {*} $database
      * @returns {any}
      */
-    dropAllViews($database: any) {
+    public dropAllViews($database: any) {
         return this.$app.db.connection($database)
             .getSchemaBuilder()
             .dropAllViews();
@@ -80,7 +80,7 @@ class WipeCommand extends Command {
      * @param {*} $database
      * @returns {any}
      */
-    dropAllTypes($database: any) {
+    public dropAllTypes($database: any) {
         return this.$app.db.connection($database)
             .getSchemaBuilder()
             .dropAllTypes();

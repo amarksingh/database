@@ -65,7 +65,7 @@ class Pivot {
      * @param {*} table
      * @returns {any}
      */
-    setTable(table: string) {
+    public setTable(table: string) {
         this.$table = table;
         return this;
     }
@@ -74,7 +74,7 @@ class Pivot {
      * getTable method.
      * @returns {any}
      */
-    getTable() {
+    public getTable() {
         return this.$table;
     }
 
@@ -84,7 +84,7 @@ class Pivot {
      * @param {*} exists
      * @returns {any}
      */
-    setRawAttributes(attributes: Record<string, any>, exists: boolean = false) {
+    public setRawAttributes(attributes: Record<string, any>, exists: boolean = false) {
         this.$attributes = Object.assign({}, attributes);
         this.$exists = exists;
         return this;
@@ -94,7 +94,7 @@ class Pivot {
      * getAttributes method.
      * @returns {any}
      */
-    getAttributes() {
+    public getAttributes() {
         return this.$attributes;
     }
 
@@ -103,7 +103,7 @@ class Pivot {
      * @param {*} attributes
      * @returns {any}
      */
-    fill(attributes: Record<string, any>) {
+    public fill(attributes: Record<string, any>) {
         Object.assign(this.$attributes, attributes);
         return this;
     }
@@ -112,7 +112,7 @@ class Pivot {
      * isDirty method.
      * @returns {any}
      */
-    isDirty() {
+    public isDirty() {
         return true;
     }
 
@@ -121,7 +121,7 @@ class Pivot {
      * @async
      * @returns {any}
      */
-    async save() {
+    public async save() {
         const db = Model.getConnectionResolver();
         if (db && this.$table) {
             if (this.$exists) {
@@ -139,7 +139,7 @@ class Pivot {
      * @async
      * @returns {any}
      */
-    async delete() {
+    public async delete() {
         const db = Model.getConnectionResolver();
         if (db && this.$table) {
             await db.table(this.$table).where(this.$attributes).delete();
@@ -151,7 +151,7 @@ class Pivot {
      * getDateFormat method.
      * @returns {any}
      */
-    getDateFormat() {
+    public getDateFormat() {
         return 'YYYY-MM-DD HH:mm:ss';
     }
 
@@ -161,7 +161,7 @@ class Pivot {
      * @param {*} relatedKey
      * @returns {any}
      */
-    setPivotKeys(foreignKey: any, relatedKey: any) {
+    public setPivotKeys(foreignKey: any, relatedKey: any) {
         this.$foreignKey = foreignKey;
         this.$relatedKey = relatedKey;
 

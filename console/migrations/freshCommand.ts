@@ -6,15 +6,15 @@ import Command from '@ostro/console/command';
 class FreshCommand extends Command {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'migrate:fresh';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Drop all tables and re-run all migrations';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--database [database]', 'The database connection to use'),
         this.createOption('--drop-views', 'Drop all tables and views'),
@@ -34,7 +34,7 @@ class FreshCommand extends Command {
      * @async
      * @returns {any}
      */
-    async handle() {
+    public async handle() {
         if (!this.input.getOption('force') && !await this.confirmToProceed()) {
             return 1;
         }
@@ -68,7 +68,7 @@ class FreshCommand extends Command {
      * needsSeeding method.
      * @returns {any}
      */
-    needsSeeding() {
+    public needsSeeding() {
         return this.option('seed') || this.option('seeder');
     }
 
@@ -77,7 +77,7 @@ class FreshCommand extends Command {
      * @param {*} $database
      * @returns {any}
      */
-    runSeeder($database: any) {
+    public runSeeder($database: any) {
         return this.callCommand('db:seed', (Object as any).filter({
             '--database': $database,
             '--class': this.option('seeder') || 'database/seeders/databaseSeeder',

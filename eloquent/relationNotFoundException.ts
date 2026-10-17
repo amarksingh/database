@@ -4,8 +4,8 @@ import { get_class_name } from '@ostro/support/function';
  * Class RelationNotFoundException.
  */
 class RelationNotFoundException extends Error {
-    code: string;
-    statusCode: number;
+    public code: string;
+    public statusCode: number;
     $model?: string;
     $relation?: string;
 

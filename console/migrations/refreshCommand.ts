@@ -6,15 +6,15 @@ import Command from '@ostro/console/command';
 class RefreshCommand extends Command {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'migrate:refresh';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Reset and re-run all migrations';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--database [database]', 'The database connection to use'),
         this.createOption('--force', 'Force the operation to run when in production'),
@@ -31,7 +31,7 @@ class RefreshCommand extends Command {
      * @async
      * @returns {any}
      */
-    async handle() {
+    public async handle() {
         if (!this.input.getOption('force') && !await this.confirmToProceed()) {
             return 1;
         }
@@ -69,7 +69,7 @@ class RefreshCommand extends Command {
      * @param {*} $step
      * @returns {any}
      */
-    runRollback($database: any, $path: string, $step: any) {
+    public runRollback($database: any, $path: string, $step: any) {
         return this.callCommand('migrate:rollback', (Object as any).filter({
             '--database': $database,
             '--path': $path,
@@ -85,7 +85,7 @@ class RefreshCommand extends Command {
      * @param {*} $path
      * @returns {any}
      */
-    runReset($database: any, $path: string) {
+    public runReset($database: any, $path: string) {
         return this.callCommand('migrate:reset', (Object as any).filter({
             '--database': $database,
             '--path': $path,
@@ -98,7 +98,7 @@ class RefreshCommand extends Command {
      * needsSeeding method.
      * @returns {any}
      */
-    needsSeeding() {
+    public needsSeeding() {
         return this.option('seed') || this.option('seeder');
     }
 
@@ -107,7 +107,7 @@ class RefreshCommand extends Command {
      * @param {*} $database
      * @returns {any}
      */
-    runSeeder($database: any) {
+    public runSeeder($database: any) {
         return this.callCommand('db:seed', (Object as any).filter({
             '--database': $database,
             '--class': this.option('seeder') || 'database/seeders/databaseSeeder',

@@ -45,7 +45,7 @@ class HasRelationships {
      * @param {*} $localKey
      * @returns {any}
      */
-    hasOne($related: any, $foreignKey: any = null, $localKey: any = null) {
+    public hasOne($related: any, $foreignKey: any = null, $localKey: any = null) {
         $related = typeof $related == 'string' ? require($related) : $related
 
         let $instance = this.newRelatedInstance($related);
@@ -65,7 +65,7 @@ class HasRelationships {
      * @param {*} $localKey
      * @returns {any}
      */
-    newHasOne($query: any, $parent: any, $foreignKey: any, $localKey: any) {
+    public newHasOne($query: any, $parent: any, $foreignKey: any, $localKey: any) {
         return new (HasOne as any)($query, $parent, $foreignKey, $localKey);
     }
 
@@ -79,7 +79,7 @@ class HasRelationships {
      * @param {*} $secondLocalKey
      * @returns {any}
      */
-    hasOneThrough($related: any, $through: any, $firstKey: any = null, $secondKey: any = null, $localKey: any = null, $secondLocalKey: any = null) {
+    public hasOneThrough($related: any, $through: any, $firstKey: any = null, $secondKey: any = null, $localKey: any = null, $secondLocalKey: any = null) {
         $through = typeof $through == 'string' ? require($through) : $through
         $related = typeof $related == 'string' ? require($related) : $related
 
@@ -107,7 +107,7 @@ class HasRelationships {
      * @param {*} $secondLocalKey
      * @returns {any}
      */
-    newHasOneThrough($query: any, $farParent: any, $throughParent: any, $firstKey: any, $secondKey: any, $localKey: any, $secondLocalKey: any) {
+    public newHasOneThrough($query: any, $farParent: any, $throughParent: any, $firstKey: any, $secondKey: any, $localKey: any, $secondLocalKey: any) {
         return new (HasOneThrough as any)($query, $farParent, $throughParent, $firstKey, $secondKey, $localKey, $secondLocalKey);
     }
 
@@ -119,7 +119,7 @@ class HasRelationships {
      * @param {*} $relation
      * @returns {any}
      */
-    belongsTo($related: any, $foreignKey: any = null, $ownerKey: any = null, $relation: any = null) {
+    public belongsTo($related: any, $foreignKey: any = null, $ownerKey: any = null, $relation: any = null) {
         $related = typeof $related == 'string' ? require($related) : $related
 
         if (is_null($relation)) {
@@ -155,7 +155,7 @@ class HasRelationships {
      * @param {*} $relation
      * @returns {any}
      */
-    newBelongsTo($query: any, $child: any, $foreignKey: any, $ownerKey: any, $relation: any) {
+    public newBelongsTo($query: any, $child: any, $foreignKey: any, $ownerKey: any, $relation: any) {
         return new BelongsTo($query, $child, $foreignKey, $ownerKey, $relation);
     }
 
@@ -163,7 +163,7 @@ class HasRelationships {
      * guessBelongsToRelation method.
      * @returns {any}
      */
-    guessBelongsToRelation() {
+    public guessBelongsToRelation() {
         return getCallerFunctionName('belongsTo');
 
     }
@@ -174,7 +174,7 @@ class HasRelationships {
      * @param {*} $localKey
      * @returns {any}
      */
-    hasMany($related: any, $foreignKey: any = null, $localKey: any = null) {
+    public hasMany($related: any, $foreignKey: any = null, $localKey: any = null) {
         $related = typeof $related == 'string' ? require($related) : $related
         let $instance = this.newRelatedInstance($related);
 
@@ -194,7 +194,7 @@ class HasRelationships {
      * @param {*} $localKey
      * @returns {any}
      */
-    newHasMany($query: any, $parent: any, $foreignKey: any, $localKey: any) {
+    public newHasMany($query: any, $parent: any, $foreignKey: any, $localKey: any) {
         return new HasMany($query, $parent, $foreignKey, $localKey);
     }
 
@@ -208,7 +208,7 @@ class HasRelationships {
      * @param {*} $secondLocalKey
      * @returns {any}
      */
-    hasManyThrough($related: any, $through: any, $firstKey: any = null, $secondKey: any = null, $localKey: any = null, $secondLocalKey: any = null) {
+    public hasManyThrough($related: any, $through: any, $firstKey: any = null, $secondKey: any = null, $localKey: any = null, $secondLocalKey: any = null) {
         $through = typeof $through == 'string' ? require($through) : $through
         $related = typeof $related == 'string' ? require($related) : $related
 
@@ -244,7 +244,7 @@ class HasRelationships {
      * @param {*} $secondLocalKey
      * @returns {any}
      */
-    newHasManyThrough($query: any, $farParent: any, $throughParent: any, $firstKey: any, $secondKey: any, $localKey: any, $secondLocalKey: any) {
+    public newHasManyThrough($query: any, $farParent: any, $throughParent: any, $firstKey: any, $secondKey: any, $localKey: any, $secondLocalKey: any) {
         return new HasManyThrough($query, $farParent, $throughParent, $firstKey, $secondKey, $localKey, $secondLocalKey);
     }
 
@@ -281,7 +281,7 @@ class HasRelationships {
      * guessBelongsToManyRelation method.
      * @returns {any}
      */
-    guessBelongsToManyRelation() {
+    public guessBelongsToManyRelation() {
         return getCallerFunctionName('belongsToMany')
 
     }
@@ -292,7 +292,7 @@ class HasRelationships {
      * @param {*} $instance
      * @returns {any}
      */
-    joiningTable($related: any, $instance: any = null) {
+    public joiningTable($related: any, $instance: any = null) {
 
         let $segments = [
             $instance ? $instance.joiningTableSegment() :
@@ -309,7 +309,7 @@ class HasRelationships {
      * joiningTableSegment method.
      * @returns {any}
      */
-    joiningTableSegment() {
+    public joiningTableSegment() {
         return snake(get_class_name(this));
     }
 
@@ -318,7 +318,7 @@ class HasRelationships {
      * @param {*} $relation
      * @returns {any}
      */
-    touches($relation: any) {
+    public touches($relation: any) {
         return in_array($relation, this.getTouchedRelations());
     }
 
@@ -326,7 +326,7 @@ class HasRelationships {
      * touchOwners method.
      * @returns {any}
      */
-    touchOwners() {
+    public touchOwners() {
         for (let $relation of this.getTouchedRelations()) {
             this[$relation]().touch();
 
@@ -342,7 +342,7 @@ class HasRelationships {
      * @param {*} $class
      * @returns {any}
      */
-    newRelatedInstance($class: any) {
+    public newRelatedInstance($class: any) {
         return tap(new $class, ($instance) => {
             if (!$instance.getConnectionName()) {
                 $instance.setConnection(this.$connection);
@@ -354,7 +354,7 @@ class HasRelationships {
      * getRelations method.
      * @returns {any}
      */
-    getRelations() {
+    public getRelations() {
         return this[kRelation]
     }
 
@@ -363,7 +363,7 @@ class HasRelationships {
      * @param {*} $key
      * @returns {any}
      */
-    existsRelation($key: string) {
+    public existsRelation($key: string) {
         return Boolean(this.relationLoaded($key))
     }
 
@@ -372,7 +372,7 @@ class HasRelationships {
      * @param {*} $key
      * @returns {any}
      */
-    relationLoaded($key: string) {
+    public relationLoaded($key: string) {
         return Boolean(this.getRelations()?.[$key]);
     }
     /**
@@ -380,7 +380,7 @@ class HasRelationships {
      * @param {*} relation
      * @returns {any}
      */
-    relation(relation: any) {
+    public relation(relation: any) {
         return this.getRelations()[relation]
     }
 
@@ -390,7 +390,7 @@ class HasRelationships {
      * @param {*} $value
      * @returns {any}
      */
-    setRelation($relation: any, $value: any = null) {
+    public setRelation($relation: any, $value: any = null) {
 
         Object.defineProperty(this, '$$' + $relation, { value: $value, writable: true })
         this.getRelations()[$relation] = $value;
@@ -403,7 +403,7 @@ class HasRelationships {
      * @param {*} $relation
      * @returns {any}
      */
-    unsetRelation($relation: any) {
+    public unsetRelation($relation: any) {
         delete this[kRelation][$relation];
 
         return this;
@@ -414,7 +414,7 @@ class HasRelationships {
      * @param {*} $relations
      * @returns {any}
      */
-    setRelations($relations: any) {
+    public setRelations($relations: any) {
         this[kRelation] = $relations;
 
         return this;
@@ -424,7 +424,7 @@ class HasRelationships {
      * withoutRelations method.
      * @returns {any}
      */
-    withoutRelations() {
+    public withoutRelations() {
         let $model = clone(this);
 
         return $model.unsetRelations();
@@ -434,7 +434,7 @@ class HasRelationships {
      * unsetRelations method.
      * @returns {any}
      */
-    unsetRelations() {
+    public unsetRelations() {
         this[kRelation] = {};
 
         return this;
@@ -446,7 +446,7 @@ class HasRelationships {
      * @param {*} $relations
      * @returns {any}
      */
-    async load($relations: any) {
+    public async load($relations: any) {
         let relations = Array.isArray($relations) ? $relations : (arguments.length === 1 && typeof $relations === 'string' ? [$relations] : [...arguments]);
         for (let rel of relations) {
             if (typeof this[rel] === 'function') {
@@ -462,7 +462,7 @@ class HasRelationships {
      * getTouchedRelations method.
      * @returns {any}
      */
-    getTouchedRelations() {
+    public getTouchedRelations() {
         return this[kTouches];
     }
 
@@ -471,7 +471,7 @@ class HasRelationships {
      * @param {*} $touches
      * @returns {any}
      */
-    setTouchedRelations($touches: any) {
+    public setTouchedRelations($touches: any) {
         this[kTouches] = $touches;
 
         return this;

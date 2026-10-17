@@ -30,7 +30,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * register method.
      * @returns {any}
      */
-    register() {
+    public register() {
         this.registerRepository();
 
         this.registerMigrator();
@@ -44,7 +44,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * registerRepository method.
      * @returns {any}
      */
-    registerRepository() {
+    public registerRepository() {
         this.$app.singleton('migration.repository', function ($app) {
             let $table = $app['config']['database.migrations'];
 
@@ -56,7 +56,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * registerMigrator method.
      * @returns {any}
      */
-    registerMigrator() {
+    public registerMigrator() {
         this.$app.singleton('migrator', function ($app) {
             let $repository = $app['migration.repository'];
             return new Migrator($repository, $app['db'], $app['files']);
@@ -67,7 +67,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * registerCreator method.
      * @returns {any}
      */
-    registerCreator() {
+    public registerCreator() {
         this.$app.singleton('migration.creator', function ($app) {
             return new MigrationCreator($app['files'], $app.basePath('stubs'));
         });
@@ -78,7 +78,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * @param {*} $commands
      * @returns {any}
      */
-    registerCommands($commands: Record<string, any> = {}) {
+    public registerCommands($commands: Record<string, any> = {}) {
         for (let $command of Object.keys($commands)) {
             this[`register${$command}Command`]();
         }
@@ -90,7 +90,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * registerMigrateCommand method.
      * @returns {any}
      */
-    registerMigrateCommand() {
+    public registerMigrateCommand() {
         this.$app.singleton('command.migrate', function ($app) {
             return new MigrateCommand($app['migrator'], $app['files']);
         });
@@ -100,7 +100,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * registerMigrateFreshCommand method.
      * @returns {any}
      */
-    registerMigrateFreshCommand() {
+    public registerMigrateFreshCommand() {
         this.$app.singleton('command.migrate.fresh', function () {
             return new FreshCommand();
         });
@@ -110,7 +110,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * registerMigrateRefreshCommand method.
      * @returns {any}
      */
-    registerMigrateRefreshCommand() {
+    public registerMigrateRefreshCommand() {
         this.$app.singleton('command.migrate.refresh', function () {
             return new RefreshCommand();
         });
@@ -120,7 +120,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * registerMigrateInstallCommand method.
      * @returns {any}
      */
-    registerMigrateInstallCommand() {
+    public registerMigrateInstallCommand() {
         this.$app.singleton('command.migrate.install', function ($app) {
             return new InstallCommand($app['migration.repository']);
         });
@@ -130,7 +130,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * registerMigrateMakeCommand method.
      * @returns {any}
      */
-    registerMigrateMakeCommand() {
+    public registerMigrateMakeCommand() {
         this.$app.singleton('command.migrate.make', function ($app) {
 
             return new MigrateMakeCommand($app['migration.creator']);
@@ -141,7 +141,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * registerMigrateResetCommand method.
      * @returns {any}
      */
-    registerMigrateResetCommand() {
+    public registerMigrateResetCommand() {
         this.$app.singleton('command.migrate.reset', function ($app) {
             return new ResetCommand($app['migrator']);
         });
@@ -151,7 +151,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * registerMigrateRollbackCommand method.
      * @returns {any}
      */
-    registerMigrateRollbackCommand() {
+    public registerMigrateRollbackCommand() {
         this.$app.singleton('command.migrate.rollback', function ($app) {
             return new RollbackCommand($app['migrator']);
         });
@@ -161,7 +161,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * registerMigrateStatusCommand method.
      * @returns {any}
      */
-    registerMigrateStatusCommand() {
+    public registerMigrateStatusCommand() {
         this.$app.singleton('command.migrate.status', function ($app) {
             return new StatusCommand($app['migrator']);
         });
@@ -171,7 +171,7 @@ class MigrationServiceProvider extends ServiceProvider {
      * provides method.
      * @returns {any}
      */
-    provides() {
+    public provides() {
         return [].concat(Object.values(this.$commands));
     }
 }

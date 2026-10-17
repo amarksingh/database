@@ -18,7 +18,7 @@ class QueriesRelationships {
      * @param {*} $callback
      * @returns {any}
      */
-    has($relation: any, $operator: string = '>=', $count: number = 1, $boolean: string = 'and', $callback?: Function) {
+    public has($relation: any, $operator: string = '>=', $count: number = 1, $boolean: string = 'and', $callback?: Function) {
         $operator = typeof $operator != 'string' ? '>=' : $operator
         $count = typeof $count != 'number' ? 1 : $count
         $boolean = typeof $boolean != 'string' ? 'and' : $boolean
@@ -57,7 +57,7 @@ class QueriesRelationships {
      * @param {*} $boolean
      * @returns {any}
      */
-    hasNested($relations: any, $operator: string = '>=', $count: number = 1, $boolean: string = 'and', $callback?: any) {
+    public hasNested($relations: any, $operator: string = '>=', $count: number = 1, $boolean: string = 'and', $callback?: any) {
         $callback = $callback || Array.from(arguments).find(arg => typeof arg == 'function')
 
         $relations = $relations.split('.');
@@ -86,7 +86,7 @@ class QueriesRelationships {
      * @param {*} $count
      * @returns {any}
      */
-    orHas($relation: any, $operator: string = '>=', $count: number = 1) {
+    public orHas($relation: any, $operator: string = '>=', $count: number = 1) {
         let $callback = Array.from(arguments).find(arg => typeof arg == 'function')
 
         return this.has($relation, $operator, $count, 'or', $callback);
@@ -98,7 +98,7 @@ class QueriesRelationships {
      * @param {*} $boolean
      * @returns {any}
      */
-    doesntHave($relation: any, $boolean: string = 'and', $callback?: any) {
+    public doesntHave($relation: any, $boolean: string = 'and', $callback?: any) {
         $callback = $callback || Array.from(arguments).find(arg => typeof arg == 'function')
 
         return this.has($relation, '<', 1, $boolean, $callback);
@@ -110,7 +110,7 @@ class QueriesRelationships {
      * @param {*} $callback
      * @returns {any}
      */
-    orDoesntHave($relation: any, $callback: Function) {
+    public orDoesntHave($relation: any, $callback: Function) {
         return this.doesntHave($relation, 'or', $callback);
     }
 
@@ -121,7 +121,7 @@ class QueriesRelationships {
      * @param {*} $count
      * @returns {any}
      */
-    whereHas($relation: any, $operator: string = '>=', $count: number = 1) {
+    public whereHas($relation: any, $operator: string = '>=', $count: number = 1) {
         let $callback = Array.from(arguments).find(arg => typeof arg == 'function')
 
         return this.has($relation, $operator, $count, 'and', $callback);
@@ -134,7 +134,7 @@ class QueriesRelationships {
      * @param {*} $count
      * @returns {any}
      */
-    orWhereHas($relation: any, $operator: string = '>=', $count: number = 1) {
+    public orWhereHas($relation: any, $operator: string = '>=', $count: number = 1) {
         let $callback = Array.from(arguments).find(arg => typeof arg == 'function')
 
         return this.has($relation, $operator, $count, 'or', $callback);
@@ -146,7 +146,7 @@ class QueriesRelationships {
      * @param {*} $callback
      * @returns {any}
      */
-    whereDoesntHave($relation: any, $callback: any = null) {
+    public whereDoesntHave($relation: any, $callback: any = null) {
         return this.doesntHave($relation, 'and', $callback);
     }
 
@@ -156,7 +156,7 @@ class QueriesRelationships {
      * @param {*} $callback
      * @returns {any}
      */
-    orWhereDoesntHave($relation: any, $callback: any = null) {
+    public orWhereDoesntHave($relation: any, $callback: any = null) {
         return this.doesntHave($relation, 'or', $callback);
     }
 
@@ -166,7 +166,7 @@ class QueriesRelationships {
      * @param {*} $type
      * @returns {any}
      */
-    getBelongsToRelation($relation: any, $type: string) {
+    public getBelongsToRelation($relation: any, $type: string) {
         let $belongsTo = Relation.noConstraints(() => {
             return this.getModel().belongsTo(
                 $type,
@@ -188,7 +188,7 @@ class QueriesRelationships {
      * @param {*} $function
      * @returns {any}
      */
-    withAggregate($relations: any, $column: string, $function: any = null) {
+    public withAggregate($relations: any, $column: string, $function: any = null) {
 
         if (empty($relations)) {
             return this;
@@ -275,7 +275,7 @@ class QueriesRelationships {
      * @param {*} $relations
      * @returns {any}
      */
-    withCount($relations: any) {
+    public withCount($relations: any) {
         return this.withAggregate((typeof $relations === 'object' && !Array.isArray($relations)) ? $relations : (Array.isArray($relations) ? $relations : [...arguments]), '*', 'count');
     }
 
@@ -285,7 +285,7 @@ class QueriesRelationships {
      * @param {*} $column
      * @returns {any}
      */
-    withMax($relation: any, $column: string) {
+    public withMax($relation: any, $column: string) {
         return this.withAggregate($relation, $column, 'max');
     }
 
@@ -295,7 +295,7 @@ class QueriesRelationships {
      * @param {*} $column
      * @returns {any}
      */
-    withMin($relation: any, $column: string) {
+    public withMin($relation: any, $column: string) {
         return this.withAggregate($relation, $column, 'min');
     }
 
@@ -305,7 +305,7 @@ class QueriesRelationships {
      * @param {*} $column
      * @returns {any}
      */
-    withSum($relation: any, $column: string) {
+    public withSum($relation: any, $column: string) {
         return this.withAggregate($relation, $column, 'sum');
     }
 
@@ -315,7 +315,7 @@ class QueriesRelationships {
      * @param {*} $column
      * @returns {any}
      */
-    withAvg($relation: any, $column: string) {
+    public withAvg($relation: any, $column: string) {
         return this.withAggregate($relation, $column, 'avg');
     }
 
@@ -324,7 +324,7 @@ class QueriesRelationships {
      * @param {*} $relation
      * @returns {any}
      */
-    withExists($relation: any) {
+    public withExists($relation: any) {
         return this.withAggregate($relation, '*', 'exists');
     }
 
@@ -337,7 +337,7 @@ class QueriesRelationships {
      * @param {*} $boolean
      * @returns {any}
      */
-    addHasWhere($hasQuery: any, $relation: any, $operator: string, $count: number, $boolean: string) {
+    public addHasWhere($hasQuery: any, $relation: any, $operator: string, $count: number, $boolean: string) {
         $hasQuery.mergeConstraintsFrom($relation.getQuery());
 
         return this.canUseExistsForExistenceCheck($operator, $count) ?
@@ -350,7 +350,7 @@ class QueriesRelationships {
      * @param {*} $from
      * @returns {any}
      */
-    mergeConstraintsFrom($from: any) {
+    public mergeConstraintsFrom($from: any) {
         return this.withoutGlobalScopes(
             $from.removedScopes()
         )
@@ -364,7 +364,7 @@ class QueriesRelationships {
      * @param {*} $boolean
      * @returns {any}
      */
-    addWhereCountQuery($query: any, $operator: string = '>=', $count: number = 1, $boolean: string = 'and') {
+    public addWhereCountQuery($query: any, $operator: string = '>=', $count: number = 1, $boolean: string = 'and') {
         let querytype = ($boolean == 'and' ? 'where' : 'orWhere');
         let sql = $query.toSQL().sql;
         let countVal = is_numeric($count) ? $count : `'${$count}'`;
@@ -378,7 +378,7 @@ class QueriesRelationships {
      * @param {*} $relation
      * @returns {any}
      */
-    getRelationWithoutConstraints($relation: any) {
+    public getRelationWithoutConstraints($relation: any) {
         return Relation.noConstraints(() => {
             if (typeof this.getModel()[$relation] != 'function') {
                 throw RelationNotFoundException.make(this.getModel(), $relation);
@@ -393,7 +393,7 @@ class QueriesRelationships {
      * @param {*} $count
      * @returns {any}
      */
-    canUseExistsForExistenceCheck($operator: string, $count: number) {
+    public canUseExistsForExistenceCheck($operator: string, $count: number) {
         return ($operator === '>=' || $operator === '<') && $count === 1;
     }
 }

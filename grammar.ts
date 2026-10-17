@@ -2,16 +2,16 @@
  * Class Grammar.
  */
 class Grammar {
-    $connection: any;
+    public $connection: any;
 
-    $tablePrefix: string = '';
+    public $tablePrefix: string = '';
 
     /**
      * Get the format for database stored dates.
      *
      * @returns Date format string.
      */
-    getDateFormat(): string {
+    public getDateFormat(): string {
         return 'Y-m-d H:i:s';
     }
 
@@ -20,7 +20,7 @@ class Grammar {
      *
      * @returns Table prefix.
      */
-    getTablePrefix(): string {
+    public getTablePrefix(): string {
         return this.$tablePrefix;
     }
 
@@ -30,7 +30,7 @@ class Grammar {
      * @param prefix - Table prefix.
      * @returns Fluent self instance.
      */
-    setTablePrefix(prefix: string): this {
+    public setTablePrefix(prefix: string): this {
         this.$tablePrefix = prefix;
 
         return this;
@@ -42,7 +42,7 @@ class Grammar {
      * @param connection - Connection instance.
      * @returns Fluent self instance.
      */
-    setConnection(connection: any): this {
+    public setConnection(connection: any): this {
         this.$connection = connection;
 
         return this;

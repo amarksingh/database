@@ -11,7 +11,7 @@ class CanBeOneOfMany {
      * getRelationQuery method.
      * @returns {any}
      */
-    getRelationQuery() {
+    public getRelationQuery() {
         return this.isOneOfMany() ?
             this.$oneOfManySubQuery :
             this.$query;
@@ -21,7 +21,7 @@ class CanBeOneOfMany {
      * getOneOfManySubQuery method.
      * @returns {any}
      */
-    getOneOfManySubQuery() {
+    public getOneOfManySubQuery() {
         return this.$oneOfManySubQuery;
     }
 
@@ -30,7 +30,7 @@ class CanBeOneOfMany {
      * @param {*} $column
      * @returns {any}
      */
-    qualifySubSelectColumn($column: string) {
+    public qualifySubSelectColumn($column: string) {
         return this.getRelationName() + '.' + last($column.split('.'));
     }
 
@@ -39,7 +39,7 @@ class CanBeOneOfMany {
      * @param {*} $column
      * @returns {any}
      */
-    qualifyRelatedColumn($column: string) {
+    public qualifyRelatedColumn($column: string) {
         return $column.includes('.') ? $column : this.$query.getModel().getTable() + '.' + $column;
     }
 
@@ -47,7 +47,7 @@ class CanBeOneOfMany {
      * isOneOfMany method.
      * @returns {any}
      */
-    isOneOfMany() {
+    public isOneOfMany() {
         return this.$isOneOfMany === true;
     }
 
@@ -55,7 +55,7 @@ class CanBeOneOfMany {
      * getRelationName method.
      * @returns {any}
      */
-    getRelationName() {
+    public getRelationName() {
         return this.$relationName;
     }
 }

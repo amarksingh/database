@@ -19,7 +19,7 @@ class DatabaseMigrationRepository {
      * getRan method.
      * @returns {any}
      */
-    getRan() {
+    public getRan() {
         return this.table()
             .orderBy('batch', 'asc')
             .orderBy('migration', 'asc')
@@ -31,7 +31,7 @@ class DatabaseMigrationRepository {
      * @param {*} $steps
      * @returns {any}
      */
-    getMigrations($steps: any) {
+    public getMigrations($steps: any) {
         return this.table()
             .where('batch', '>=', '1')
             .orderBy('batch', 'desc')
@@ -45,7 +45,7 @@ class DatabaseMigrationRepository {
      * @async
      * @returns {any}
      */
-    async getLast() {
+    public async getLast() {
         const lastBatch = await this.getLastBatchNumber();
         return this.table()
             .where('batch', lastBatch)
@@ -57,7 +57,7 @@ class DatabaseMigrationRepository {
      * getMigrationBatches method.
      * @returns {any}
      */
-    getMigrationBatches() {
+    public getMigrationBatches() {
         return this.table()
             .orderBy('batch', 'asc')
             .orderBy('migration', 'asc')
@@ -70,7 +70,7 @@ class DatabaseMigrationRepository {
      * @param {*} $batch
      * @returns {any}
      */
-    log($file: any, $batch: any) {
+    public log($file: any, $batch: any) {
         return this.table().insert({ 'migration': $file, 'batch': $batch })
     }
 
@@ -79,7 +79,7 @@ class DatabaseMigrationRepository {
      * @param {*} $migration
      * @returns {any}
      */
-    delete($migration: any) {
+    public delete($migration: any) {
         return this.table().where('migration', $migration.migration).delete();
     }
 
@@ -88,7 +88,7 @@ class DatabaseMigrationRepository {
      * @async
      * @returns {any}
      */
-    async getNextBatchNumber() {
+    public async getNextBatchNumber() {
         return (await this.getLastBatchNumber()) + 1;
     }
 
@@ -97,7 +97,7 @@ class DatabaseMigrationRepository {
      * @async
      * @returns {any}
      */
-    async getLastBatchNumber() {
+    public async getLastBatchNumber() {
         const res = await this.table().max('batch as batch');
         if (!res || !res.length) return 0;
         const val = Object.values(res[0])[0];
@@ -108,7 +108,7 @@ class DatabaseMigrationRepository {
      * createRepository method.
      * @returns {any}
      */
-    createRepository() {
+    public createRepository() {
         let $schema = this.getConnection().getSchemaBuilder();
 
         return $schema.createTable(this.$table, function ($table) {
@@ -122,7 +122,7 @@ class DatabaseMigrationRepository {
      * repositoryExists method.
      * @returns {any}
      */
-    repositoryExists() {
+    public repositoryExists() {
         let $schema = this.getConnection().getSchemaBuilder();
         return $schema.hasTable(this.$table)
     }
@@ -131,7 +131,7 @@ class DatabaseMigrationRepository {
      * deleteRepository method.
      * @returns {any}
      */
-    deleteRepository() {
+    public deleteRepository() {
         let $schema = this.getConnection().getSchemaBuilder();
 
         return $schema.dropTable(this.$table);
@@ -141,7 +141,7 @@ class DatabaseMigrationRepository {
      * table method.
      * @returns {any}
      */
-    table() {
+    public table() {
         return this.getConnection().table(this.$table);
     }
 
@@ -149,7 +149,7 @@ class DatabaseMigrationRepository {
      * getConnectionResolver method.
      * @returns {any}
      */
-    getConnectionResolver() {
+    public getConnectionResolver() {
         return this.$resolver;
     }
 
@@ -157,7 +157,7 @@ class DatabaseMigrationRepository {
      * getConnection method.
      * @returns {any}
      */
-    getConnection() {
+    public getConnection() {
         return this.getConnectionResolver().connection(this.$connection);
     }
 
@@ -166,7 +166,7 @@ class DatabaseMigrationRepository {
      * @param {*} $name
      * @returns {any}
      */
-    setSource($name: string) {
+    public setSource($name: string) {
         this.$connection = $name;
     }
 }

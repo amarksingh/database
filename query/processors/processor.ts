@@ -10,7 +10,7 @@ class Processor {
      * @param results - Raw query results.
      * @returns Processed query results.
      */
-    processSelect(query: any, results: any): any {
+    public processSelect(query: any, results: any): any {
         return results;
     }
 
@@ -23,7 +23,7 @@ class Processor {
      * @param sequence - Sequence column name.
      * @returns Inserted identifier.
      */
-    processInsertGetId(query: any, sql: any, values: Record<string, any>, sequence: any = null): any {
+    public processInsertGetId(query: any, sql: any, values: Record<string, any>, sequence: any = null): any {
         return sequence;
     }
 
@@ -33,7 +33,7 @@ class Processor {
      * @param results - Raw table list.
      * @returns Processed table list.
      */
-    processTables(results: any): any {
+    public processTables(results: any): any {
         return results;
     }
 
@@ -43,7 +43,7 @@ class Processor {
      * @param results - Raw view list.
      * @returns Processed view list.
      */
-    processViews(results: any): any {
+    public processViews(results: any): any {
         return results;
     }
 
@@ -53,7 +53,7 @@ class Processor {
      * @param results - Raw type list.
      * @returns Processed type list.
      */
-    processTypes(results: any): any {
+    public processTypes(results: any): any {
         return results;
     }
 
@@ -63,7 +63,7 @@ class Processor {
      * @param results - Raw column listing.
      * @returns Processed column listing.
      */
-    processColumns(results: any): any {
+    public processColumns(results: any): any {
         return results;
     }
 
@@ -73,7 +73,7 @@ class Processor {
      * @param results - Raw index listing.
      * @returns Processed index listing.
      */
-    processIndexes(results: any): any {
+    public processIndexes(results: any): any {
         return results;
     }
 
@@ -83,7 +83,7 @@ class Processor {
      * @param results - Raw foreign keys.
      * @returns Processed foreign keys.
      */
-    processForeignKeys(results: any): any {
+    public processForeignKeys(results: any): any {
         return results;
     }
 
@@ -93,7 +93,7 @@ class Processor {
      * @param results - Raw column listing.
      * @returns Processed column listing.
      */
-    processColumnListing(results: any): any {
+    public processColumnListing(results: any): any {
         return results;
     }
 

@@ -6,15 +6,15 @@ import BaseCommand from './baseCommand';
 class RollbackCommand extends BaseCommand {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'migrate:rollback';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Rollback all database migrations';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--database [database]', 'The database connection to use'),
         this.createOption('--force', 'Force the operation to run when in production'),
@@ -40,7 +40,7 @@ class RollbackCommand extends BaseCommand {
      * @async
      * @returns {any}
      */
-    async handle() {
+    public async handle() {
         if (!this.input.getOption('force') && !await this.confirmToProceed()) {
             return 1;
         }

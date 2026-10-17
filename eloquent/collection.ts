@@ -9,7 +9,7 @@ class Collection extends BaseCollection {
      * toArray method.
      * @returns {any}
      */
-    toArray() {
+    public toArray() {
         return this.map($value => {
             return $value instanceof ModelInterface ? ($value as any).toJson() : $value
         }).all()
@@ -18,7 +18,7 @@ class Collection extends BaseCollection {
      * serialize method.
      * @returns {any}
      */
-    serialize() {
+    public serialize() {
         let $value = this.all();
         if (Array.isArray($value)) {
             return this.toArray()
@@ -32,7 +32,7 @@ class Collection extends BaseCollection {
      * toJSON method.
      * @returns {any}
      */
-    toJSON() {
+    public toJSON() {
         let $value = this.all();
         if (Array.isArray($value)) {
             for (let i in $value) {
@@ -48,7 +48,7 @@ class Collection extends BaseCollection {
      * toJson method.
      * @returns {any}
      */
-    toJson() {
+    public toJson() {
         return this.toJSON()
     }
 

@@ -73,7 +73,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $table
      * @returns {any}
      */
-    resolveTableName($table: any) {
+    public resolveTableName($table: any) {
         if (typeof $table === 'function') {
             const $model = new ($table as any);
             if ($model instanceof Model || (typeof $model.getTable === 'function')) {
@@ -92,7 +92,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * addConstraints method.
      * @returns {any}
      */
-    addConstraints() {
+    public addConstraints() {
 
         this.performJoin();
         if ((this.constructor as any).$constraints) {
@@ -105,7 +105,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $query
      * @returns {any}
      */
-    performJoin($query: any = null) {
+    public performJoin($query: any = null) {
         $query = $query || this.$query;
 
         $query.join(
@@ -122,7 +122,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * addWhereConstraints method.
      * @returns {any}
      */
-    addWhereConstraints() {
+    public addWhereConstraints() {
         this.$query.where(
             this.getQualifiedForeignPivotKeyName(), '=', this.$parent[this.$parentKey]
         );
@@ -135,7 +135,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $models
      * @returns {any}
      */
-    addEagerConstraints($models: any) {
+    public addEagerConstraints($models: any) {
         let $whereIn = this.whereInMethod(this.$parent, this.$parentKey);
         this.$query[$whereIn](
             this.getQualifiedForeignPivotKeyName(),
@@ -150,7 +150,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $relation
      * @returns {any}
      */
-    initRelation($models: any, $relation: any) {
+    public initRelation($models: any, $relation: any) {
         for (let $model of $models) {
 
             $model.setRelation($relation, this.$related.newCollection());
@@ -165,7 +165,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $relation
      * @returns {any}
      */
-    match($models: any, $results: any, $relation: any) {
+    public match($models: any, $results: any, $relation: any) {
         let $dictionary = this.buildDictionary($results);
 
         for (let $model of $models) {
@@ -185,7 +185,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $results
      * @returns {any}
      */
-    buildDictionary($results: any) {
+    public buildDictionary($results: any) {
 
         let $dictionary = {};
         for (let $result of $results) {
@@ -205,7 +205,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getPivotClass method.
      * @returns {any}
      */
-    getPivotClass() {
+    public getPivotClass() {
         return this.$using || Pivot;
     }
 
@@ -214,7 +214,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $class
      * @returns {any}
      */
-    using($class: any) {
+    public using($class: any) {
         this.$using = $class;
 
         return this;
@@ -225,7 +225,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $accessor
      * @returns {any}
      */
-    as($accessor: any) {
+    public as($accessor: any) {
         this.$accessor = $accessor;
 
         return this;
@@ -239,7 +239,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $boolean
      * @returns {any}
      */
-    wherePivot($column: string, $operator: any = null, $value: any = null, $boolean: string = 'and') {
+    public wherePivot($column: string, $operator: any = null, $value: any = null, $boolean: string = 'and') {
         this.$pivotWheres.push(arguments);
 
         return this.where(this.qualifyPivotColumn($column), $operator, $value, $boolean);
@@ -253,7 +253,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $not
      * @returns {any}
      */
-    wherePivotBetween($column: string, $values: Record<string, any>, $boolean: string = 'and', $not: boolean = false) {
+    public wherePivotBetween($column: string, $values: Record<string, any>, $boolean: string = 'and', $not: boolean = false) {
         return this.whereBetween(this.qualifyPivotColumn($column), $values, $boolean, $not);
     }
 
@@ -263,7 +263,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $values
      * @returns {any}
      */
-    orWherePivotBetween($column: string, $values: Record<string, any>) {
+    public orWherePivotBetween($column: string, $values: Record<string, any>) {
         return this.wherePivotBetween($column, $values, 'or');
     }
 
@@ -274,7 +274,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $boolean
      * @returns {any}
      */
-    wherePivotNotBetween($column: string, $values: Record<string, any>, $boolean: string = 'and') {
+    public wherePivotNotBetween($column: string, $values: Record<string, any>, $boolean: string = 'and') {
         return this.wherePivotBetween($column, $values, $boolean, true);
     }
 
@@ -284,7 +284,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $values
      * @returns {any}
      */
-    orWherePivotNotBetween($column: string, $values: Record<string, any>) {
+    public orWherePivotNotBetween($column: string, $values: Record<string, any>) {
         return this.wherePivotBetween($column, $values, 'or', true);
     }
 
@@ -296,7 +296,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $not
      * @returns {any}
      */
-    wherePivotIn($column: string, $values: Record<string, any>, $boolean: string = 'and', $not: boolean = false) {
+    public wherePivotIn($column: string, $values: Record<string, any>, $boolean: string = 'and', $not: boolean = false) {
         this.$pivotWhereIns.push(arguments);
 
         if ($not) {
@@ -312,7 +312,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $value
      * @returns {any}
      */
-    orWherePivot($column: string, $operator: any = null, $value: any = null) {
+    public orWherePivot($column: string, $operator: any = null, $value: any = null) {
         return this.wherePivot($column, $operator, $value, 'or');
     }
 
@@ -322,7 +322,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $value
      * @returns {any}
      */
-    withPivotValue($column: string, $value: any = null) {
+    public withPivotValue($column: string, $value: any = null) {
         if (is_array($column) || (typeof $column === 'object' && $column !== null)) {
             for (let $name in $column) {
                 let $value = $column[$name]
@@ -347,7 +347,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $values
      * @returns {any}
      */
-    orWherePivotIn($column: string, $values: Record<string, any>) {
+    public orWherePivotIn($column: string, $values: Record<string, any>) {
         return this.wherePivotIn($column, $values, 'or');
     }
 
@@ -358,7 +358,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $boolean
      * @returns {any}
      */
-    wherePivotNotIn($column: string, $values: Record<string, any>, $boolean: string = 'and') {
+    public wherePivotNotIn($column: string, $values: Record<string, any>, $boolean: string = 'and') {
         return this.wherePivotIn($column, $values, $boolean, true);
     }
 
@@ -368,7 +368,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $values
      * @returns {any}
      */
-    orWherePivotNotIn($column: string, $values: Record<string, any>) {
+    public orWherePivotNotIn($column: string, $values: Record<string, any>) {
         return this.wherePivotNotIn($column, $values, 'or');
     }
 
@@ -379,7 +379,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $not
      * @returns {any}
      */
-    wherePivotNull($column: string, $boolean: string = 'and', $not: boolean = false) {
+    public wherePivotNull($column: string, $boolean: string = 'and', $not: boolean = false) {
         this.$pivotWhereNulls.push(arguments);
 
         return this.whereNull(this.qualifyPivotColumn($column), $boolean, $not);
@@ -391,7 +391,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $boolean
      * @returns {any}
      */
-    wherePivotNotNull($column: string, $boolean: string = 'and') {
+    public wherePivotNotNull($column: string, $boolean: string = 'and') {
         return this.wherePivotNull($column, $boolean, true);
     }
 
@@ -401,7 +401,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $not
      * @returns {any}
      */
-    orWherePivotNull($column: string, $not: boolean = false) {
+    public orWherePivotNull($column: string, $not: boolean = false) {
         return this.wherePivotNull($column, 'or', $not);
     }
 
@@ -410,7 +410,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $column
      * @returns {any}
      */
-    orWherePivotNotNull($column: string) {
+    public orWherePivotNotNull($column: string) {
         return this.orWherePivotNull($column, true);
     }
 
@@ -420,7 +420,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $direction
      * @returns {any}
      */
-    orderByPivot($column: string, $direction: string = 'asc') {
+    public orderByPivot($column: string, $direction: string = 'asc') {
         return this.orderBy(this.qualifyPivotColumn($column), $direction);
     }
 
@@ -431,7 +431,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    async findOrNew($id: string, $columns: any[] = ['*']) {
+    public async findOrNew($id: string, $columns: any[] = ['*']) {
         let $instance = await this.find($id, $columns)
         if (is_null($instance)) {
             $instance = this.$related.newInstance();
@@ -446,7 +446,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $attributes
      * @returns {any}
      */
-    async firstOrNew($attributes: Record<string, any> = {}) {
+    public async firstOrNew($attributes: Record<string, any> = {}) {
         let $instance = await this.where($attributes).first();
         if (is_null($instance)) {
             $instance = this.$related.newInstance($attributes);
@@ -464,7 +464,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $touch
      * @returns {any}
      */
-    async firstOrCreate($attributes: Record<string, any>, $joining: any[] = [], $touch: boolean = true) {
+    public async firstOrCreate($attributes: Record<string, any>, $joining: any[] = [], $touch: boolean = true) {
         let $instance = await this.where($attributes).first()
         if (is_null($instance)) {
             $instance = await this.create($attributes, $joining, $touch);
@@ -482,7 +482,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $touch
      * @returns {any}
      */
-    async updateOrCreate($attributes: Record<string, any>, $values: any[] = [], $joining: any[] = [], $touch: boolean = true) {
+    public async updateOrCreate($attributes: Record<string, any>, $values: any[] = [], $joining: any[] = [], $touch: boolean = true) {
         let $instance = await this.where($attributes).first()
         if (is_null($instance)) {
             return this.create($values, $joining, $touch);
@@ -501,7 +501,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    find($id: any, $columns: any[] = ['*']) {
+    public find($id: any, $columns: any[] = ['*']) {
         if (!($id instanceof Model) && (is_array($id) || $id instanceof Array)) {
             return this.findMany($id, $columns);
         }
@@ -517,7 +517,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    findMany($ids: any, $columns: any[] = ['*']) {
+    public findMany($ids: any, $columns: any[] = ['*']) {
         $ids = ($ids && typeof ($ids as any).toArray === 'function') ? ($ids as any).toArray() : $ids;
 
         if (empty($ids)) {
@@ -536,7 +536,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    async findOrFail($id: any, $columns: any[] = ['*']) {
+    public async findOrFail($id: any, $columns: any[] = ['*']) {
         let $result = await this.find($id, $columns);
 
         $id = ($id && typeof ($id as any).toArray === 'function') ? ($id as any).toArray() : $id;
@@ -561,7 +561,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $callback
      * @returns {any}
      */
-    async findOr($id: any, $columns: any[] = ['*'], $callback: any = null) {
+    public async findOr($id: any, $columns: any[] = ['*'], $callback: any = null) {
         if (typeof $columns === 'function') {
             $callback = $columns;
             $columns = ['*'];
@@ -591,7 +591,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $boolean
      * @returns {any}
      */
-    firstWhere($column: string, $operator: any = null, $value: any = null, $boolean: string = 'and') {
+    public firstWhere($column: string, $operator: any = null, $value: any = null, $boolean: string = 'and') {
         if (arguments.length === 2) {
             return this.where($column, '=', $operator).first();
         }
@@ -604,7 +604,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    async first($columns: any[] = ['*']) {
+    public async first($columns: any[] = ['*']) {
         let $results = await this.take(1).get($columns);
 
         return count($results) > 0 ? $results.first() : null;
@@ -616,7 +616,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    async firstOrFail($columns: any[] = ['*']) {
+    public async firstOrFail($columns: any[] = ['*']) {
         let $model = await this.first($columns)
         if (!is_null($model)) {
             return $model;
@@ -630,7 +630,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @async
      * @returns {any}
      */
-    async getResults() {
+    public async getResults() {
         return !is_null(this.$parent[this.$parentKey]) ?
             await this.get() :
             this.$related.newCollection();
@@ -642,7 +642,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    async get($columns: any[] = ['*']) {
+    public async get($columns: any[] = ['*']) {
 
         let $builder = this.$query;
 
@@ -670,7 +670,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    shouldSelect($columns: any[] = ['*']) {
+    public shouldSelect($columns: any[] = ['*']) {
         if ($columns.includes('*')) {
             $columns = [this.$related.getTable() + '.*'];
         }
@@ -682,7 +682,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * aliasedPivotColumns method.
      * @returns {any}
      */
-    aliasedPivotColumns() {
+    public aliasedPivotColumns() {
         let $defaults = [this.$foreignPivotKey, this.$relatedPivotKey];
 
         return collect($defaults.concat(this.$pivotColumns)).map(($column) => {
@@ -698,7 +698,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $page
      * @returns {any}
      */
-    paginate($perPage: any = null, $columns: any[] = ['*'], $pageName: string = 'page', $page: any = null) {
+    public paginate($perPage: any = null, $columns: any[] = ['*'], $pageName: string = 'page', $page: any = null) {
 
         this.$query.addSelect(this.shouldSelect($columns));
 
@@ -715,7 +715,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $page
      * @returns {any}
      */
-    simplePaginate($perPage: any = null, $columns: any[] = ['*'], $pageName: string = 'page', $page: any = null) {
+    public simplePaginate($perPage: any = null, $columns: any[] = ['*'], $pageName: string = 'page', $page: any = null) {
         this.$query.addSelect(this.shouldSelect($columns));
 
         return tap(this.$query.simplePaginate($perPage, $columns, $pageName, $page), ($paginator) => {
@@ -731,7 +731,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $cursor
      * @returns {any}
      */
-    cursorPaginate($perPage: any = null, $columns: any[] = ['*'], $cursorName: string = 'cursor', $cursor: any = null) {
+    public cursorPaginate($perPage: any = null, $columns: any[] = ['*'], $cursorName: string = 'cursor', $cursor: any = null) {
         this.$query.addSelect(this.shouldSelect($columns));
 
         return tap(this.$query.cursorPaginate($perPage, $columns, $cursorName, $cursor), ($paginator) => {
@@ -745,7 +745,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $callback
      * @returns {any}
      */
-    chunk($count: number, $callback: Function) {
+    public chunk($count: number, $callback: Function) {
         return this.prepareQueryBuilder().chunk($count, ($results, $page) => {
             this.hydratePivotRelation($results.all());
 
@@ -761,7 +761,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $alias
      * @returns {any}
      */
-    chunkById($count: number, $callback: Function, $column: any = null, $alias: any = null) {
+    public chunkById($count: number, $callback: Function, $column: any = null, $alias: any = null) {
         this.prepareQueryBuilder();
 
         $column = $column || this.getRelated().qualifyColumn(
@@ -783,7 +783,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $count
      * @returns {any}
      */
-    each($callback: Function, $count: number = 1000) {
+    public each($callback: Function, $count: number = 1000) {
         return this.chunk($count, ($results) => {
             for (let $key in $results) {
                 let $value = $results[$key]
@@ -799,7 +799,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $chunkSize
      * @returns {any}
      */
-    lazy($chunkSize: number = 1000) {
+    public lazy($chunkSize: number = 1000) {
         return this.prepareQueryBuilder().lazy($chunkSize).map(($model) => {
             this.hydratePivotRelation([$model]);
 
@@ -814,7 +814,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $alias
      * @returns {any}
      */
-    lazyById($chunkSize: number = 1000, $column: any = null, $alias: any = null) {
+    public lazyById($chunkSize: number = 1000, $column: any = null, $alias: any = null) {
         $column = $column || this.getRelated().qualifyColumn(
             this.getRelatedKeyName()
         );
@@ -832,7 +832,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * cursor method.
      * @returns {any}
      */
-    cursor() {
+    public cursor() {
         return this.prepareQueryBuilder().cursor().map(($model) => {
             this.hydratePivotRelation([$model]);
 
@@ -844,7 +844,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * prepareQueryBuilder method.
      * @returns {any}
      */
-    prepareQueryBuilder() {
+    public prepareQueryBuilder() {
         return this.$query.select(this.shouldSelect());
     }
 
@@ -853,7 +853,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $models
      * @returns {any}
      */
-    hydratePivotRelation($models: any) {
+    public hydratePivotRelation($models: any) {
 
         for (let $model of $models) {
             $model.setRelation(this.$accessor, this.migratePivotAttributes($model));
@@ -867,7 +867,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $model
      * @returns {any}
      */
-    migratePivotAttributes($model: any) {
+    public migratePivotAttributes($model: any) {
         let $values = {};
         let attributes = $model.getAttributes()
         for (let $key in attributes) {
@@ -889,7 +889,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @async
      * @returns {any}
      */
-    async touchIfTouching() {
+    public async touchIfTouching() {
         if (this.touchingParent()) {
             await this.getParent().touch();
         }
@@ -903,7 +903,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * touchingParent method.
      * @returns {any}
      */
-    touchingParent() {
+    public touchingParent() {
         return this.getRelated().touches(this.guessInverseRelation());
     }
 
@@ -911,7 +911,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * guessInverseRelation method.
      * @returns {any}
      */
-    guessInverseRelation() {
+    public guessInverseRelation() {
         return this.getParent().getTable();
         // return String.camel(String.pluralStudly(class_basename(this.getParent())));
     }
@@ -921,7 +921,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @async
      * @returns {any}
      */
-    async touch() {
+    public async touch() {
         let $key = this.getRelated().getKeyName();
 
         let $columns = {
@@ -938,7 +938,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * allRelatedIds method.
      * @returns {any}
      */
-    allRelatedIds() {
+    public allRelatedIds() {
         return this.newPivotQuery().pluck(this.$relatedPivotKey);
     }
 
@@ -950,7 +950,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $touch
      * @returns {any}
      */
-    async save($model: any, $pivotAttributes: any[] = [], $touch: boolean = true) {
+    public async save($model: any, $pivotAttributes: any[] = [], $touch: boolean = true) {
         await $model.save({ 'touch': false });
 
         await this.attach($model, $pivotAttributes, $touch);
@@ -965,7 +965,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $pivotAttributes
      * @returns {any}
      */
-    async saveMany($models: any, $pivotAttributes: any[] = []) {
+    public async saveMany($models: any, $pivotAttributes: any[] = []) {
         for (let $key in $models) {
             let $model = $models[$key]
             await this.save($model, ($pivotAttributes[$key] || []), false);
@@ -984,7 +984,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $touch
      * @returns {any}
      */
-    async create($attributes: any = {}, $joining: any[] = [], $touch: boolean = true) {
+    public async create($attributes: any = {}, $joining: any[] = [], $touch: boolean = true) {
         const $instance = this.$related.newInstance($attributes);
         $instance.fill($attributes);
 
@@ -1002,7 +1002,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $joinings
      * @returns {any}
      */
-    async createMany($records: any, $joinings: any[] = []) {
+    public async createMany($records: any, $joinings: any[] = []) {
         const createPromises = Object.keys($records).map($key => {
             let $record = $records[$key];
             return this.create($record, ($joinings[$key] || []), false);
@@ -1021,7 +1021,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    getRelationExistenceQuery($query: any, $parentQuery: any, $columns: any[] = ['*']) {
+    public getRelationExistenceQuery($query: any, $parentQuery: any, $columns: any[] = ['*']) {
         if ($parentQuery.getTable() == $query.getTable()) {
             return this.getRelationExistenceQueryForSelfJoin($query, $parentQuery, $columns);
         }
@@ -1038,7 +1038,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $columns
      * @returns {any}
      */
-    getRelationExistenceQueryForSelfJoin($query: any, $parentQuery: any, $columns: any[] = ['*']) {
+    public getRelationExistenceQueryForSelfJoin($query: any, $parentQuery: any, $columns: any[] = ['*']) {
 
         $query.select($columns);
         let $hash = this.getRelationCountHash();
@@ -1057,7 +1057,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getExistenceCompareKey method.
      * @returns {any}
      */
-    getExistenceCompareKey() {
+    public getExistenceCompareKey() {
         return this.getQualifiedForeignPivotKeyName();
     }
 
@@ -1067,7 +1067,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $updatedAt
      * @returns {any}
      */
-    withTimestamps($createdAt: any = null, $updatedAt: any = null) {
+    public withTimestamps($createdAt: any = null, $updatedAt: any = null) {
         this.$withTimestamps = true;
 
         this.$pivotCreatedAt = $createdAt;
@@ -1080,7 +1080,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * createdAt method.
      * @returns {any}
      */
-    createdAt() {
+    public createdAt() {
         return this.$pivotCreatedAt || this.$parent.getCreatedAtColumn();
     }
 
@@ -1088,7 +1088,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * updatedAt method.
      * @returns {any}
      */
-    updatedAt() {
+    public updatedAt() {
         return this.$pivotUpdatedAt || this.$parent.getUpdatedAtColumn();
     }
 
@@ -1096,7 +1096,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getForeignPivotKeyName method.
      * @returns {any}
      */
-    getForeignPivotKeyName() {
+    public getForeignPivotKeyName() {
         return this.$foreignPivotKey;
     }
 
@@ -1104,7 +1104,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getQualifiedForeignPivotKeyName method.
      * @returns {any}
      */
-    getQualifiedForeignPivotKeyName() {
+    public getQualifiedForeignPivotKeyName() {
         return this.qualifyPivotColumn(this.$foreignPivotKey);
     }
 
@@ -1112,7 +1112,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getRelatedPivotKeyName method.
      * @returns {any}
      */
-    getRelatedPivotKeyName() {
+    public getRelatedPivotKeyName() {
         return this.$relatedPivotKey;
     }
 
@@ -1120,7 +1120,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getQualifiedRelatedPivotKeyName method.
      * @returns {any}
      */
-    getQualifiedRelatedPivotKeyName() {
+    public getQualifiedRelatedPivotKeyName() {
         return this.qualifyPivotColumn(this.$relatedPivotKey);
     }
 
@@ -1128,7 +1128,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getParentKeyName method.
      * @returns {any}
      */
-    getParentKeyName() {
+    public getParentKeyName() {
         return this.$parentKey;
     }
 
@@ -1136,7 +1136,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getQualifiedParentKeyName method.
      * @returns {any}
      */
-    getQualifiedParentKeyName() {
+    public getQualifiedParentKeyName() {
         return this.$parent.qualifyColumn(this.$parentKey);
     }
 
@@ -1144,7 +1144,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getRelatedKeyName method.
      * @returns {any}
      */
-    getRelatedKeyName() {
+    public getRelatedKeyName() {
         return this.$relatedKey;
     }
 
@@ -1152,7 +1152,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getQualifiedRelatedKeyName method.
      * @returns {any}
      */
-    getQualifiedRelatedKeyName() {
+    public getQualifiedRelatedKeyName() {
         return this.$related.qualifyColumn(this.$relatedKey);
     }
 
@@ -1160,7 +1160,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getTable method.
      * @returns {any}
      */
-    getTable() {
+    public getTable() {
         return this.$table;
     }
 
@@ -1168,7 +1168,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getRelationName method.
      * @returns {any}
      */
-    getRelationName() {
+    public getRelationName() {
         return this.$relationName;
     }
 
@@ -1176,7 +1176,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getPivotAccessor method.
      * @returns {any}
      */
-    getPivotAccessor() {
+    public getPivotAccessor() {
         return this.$accessor;
     }
 
@@ -1184,7 +1184,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * getPivotColumns method.
      * @returns {any}
      */
-    getPivotColumns() {
+    public getPivotColumns() {
         return this.$pivotColumns;
     }
 
@@ -1193,7 +1193,7 @@ class BelongsToMany extends implement(Relation, InteractsWithPivotTable) {
      * @param {*} $column
      * @returns {any}
      */
-    qualifyPivotColumn($column: string) {
+    public qualifyPivotColumn($column: string) {
         return contains($column, '.') ?
             $column :
             this.$table + '.' + $column;
