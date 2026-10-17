@@ -1,6 +1,6 @@
 {
   "name": "@ostro/database",
-  "version": "1.4.6",
+  "version": "2.0.0-alpha.1",
   "description": "Database module for OstroJS",
   "main": "build/databaseManager.js",
   "types": "build/databaseManager.d.ts",
@@ -23,9 +23,9 @@
     "test": "npx c8 npx jest --runInBand --no-coverage --forceExit"
   },
   "dependencies": {
-    "@ostro/contracts": "^1.0.2",
-    "@ostro/pagination": "^1.0.4",
-    "@ostro/support": "^1.2.0",
+    "@ostro/contracts": "^2.0.0-alpha.1",
+    "@ostro/pagination": "^2.0.0-alpha.1",
+    "@ostro/support": "^2.0.0-alpha.1",
     "fs-extra": "^8.1.0",
     "knex": "^2.3.0",
     "lodash": "^4.17.21",
